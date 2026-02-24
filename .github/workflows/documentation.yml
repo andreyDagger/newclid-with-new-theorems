@@ -30,21 +30,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Install yuclid build dependencies
-        run: sudo apt-get install g++-14 libboost1.83-all-dev libgmp-dev pkg-config
-      - name: Set environment variables from .env
-        run: cat .env >> "$GITHUB_ENV"
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-      - name: Install dependencies
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Cache Nix store
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Build documentation
         run: |
-          uv sync --extra doc
-      - name: Sphinx build
-        run: |
-          uv run python ./docs/reformat.py
-          uv run sphinx-build -b html ./docs ./_build
+          nix develop --command bash -c "uv sync --extra doc && uv run python ./docs/reformat.py && uv run sphinx-build -b html ./docs ./_build"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
