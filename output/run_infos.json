@@ -1,0 +1,13 @@
+{
+  "runtime": 0.43393611907958984,
+  "success": true,
+  "steps": 137,
+  "success_per_goal": {
+    "PP₁QQ₁ are cyclic succeeded": true
+  },
+  "agent_stats": {
+    "agent_type": "follow_deductions",
+    "n_deductions_stored": 136,
+    "n_deductions_followed": 136
+  }
+}

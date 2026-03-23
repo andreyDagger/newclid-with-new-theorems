@@ -592,6 +592,36 @@ namespace Yuclid {
     return thm;
   }
 
+  Theorem Theorem::pappus_theorem(const Point& a, const Point& b, const Point& c, const Point& p, const Point& q, const Point& r, const Point& x, const Point& y, const Point& z) {
+    Theorem thm("Pappus.", "r93");
+    thm
+      .add_hypothesis<Collinear>(a, b, c)
+    .add_hypothesis<Collinear>(p, q, r)
+    .add_hypothesis<Collinear>(a, x, q)
+    .add_hypothesis<Collinear>(b, x, p)
+    .add_hypothesis<Collinear>(a, y, r)
+    .add_hypothesis<Collinear>(c, y, p)
+    .add_hypothesis<Collinear>(b, z, r)
+    .add_hypothesis<Collinear>(c, z, q)
+    .add_conclusion<Collinear>(x, y, z);
+    return thm;
+  }
+
+  Theorem Theorem::radical_axes(const Point &p, const Point &p1, const Point &q, const Point &q1, const Point &e, const Point &f, const Point &c, const Point &r, const Point &s) {
+    Theorem thm("Radical axes.", "r94");
+    // cerr << "THEOREM: " << p.name() << " " << p1.name() << " " << q.name() << " "
+    thm
+    .add_hypothesis<CyclicQuadrangle>(p1, c, p, e)
+    .add_hypothesis<CyclicQuadrangle>(q1, c, q, f)
+    .add_hypothesis<EqualRatios>(Dist(s, p), Dist(s, q), Dist(s, f), Dist(s, e))
+    .add_hypothesis<Collinear>(r, p1, p)
+    .add_hypothesis<Collinear>(r, q1, q)
+    .add_hypothesis<Collinear>(s, c, r)
+    .add_hypothesis<Collinear>(s, e, f)
+    .add_conclusion<CyclicQuadrangle>(p, p1, q, q1);
+    return thm;
+  }
+
   Point Theorem::max_point() const {
 #ifdef __cpp_lib_ranges_concat
     // TODO: test that this #ifdef branch actually works

@@ -162,6 +162,10 @@ namespace Yuclid {
 
     void match_orthocenters();
 
+    void match_pappus();
+
+    void match_radical_axes();
+
     const Problem *m_problem;
     const Config::Solver *m_config;
 

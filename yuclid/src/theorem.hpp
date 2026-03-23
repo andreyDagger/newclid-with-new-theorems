@@ -256,6 +256,10 @@ namespace Yuclid {
 
     static Theorem angle_bisector_meets_bisector(const Angle& ang, const Point &pt);
 
+    static Theorem pappus_theorem(const Point& a, const Point& b, const Point& c, const Point& p, const Point& q, const Point& r, const Point& x, const Point& y, const Point& z);
+
+    static Theorem radical_axes(const Point& p, const Point& p1, const Point& q, const Point& q1, const Point& e, const Point& f, const Point& c, const Point& r, const Point& s);
+
     [[nodiscard]] Theorem normalize() const;
 
     Theorem() = default;

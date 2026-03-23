@@ -61,6 +61,8 @@ from newclid.all_rules import (
     R80_SAME_CHORD_SAME_ARC_FOUR_POINTS_1,
     R82_PARA_OF_COLL,
     R91_ANGLES_OF_ISO_TRAPEZOID,
+    R93_PAPPUS_THEOREM,
+    R94_RADICAL_AXES,
 )
 from newclid.deductors import ARReason
 from newclid.deductors.deductor_interface import ARCoefficient
@@ -211,6 +213,7 @@ class YuclidAdapter(DeductionProvider):
                 result = subprocess.run(
                     command, capture_output=True, text=True, check=True
                 )
+                print(f"STDERR: {result.stderr}")
 
             except subprocess.CalledProcessError as e:
                 error_msg = (
@@ -421,6 +424,8 @@ YUCLID_RULES: set[Rule] = {
     R80_SAME_CHORD_SAME_ARC_FOUR_POINTS_1,
     R82_PARA_OF_COLL,
     R91_ANGLES_OF_ISO_TRAPEZOID,
+    R93_PAPPUS_THEOREM,
+    R94_RADICAL_AXES,
 }
 
 ID_TO_YUCLID_RULE: dict[str, Rule] = {rule.id: rule for rule in YUCLID_RULES}

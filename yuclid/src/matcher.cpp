@@ -130,6 +130,8 @@ namespace Yuclid {
     } else {
       match_orthocenters();
     }
+    match_pappus();
+    match_radical_axes();
   }
 
   vector<tuple<double, double, Triangle>> TheoremMatcher::all_triangles() {
@@ -614,6 +616,77 @@ namespace Yuclid {
               insert_theorem(Theorem::orthocenter(pred));
               insert_theorem(Theorem::orthocenter({Triangle{pt_b, pt_c, pt_a}, pt_d}));
               insert_theorem(Theorem::orthocenter({Triangle{pt_c, pt_a, pt_b}, pt_d}));
+            }
+          }
+        }
+      }
+    }
+  }
+
+  void TheoremMatcher::match_pappus() {
+    for (const auto& pt_a : m_problem->all_points()) {
+      for (const auto& pt_b : m_problem->all_points()) {
+        if (pt_b.is_close(pt_a)) continue;
+        for (const auto& pt_c : m_problem->all_points()) {
+          if (pt_c.is_close(pt_b) || pt_c.is_close(pt_a)) continue;
+          if (!Collinear(pt_a, pt_b, pt_c).check_equations()) continue;
+          for (const auto& pt_p : m_problem->all_points()) {
+            if (pt_p.is_close(pt_a) || pt_p.is_close(pt_b) || pt_p.is_close(pt_c)) continue;
+            for (const auto& pt_q : m_problem->all_points()) {
+              if (pt_q.is_close(pt_a) || pt_q.is_close(pt_b) || pt_q.is_close(pt_c) || pt_q.is_close(pt_p)) continue;
+              for (const auto& pt_r : m_problem->all_points()) {
+                if (pt_r.is_close(pt_a) || pt_r.is_close(pt_b) || pt_r.is_close(pt_c) || pt_r.is_close(pt_p) || pt_r.is_close(pt_q)) continue;
+                if (!Collinear(pt_p, pt_q, pt_r).check_equations()) continue;
+                for (const auto& pt_x : m_problem->all_points()) {
+                  if (pt_x.is_close(pt_a) || pt_x.is_close(pt_b) || pt_x.is_close(pt_c) || pt_x.is_close(pt_p) || pt_x.is_close(pt_q) || pt_x.is_close(pt_r)) continue;
+                  if (!Collinear(pt_a, pt_x, pt_q).check_equations() || !Collinear(pt_b, pt_x, pt_p).check_equations()) continue;
+                  for (const auto& pt_y : m_problem->all_points()) {
+                    if (pt_y.is_close(pt_a) || pt_y.is_close(pt_b) || pt_y.is_close(pt_c) || pt_y.is_close(pt_p) || pt_y.is_close(pt_q) || pt_y.is_close(pt_r) || pt_y.is_close(pt_x)) continue;
+                    if (!Collinear(pt_a, pt_y, pt_r).check_equations() || !Collinear(pt_c, pt_y, pt_p).check_equations()) continue;
+                    for (const auto& pt_z : m_problem->all_points()) {
+                      if (pt_z.is_close(pt_a) || pt_z.is_close(pt_b) || pt_z.is_close(pt_c) || pt_z.is_close(pt_p) || pt_z.is_close(pt_q) || pt_z.is_close(pt_r) || pt_z.is_close(pt_x) || pt_z.is_close(pt_y)) continue;
+                      if (!Collinear(pt_b, pt_z, pt_r).check_equations() || !Collinear(pt_c, pt_z, pt_q).check_equations()) continue;
+                      insert_theorem(Theorem::pappus_theorem(pt_a, pt_b, pt_c, pt_p, pt_q, pt_r, pt_x, pt_y, pt_z));
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  void TheoremMatcher::match_radical_axes() {
+    for (const auto& pt_p : m_problem->all_points()) {
+      for (const auto& pt_p1 : m_problem->all_points()) {
+        if (pt_p1.is_close(pt_p)) continue;
+        for (const auto& pt_c : m_problem->all_points()) {
+          if (pt_c.is_close(pt_p) || pt_c.is_close(pt_p1)) continue;
+          for (const auto& pt_e : m_problem->all_points()) {
+            if (pt_e.is_close(pt_p) || pt_e.is_close(pt_p1) || pt_e.is_close(pt_c)) continue;
+            if (!CyclicQuadrangle(pt_p1, pt_c, pt_p, pt_e).check_equations()) continue;
+            for (const auto& pt_q : m_problem->all_points()) {
+              if (pt_q.is_close(pt_p) || pt_q.is_close(pt_p1) || pt_q.is_close(pt_c) || pt_q.is_close(pt_e)) continue;
+              for (const auto& pt_q1 : m_problem->all_points()) {
+                if (pt_q1.is_close(pt_p) || pt_q1.is_close(pt_p1) || pt_q1.is_close(pt_c) || pt_q1.is_close(pt_e) || pt_q1.is_close(pt_q)) continue;
+                for (const auto& pt_f : m_problem->all_points()) {
+                  if (pt_f.is_close(pt_p) || pt_f.is_close(pt_p1) || pt_f.is_close(pt_c) || pt_f.is_close(pt_e) || pt_f.is_close(pt_q) || pt_f.is_close(pt_q1)) continue;
+                  if (!CyclicQuadrangle(pt_q1, pt_c, pt_q, pt_f).check_equations()) continue;
+                  for (const auto& pt_r : m_problem->all_points()) {
+                    if (pt_r.is_close(pt_p) || pt_r.is_close(pt_p1) || pt_r.is_close(pt_c) || pt_r.is_close(pt_e) || pt_r.is_close(pt_q) || pt_r.is_close(pt_q1) || pt_r.is_close(pt_f)) continue;
+                    if (!Collinear(pt_r, pt_p1, pt_p).check_equations() || !Collinear(pt_r, pt_q1, pt_q).check_equations()) continue;
+                    for (const auto& pt_s : m_problem->all_points()) {
+                      if (pt_s.is_close(pt_p) || pt_s.is_close(pt_p1) || pt_s.is_close(pt_c) || pt_s.is_close(pt_e) || pt_s.is_close(pt_q) || pt_s.is_close(pt_q1) || pt_s.is_close(pt_f) || pt_s.is_close(pt_r)) continue;
+                      if (!Collinear(pt_s, pt_c, pt_r).check_equations() || !Collinear(pt_s, pt_e, pt_f).check_equations()) continue;
+                      if (!EqualRatios(Dist(pt_s, pt_p), Dist(pt_s, pt_q), Dist(pt_s, pt_f), Dist(pt_s, pt_e)).check_equations()) continue;
+                      // cerr << "HERE: " << pt_p.name() << " " << pt_p1.name() << " " << pt_c.name() << " " << pt_e.name() << " " << pt_q.name() << " " << pt_q1.name() << " " << pt_f.name() << " " << pt_r.name() << " " << pt_s.name() << "\n";
+                      insert_theorem(Theorem::radical_axes(pt_p, pt_p1, pt_q, pt_q1, pt_e, pt_f, pt_c, pt_r, pt_s));
+                    }
+                  }
+                }
+              }
             }
           }
         }

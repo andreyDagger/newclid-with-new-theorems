@@ -123,6 +123,8 @@ __all__ = [
     "R90_PARALLELOGRAM_LAW",
     "R91_ANGLES_OF_ISO_TRAPEZOID",
     "R92_DIAMETER_CROSSES_CENTER",
+    "R93_PAPPUS_THEOREM",
+    "R94_RADICAL_AXES",
 ]
 
 R00_PERPENDICULARS_GIVE_PARALLEL = Rule(
@@ -1061,6 +1063,37 @@ R92_DIAMETER_CROSSES_CENTER = Rule(
     conclusions_txt=("coll O C D",),
 )
 
+R93_PAPPUS_THEOREM = Rule(
+    id="r93",
+    description="Pappus",
+    premises_txt=(
+        "coll A B C",
+        "coll P Q R",
+        "coll A X Q",
+        "coll B X P",
+        "coll A Y R",
+        "coll C Y P",
+        "coll B Z R",
+        "coll C Z Q",
+    ),
+    conclusions_txt=("coll X Y Z",),
+)
+
+R94_RADICAL_AXES = Rule(
+    id="r94",
+    description="Radial axis",
+    premises_txt=(
+        "cyclic P1 C P E",
+        "cyclic Q1 C Q F",
+        "eqratio S P S Q S F S E",
+        "coll R P1 P",
+        "coll R Q1 Q",
+        "coll S C R",
+        "coll S E F"
+    ),
+    conclusions_txt=("cyclic P Q Q1 P1",),
+)
+
 ALL_RULES: list[Rule] = [
     R00_PERPENDICULARS_GIVE_PARALLEL,
     R01_DEFINITION_OF_CYCLIC,
@@ -1149,6 +1182,8 @@ ALL_RULES: list[Rule] = [
     R90_PARALLELOGRAM_LAW,
     R91_ANGLES_OF_ISO_TRAPEZOID,
     R92_DIAMETER_CROSSES_CENTER,
+    R93_PAPPUS_THEOREM,
+    R94_RADICAL_AXES,
 ]
 """List of all rules that existed at some point in the history of Newclid"""
 
