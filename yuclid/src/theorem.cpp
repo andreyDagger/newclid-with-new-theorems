@@ -24,6 +24,7 @@
 #include "statement/cong.hpp"
 #include "statement/congruent_triangles.hpp"
 #include "statement/cyclic.hpp"
+#include "statement/ncyclic.hpp"
 #include "statement/eqn_statement.hpp"
 #include "statement/eqratio.hpp"
 #include "statement/equal_angles.hpp"
@@ -60,6 +61,7 @@
 #include <ranges>
 #include <utility>
 #include <vector>
+
 
 using namespace std;
 
@@ -609,7 +611,6 @@ namespace Yuclid {
 
   Theorem Theorem::radical_axes(const Point &p, const Point &p1, const Point &q, const Point &q1, const Point &e, const Point &f, const Point &c, const Point &r, const Point &s) {
     Theorem thm("Radical axes.", "r94");
-    // cerr << "THEOREM: " << p.name() << " " << p1.name() << " " << q.name() << " "
     thm
     .add_hypothesis<CyclicQuadrangle>(p1, c, p, e)
     .add_hypothesis<CyclicQuadrangle>(q1, c, q, f)
@@ -618,6 +619,7 @@ namespace Yuclid {
     .add_hypothesis<Collinear>(r, q1, q)
     .add_hypothesis<Collinear>(s, c, r)
     .add_hypothesis<Collinear>(s, e, f)
+    // .add_hypothesis<NonCyclicQuadrangle>(p1, c, q1, p)
     .add_conclusion<CyclicQuadrangle>(p, p1, q, q1);
     return thm;
   }

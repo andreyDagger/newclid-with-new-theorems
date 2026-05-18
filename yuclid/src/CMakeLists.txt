@@ -34,6 +34,7 @@ add_library(yuclid
   statement/line_angle_eq.cpp
   statement/midpoint.cpp
   statement/ncoll.cpp
+  statement/ncyclic.cpp
   statement/npara.cpp
   statement/nperp.cpp
   statement/not_equal.cpp

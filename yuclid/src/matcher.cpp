@@ -25,6 +25,7 @@
 #include "statement/coll.hpp"
 #include "statement/angle_eq.hpp"
 #include "statement/cyclic.hpp"
+#include "statement/ncyclic.hpp"
 #include "statement/midpoint.hpp"
 #include "statement/orthocenter.hpp"
 #include "statement/para.hpp"
@@ -680,8 +681,7 @@ namespace Yuclid {
                     for (const auto& pt_s : m_problem->all_points()) {
                       if (pt_s.is_close(pt_p) || pt_s.is_close(pt_p1) || pt_s.is_close(pt_c) || pt_s.is_close(pt_e) || pt_s.is_close(pt_q) || pt_s.is_close(pt_q1) || pt_s.is_close(pt_f) || pt_s.is_close(pt_r)) continue;
                       if (!Collinear(pt_s, pt_c, pt_r).check_equations() || !Collinear(pt_s, pt_e, pt_f).check_equations()) continue;
-                      if (!EqualRatios(Dist(pt_s, pt_p), Dist(pt_s, pt_q), Dist(pt_s, pt_f), Dist(pt_s, pt_e)).check_equations()) continue;
-                      // cerr << "HERE: " << pt_p.name() << " " << pt_p1.name() << " " << pt_c.name() << " " << pt_e.name() << " " << pt_q.name() << " " << pt_q1.name() << " " << pt_f.name() << " " << pt_r.name() << " " << pt_s.name() << "\n";
+                      if (!EqualRatios(Dist(pt_s, pt_p), Dist(pt_s, pt_q), Dist(pt_s, pt_f), Dist(pt_s, pt_e)).check_equations()) continue; // !NonCyclicQuadrangle(pt_p1, pt_c, pt_q1, pt_p).check_equations()
                       insert_theorem(Theorem::radical_axes(pt_p, pt_p1, pt_q, pt_q1, pt_e, pt_f, pt_c, pt_r, pt_s));
                     }
                   }

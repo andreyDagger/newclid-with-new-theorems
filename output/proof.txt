@@ -2,21 +2,21 @@
 
 ## Points
 
-- A(0.4178, -0.6781)
-- B(-0.2756, -0.4759)
-- C(0.7704, 0.4415)
-- E(0.7027, 0.2267)
-- F(0.5697, 0.2655)
-- P(0.1902, 0.3762)
-- Q(1.4525, 0.0081)
-- R(0.4093, 0.0038)
-- S(0.6144, 0.2525)
-- T(-0.8432, -1.5144)
-- U(-0.0426, -0.5439)
-- A₁(0.2707, 0.0032)
-- B₁(0.5547, -0.2434)
-- P₁(0.3050, 0.1809)
-- Q₁(0.4944, 0.0041)
+- A(0.2826, -0.5767)
+- B(-0.3714, 1.1407)
+- C(-0.6915, -1.5945)
+- E(-1.2188, -2.1453)
+- F(-0.8648, -3.0748)
+- P(-1.8419, -0.5090)
+- Q(0.7928, -7.4272)
+- R(-0.5093, -0.8525)
+- S(-0.9805, -2.7709)
+- T(0.1142, 1.6855)
+- U(-0.1576, 0.5792)
+- A₁(-0.5693, -0.5496)
+- B₁(-0.0858, -0.9616)
+- P₁(-0.8523, -0.7641)
+- Q₁(-0.4951, -0.9238)
 
 ## Assumptions:
 
@@ -24,179 +24,185 @@
 [C1] : A, B₁, C are collinear
 [C2] : A, Q, T are collinear
 [C3] : A₁, B, C are collinear
-[C4] : Q, Q₁, R are collinear
-[C5] : A₁, Q, Q₁ are collinear
+[C4] : A₁, Q, Q₁ are collinear
+[C5] : Q, Q₁, R are collinear
 [C6] : B, B₁, Q are collinear
 [C7] : B, P, T are collinear
-[C8] : B₁, P, P₁ are collinear
-[C9] : P, P₁, R are collinear
-[C10] : R, S, T are collinear
-[C11] : F, P, Q are collinear
-[C12] : P, Q, S are collinear
-[C13] : E, P, Q are collinear
-[C14] : ∠(AB,AC) = ∠(PP₁,CP₁)
-[C15] : AB ∥ PQ
-[C16] : A, C, E are collinear
-[C17] : ∠(AB,BC) = ∠(QQ₁,CQ₁)
-[C18] : B, C, F are collinear
-[C19] : A, B, U are collinear
-[C20] : R, T, U are collinear
+[C8] : P, P₁, R are collinear
+[C9] : B₁, P, P₁ are collinear
+[C10] : R, T, U are collinear
+[C11] : R, S, T are collinear
+[C12] : F, P, Q are collinear
+[C13] : P, Q, S are collinear
+[C14] : E, P, Q are collinear
+[C15] : ∠(AB,AC) = ∠(PP₁,CP₁)
+[C16] : AB ∥ PQ
+[C17] : A, C, E are collinear
+[C18] : ∠(AB,BC) = ∠(QQ₁,CQ₁)
+[C19] : B, C, F are collinear
+[C20] : A, B, U are collinear
 
 ## Numerical checks
 
-[N0] : Q ≠ Q₁
-[N1] : Q ≠ R
-[N2] : Q₁ ≠ R
-[N3] : A₁ ≠ Q
-[N4] : A₁ ≠ Q₁
+[N0] : A₁ ≠ Q
+[N1] : A₁ ≠ Q₁
+[N2] : Q ≠ Q₁
+[N3] : Q ≠ R
+[N4] : Q₁ ≠ R
 [N5] : A₁ ≠ R
-[N6] : B₁ ≠ P
-[N7] : B₁ ≠ P₁
-[N8] : P ≠ P₁
-[N9] : P ≠ R
-[N10] : P₁ ≠ R
+[N6] : P ≠ P₁
+[N7] : P ≠ R
+[N8] : P₁ ≠ R
+[N9] : B₁ ≠ P
+[N10] : B₁ ≠ P₁
 [N11] : B₁ ≠ R
 [N12] : C ≠ R
 [N13] : C ≠ T
 [N14] : R ≠ T
-[N15] : R ≠ S
-[N16] : S ≠ T
-[N17] : C ≠ S
-[N18] : F ≠ P
-[N19] : F ≠ Q
-[N20] : P ≠ Q
-[N21] : P ≠ S
-[N22] : Q ≠ S
-[N23] : F ≠ S
-[N24] : E ≠ P
-[N25] : E ≠ Q
-[N26] : E ≠ S
-[N27] : A ≠ C
-[N28] : A ≠ E
-[N29] : C ≠ E
-[N30] : C, E, P₁ are not collinear
-[N31] : B ≠ C
-[N32] : B ≠ F
-[N33] : C ≠ F
-[N34] : C, F, Q₁ are not collinear
-[N35] : ▲ABC has the same orientation as ▲CEF
-[N36] : E ≠ F
-[N37] : ▲ACU has the same orientation as ▲CSE
-[N38] : A ≠ B
-[N39] : A ≠ U
-[N40] : B ≠ U
-[N41] : R ≠ U
-[N42] : T ≠ U
-[N43] : C ≠ U
-[N44] : ▲ATU has the same orientation as ▲QTS
-[N45] : A ≠ Q
-[N46] : A ≠ T
-[N47] : Q ≠ T
-[N48] : ▲BCU has the same orientation as ▲CSF
-[N49] : ▲BTU has the same orientation as ▲PTS
-[N50] : B ≠ P
-[N51] : B ≠ T
-[N52] : P ≠ T
+[N15] : R ≠ U
+[N16] : T ≠ U
+[N17] : C ≠ U
+[N18] : R ≠ S
+[N19] : S ≠ T
+[N20] : S ≠ U
+[N21] : C ≠ S
+[N22] : F ≠ P
+[N23] : F ≠ Q
+[N24] : P ≠ Q
+[N25] : P ≠ S
+[N26] : Q ≠ S
+[N27] : F ≠ S
+[N28] : E ≠ P
+[N29] : E ≠ Q
+[N30] : E ≠ S
+[N31] : A ≠ C
+[N32] : A ≠ E
+[N33] : C ≠ E
+[N34] : C, E, P₁ are not collinear
+[N35] : B ≠ C
+[N36] : B ≠ F
+[N37] : C ≠ F
+[N38] : C, F, Q₁ are not collinear
+[N39] : ▲ACU has the same orientation as ▲CSE
+[N40] : A ≠ B
+[N41] : A ≠ U
+[N42] : B ≠ U
+[N43] : ▲ABC has the same orientation as ▲CEF
+[N44] : E ≠ F
+[N45] : ▲ABT has the same orientation as ▲PTQ
+[N46] : A ≠ Q
+[N47] : A ≠ T
+[N48] : Q ≠ T
+[N49] : B ≠ P
+[N50] : B ≠ T
+[N51] : P ≠ T
+[N52] : ▲ATU has the same orientation as ▲QTS
+[N53] : ▲BCU has the same orientation as ▲CSF
+[N54] : ▲BTU has the same orientation as ▲PTS
 
 
 # Goals
 
-PP₁QQ₁ are cyclic : Proved [82]
+PP₁QQ₁ are cyclic : Proved [86]
 
 
 # Proof:
 
-000. | Q, Q₁, R are collinear [C4], Q ≠ Q₁ [N0], Q ≠ R [N1], Q₁ ≠ R [N2] =(r82 Parallel from collinear)> QR ∥ QQ₁ [0]
-001. | A₁, Q, Q₁ are collinear [C5], A₁ ≠ Q [N3], A₁ ≠ Q₁ [N4], Q ≠ Q₁ [N0] =(r82 Parallel from collinear)> A₁Q₁ ∥ QQ₁ [1]
-002. | Q, Q₁, R are collinear [C4], Q ≠ Q₁ [N0], Q ≠ R [N1], Q₁ ≠ R [N2] =(r82 Parallel from collinear)> Q₁R ∥ QQ₁ [2]
-003. | A₁Q₁ ∥ QQ₁ [1], Q₁R ∥ QQ₁ [2] =(AR Deduction)> Q₁R ∥ A₁Q₁ [3]
-004. | Q₁R ∥ A₁Q₁ [3] =(r28 Overlapping parallels)> A₁, Q₁, R are collinear [4]
-005. | A₁, Q₁, R are collinear [4], A₁ ≠ Q₁ [N4], A₁ ≠ R [N5], Q₁ ≠ R [N2] =(r82 Parallel from collinear)> Q₁R ∥ A₁R [5]
-006. | QR ∥ QQ₁ [0], Q₁R ∥ A₁R [5], Q₁R ∥ QQ₁ [2] =(AR Deduction)> QR ∥ A₁R [6]
+000. | A₁, Q, Q₁ are collinear [C4], A₁ ≠ Q [N0], A₁ ≠ Q₁ [N1], Q ≠ Q₁ [N2] =(r82 Parallel from collinear)> QQ₁ ∥ A₁Q₁ [0]
+001. | Q, Q₁, R are collinear [C5], Q ≠ Q₁ [N2], Q ≠ R [N3], Q₁ ≠ R [N4] =(r82 Parallel from collinear)> Q₁R ∥ QQ₁ [1]
+002. | QQ₁ ∥ A₁Q₁ [0], Q₁R ∥ QQ₁ [1] =(AR Deduction)> Q₁R ∥ A₁Q₁ [2]
+003. | Q₁R ∥ A₁Q₁ [2] =(r28 Overlapping parallels)> A₁, Q₁, R are collinear [3]
+004. | A₁, Q₁, R are collinear [3], A₁ ≠ Q₁ [N1], A₁ ≠ R [N5], Q₁ ≠ R [N4] =(r82 Parallel from collinear)> A₁R ∥ Q₁R [4]
+005. | Q, Q₁, R are collinear [C5], Q ≠ Q₁ [N2], Q ≠ R [N3], Q₁ ≠ R [N4] =(r82 Parallel from collinear)> QR ∥ QQ₁ [5]
+006. | A₁R ∥ Q₁R [4], QR ∥ QQ₁ [5], Q₁R ∥ QQ₁ [1] =(AR Deduction)> QR ∥ A₁R [6]
 007. | QR ∥ A₁R [6] =(r28 Overlapping parallels)> A₁, Q, R are collinear [7]
-008. | B₁, P, P₁ are collinear [C8], B₁ ≠ P [N6], B₁ ≠ P₁ [N7], P ≠ P₁ [N8] =(r82 Parallel from collinear)> PP₁ ∥ B₁P₁ [8]
-009. | P, P₁, R are collinear [C9], P ≠ P₁ [N8], P ≠ R [N9], P₁ ≠ R [N10] =(r82 Parallel from collinear)> P₁R ∥ PP₁ [9]
-010. | PP₁ ∥ B₁P₁ [8], P₁R ∥ PP₁ [9] =(AR Deduction)> P₁R ∥ B₁P₁ [10]
-011. | P₁R ∥ B₁P₁ [10] =(r28 Overlapping parallels)> B₁, P₁, R are collinear [11]
-012. | B₁, P₁, R are collinear [11], B₁ ≠ P₁ [N7], B₁ ≠ R [N11], P₁ ≠ R [N10] =(r82 Parallel from collinear)> B₁R ∥ P₁R [12]
-013. | P, P₁, R are collinear [C9], P ≠ P₁ [N8], P ≠ R [N9], P₁ ≠ R [N10] =(r82 Parallel from collinear)> PR ∥ PP₁ [13]
-014. | B₁R ∥ P₁R [12], PR ∥ PP₁ [13], P₁R ∥ PP₁ [9] =(AR Deduction)> PR ∥ B₁R [14]
+008. | P, P₁, R are collinear [C8], P ≠ P₁ [N6], P ≠ R [N7], P₁ ≠ R [N8] =(r82 Parallel from collinear)> PP₁ ∥ PR [8]
+009. | P, P₁, R are collinear [C8], P ≠ P₁ [N6], P ≠ R [N7], P₁ ≠ R [N8] =(r82 Parallel from collinear)> PP₁ ∥ P₁R [9]
+010. | B₁, P, P₁ are collinear [C9], B₁ ≠ P [N9], B₁ ≠ P₁ [N10], P ≠ P₁ [N6] =(r82 Parallel from collinear)> PP₁ ∥ B₁P₁ [10]
+011. | PP₁ ∥ B₁P₁ [10], PP₁ ∥ P₁R [9] =(AR Deduction)> B₁P₁ ∥ P₁R [11]
+012. | B₁P₁ ∥ P₁R [11] =(r28 Overlapping parallels)> B₁, P₁, R are collinear [12]
+013. | B₁, P₁, R are collinear [12], B₁ ≠ P₁ [N10], B₁ ≠ R [N11], P₁ ≠ R [N8] =(r82 Parallel from collinear)> P₁R ∥ B₁R [13]
+014. | PP₁ ∥ PR [8], PP₁ ∥ P₁R [9], P₁R ∥ B₁R [13] =(AR Deduction)> PR ∥ B₁R [14]
 015. | PR ∥ B₁R [14] =(r28 Overlapping parallels)> B₁, P, R are collinear [15]
 016. | A, A₁, P are collinear [C0], A, B₁, C are collinear [C1], A, Q, T are collinear [C2], A₁, B, C are collinear [C3], A₁, Q, R are collinear [7], B, B₁, Q are collinear [C6], B, P, T are collinear [C7], B₁, P, R are collinear [15] =(r93 Pappus)> C, R, T are collinear [16]
 017. | C, R, T are collinear [16], C ≠ R [N12], C ≠ T [N13], R ≠ T [N14] =(r82 Parallel from collinear)> CR ∥ CT [17]
-018. | C, R, T are collinear [16], C ≠ R [N12], C ≠ T [N13], R ≠ T [N14] =(r82 Parallel from collinear)> CR ∥ RT [18]
-019. | R, S, T are collinear [C10], R ≠ S [N15], R ≠ T [N14], S ≠ T [N16] =(r82 Parallel from collinear)> RT ∥ RS [19]
-020. | R, S, T are collinear [C10], R ≠ S [N15], R ≠ T [N14], S ≠ T [N16] =(r82 Parallel from collinear)> ST ∥ RS [20]
-021. | CR ∥ CT [17], CR ∥ RT [18], RT ∥ RS [19], ST ∥ RS [20] =(AR Deduction)> CT ∥ ST [21]
-022. | CT ∥ ST [21] =(r28 Overlapping parallels)> C, S, T are collinear [22]
-023. | C, S, T are collinear [22], C ≠ S [N17], C ≠ T [N13], S ≠ T [N16] =(r82 Parallel from collinear)> CS ∥ ST [23]
-024. | CS ∥ ST [23], ST ∥ RS [20] =(AR Deduction)> CS ∥ RS [24]
-025. | CS ∥ RS [24] =(r28 Overlapping parallels)> C, R, S are collinear [25]
-026. | F, P, Q are collinear [C11], F ≠ P [N18], F ≠ Q [N19], P ≠ Q [N20] =(r82 Parallel from collinear)> PQ ∥ FP [26]
-027. | P, Q, S are collinear [C12], P ≠ Q [N20], P ≠ S [N21], Q ≠ S [N22] =(r82 Parallel from collinear)> PS ∥ PQ [27]
-028. | PQ ∥ FP [26], PS ∥ PQ [27] =(AR Deduction)> PS ∥ FP [28]
-029. | PS ∥ FP [28] =(r28 Overlapping parallels)> F, P, S are collinear [29]
-030. | F, P, S are collinear [29], F ≠ P [N18], F ≠ S [N23], P ≠ S [N21] =(r82 Parallel from collinear)> PS ∥ FS [30]
-031. | P, Q, S are collinear [C12], P ≠ Q [N20], P ≠ S [N21], Q ≠ S [N22] =(r82 Parallel from collinear)> PS ∥ QS [31]
-032. | E, P, Q are collinear [C13], E ≠ P [N24], E ≠ Q [N25], P ≠ Q [N20] =(r82 Parallel from collinear)> EP ∥ EQ [32]
-033. | E, P, Q are collinear [C13], E ≠ P [N24], E ≠ Q [N25], P ≠ Q [N20] =(r82 Parallel from collinear)> EP ∥ PQ [33]
-034. | EP ∥ EQ [32], EP ∥ PQ [33], PS ∥ PQ [27], PS ∥ QS [31] =(AR Deduction)> EQ ∥ QS [34]
-035. | EQ ∥ QS [34] =(r28 Overlapping parallels)> E, Q, S are collinear [35]
-036. | E, Q, S are collinear [35], E ≠ Q [N25], E ≠ S [N26], Q ≠ S [N22] =(r82 Parallel from collinear)> QS ∥ ES [36]
-037. | PS ∥ FS [30], PS ∥ QS [31], QS ∥ ES [36] =(AR Deduction)> FS ∥ ES [37]
-038. | FS ∥ ES [37] =(r28 Overlapping parallels)> E, F, S are collinear [38]
-039. | A, C, E are collinear [C16], A ≠ C [N27], A ≠ E [N28], C ≠ E [N29] =(r82 Parallel from collinear)> AE ∥ AC [39]
-040. | A, C, E are collinear [C16], A ≠ C [N27], A ≠ E [N28], C ≠ E [N29] =(r82 Parallel from collinear)> AE ∥ CE [40]
-041. | ∠(AB,AC) = ∠(PP₁,CP₁) [C14], AB ∥ PQ [C15], AE ∥ AC [39], AE ∥ CE [40], EP ∥ PQ [33] =(AR Deduction)> ∠(CE,CP₁) = ∠(EP,PP₁) [41]
-042. | ∠(CE,CP₁) = ∠(EP,PP₁) [41], C, E, P₁ are not collinear [N30] =(r04 Congruent angles are in a cyclic)> CEPP₁ are cyclic [42]
-043. | B, C, F are collinear [C18], B ≠ C [N31], B ≠ F [N32], C ≠ F [N33] =(r82 Parallel from collinear)> BC ∥ BF [43]
-044. | B, C, F are collinear [C18], B ≠ C [N31], B ≠ F [N32], C ≠ F [N33] =(r82 Parallel from collinear)> CF ∥ BF [44]
-045. | F, P, Q are collinear [C11], F ≠ P [N18], F ≠ Q [N19], P ≠ Q [N20] =(r82 Parallel from collinear)> FP ∥ FQ [45]
-046. | ∠(AB,BC) = ∠(QQ₁,CQ₁) [C17], AB ∥ PQ [C15], BC ∥ BF [43], CF ∥ BF [44], FP ∥ FQ [45], PQ ∥ FP [26] =(AR Deduction)> ∠(CF,CQ₁) = ∠(FQ,QQ₁) [46]
-047. | ∠(CF,CQ₁) = ∠(FQ,QQ₁) [46], C, F, Q₁ are not collinear [N34] =(r04 Congruent angles are in a cyclic)> CFQQ₁ are cyclic [47]
-048. | E, F, S are collinear [38], E ≠ F [N36], E ≠ S [N26], F ≠ S [N23] =(r82 Parallel from collinear)> EF ∥ ES [48]
-049. | AB ∥ PQ [C15], AE ∥ AC [39], AE ∥ CE [40], EF ∥ ES [48], PS ∥ PQ [27], PS ∥ QS [31], QS ∥ ES [36] =(AR Deduction)> ∠(AB,AC) = ∠(EF,CE) [49]
-050. | AE ∥ AC [39], AE ∥ CE [40], BC ∥ BF [43], CF ∥ BF [44] =(AR Deduction)> ∠(AC,BC) = ∠(CE,CF) [50]
-051. | ∠(AB,AC) = ∠(EF,CE) [49], ∠(AC,BC) = ∠(CE,CF) [50], ▲ABC has the same orientation as ▲CEF [N35] =(r34 AA Similarity of triangles (Direct))> ▲ABC ≅ ▲EFC [51]
-052. | ▲ABC has the same orientation as ▲CEF [N35], ▲ABC ≅ ▲EFC [51] =(r52 Properties of similar triangles (Direct))> AB:AC = EF:CE [52]
-053. | ▲ABC has the same orientation as ▲CEF [N35], ▲ABC ≅ ▲EFC [51] =(r52 Properties of similar triangles (Direct))> AB:BC = EF:CF [53]
-054. | A, B, U are collinear [C19], A ≠ B [N38], A ≠ U [N39], B ≠ U [N40] =(r82 Parallel from collinear)> AU ∥ AB [54]
-055. | AB ∥ PQ [C15], AE ∥ AC [39], AE ∥ CE [40], AU ∥ AB [54], PS ∥ PQ [27], PS ∥ QS [31], QS ∥ ES [36] =(AR Deduction)> ∠(AC,AU) = ∠(CE,ES) [55]
-056. | R, T, U are collinear [C20], R ≠ T [N14], R ≠ U [N41], T ≠ U [N42] =(r82 Parallel from collinear)> RU ∥ RT [56]
-057. | R, T, U are collinear [C20], R ≠ T [N14], R ≠ U [N41], T ≠ U [N42] =(r82 Parallel from collinear)> RU ∥ TU [57]
-058. | CR ∥ CT [17], CR ∥ RT [18], RU ∥ RT [56], RU ∥ TU [57] =(AR Deduction)> CT ∥ TU [58]
-059. | CT ∥ TU [58] =(r28 Overlapping parallels)> C, T, U are collinear [59]
-060. | C, T, U are collinear [59], C ≠ T [N13], C ≠ U [N43], T ≠ U [N42] =(r82 Parallel from collinear)> TU ∥ CU [60]
-061. | AE ∥ AC [39], AE ∥ CE [40], CS ∥ ST [23], RT ∥ RS [19], RU ∥ RT [56], RU ∥ TU [57], ST ∥ RS [20], TU ∥ CU [60] =(AR Deduction)> ∠(AC,CU) = ∠(CE,CS) [61]
-062. | ∠(AC,AU) = ∠(CE,ES) [55], ∠(AC,CU) = ∠(CE,CS) [61], ▲ACU has the same orientation as ▲CSE [N37] =(r34 AA Similarity of triangles (Direct))> ▲ACU ≅ ▲ECS [62]
-063. | ▲ACU has the same orientation as ▲CSE [N37], ▲ACU ≅ ▲ECS [62] =(r52 Properties of similar triangles (Direct))> AC:AU = CE:ES [63]
-064. | A, Q, T are collinear [C2], A ≠ Q [N45], A ≠ T [N46], Q ≠ T [N47] =(r82 Parallel from collinear)> AT ∥ AQ [64]
-065. | A, Q, T are collinear [C2], A ≠ Q [N45], A ≠ T [N46], Q ≠ T [N47] =(r82 Parallel from collinear)> QT ∥ AQ [65]
-066. | AT ∥ AQ [64], QT ∥ AQ [65], RT ∥ RS [19], RU ∥ RT [56], RU ∥ TU [57], ST ∥ RS [20] =(AR Deduction)> ∠(AT,TU) = ∠(QT,ST) [66]
-067. | AB ∥ PQ [C15], AU ∥ AB [54], PS ∥ PQ [27], PS ∥ QS [31], RT ∥ RS [19], RU ∥ RT [56], RU ∥ TU [57], ST ∥ RS [20] =(AR Deduction)> ∠(AU,TU) = ∠(QS,ST) [67]
-068. | ∠(AT,TU) = ∠(QT,ST) [66], ∠(AU,TU) = ∠(QS,ST) [67], ▲ATU has the same orientation as ▲QTS [N44] =(r34 AA Similarity of triangles (Direct))> ▲ATU ≅ ▲QTS [68]
-069. | ▲ATU has the same orientation as ▲QTS [N44], ▲ATU ≅ ▲QTS [68] =(r52 Properties of similar triangles (Direct))> AU:QS = TU:ST [69]
-070. | BC ∥ BF [43], CF ∥ BF [44], CS ∥ ST [23], RT ∥ RS [19], RU ∥ RT [56], RU ∥ TU [57], ST ∥ RS [20], TU ∥ CU [60] =(AR Deduction)> ∠(BC,CU) = ∠(CF,CS) [70]
-071. | A, B, U are collinear [C19], A ≠ B [N38], A ≠ U [N39], B ≠ U [N40] =(r82 Parallel from collinear)> BU ∥ AU [71]
-072. | AB ∥ PQ [C15], AU ∥ AB [54], BU ∥ AU [71], CS ∥ ST [23], PS ∥ FS [30], PS ∥ PQ [27], RT ∥ RS [19], RU ∥ RT [56], RU ∥ TU [57], ST ∥ RS [20], TU ∥ CU [60] =(AR Deduction)> ∠(BU,CU) = ∠(FS,CS) [72]
-073. | ∠(BC,CU) = ∠(CF,CS) [70], ∠(BU,CU) = ∠(FS,CS) [72], ▲BCU has the same orientation as ▲CSF [N48] =(r34 AA Similarity of triangles (Direct))> ▲BCU ≅ ▲FCS [73]
-074. | ▲BCU has the same orientation as ▲CSF [N48], ▲BCU ≅ ▲FCS [73] =(r52 Properties of similar triangles (Direct))> BC:BU = CF:FS [74]
-075. | B, P, T are collinear [C7], B ≠ P [N50], B ≠ T [N51], P ≠ T [N52] =(r82 Parallel from collinear)> BP ∥ BT [75]
-076. | B, P, T are collinear [C7], B ≠ P [N50], B ≠ T [N51], P ≠ T [N52] =(r82 Parallel from collinear)> BP ∥ PT [76]
-077. | AB ∥ PQ [C15], AU ∥ AB [54], BP ∥ BT [75], BP ∥ PT [76], BU ∥ AU [71], PS ∥ PQ [27] =(AR Deduction)> ∠(BT,BU) = ∠(PT,PS) [77]
-078. | BP ∥ BT [75], BP ∥ PT [76], RT ∥ RS [19], RU ∥ RT [56], RU ∥ TU [57], ST ∥ RS [20] =(AR Deduction)> ∠(BT,TU) = ∠(PT,ST) [78]
-079. | ∠(BT,BU) = ∠(PT,PS) [77], ∠(BT,TU) = ∠(PT,ST) [78], ▲BTU has the same orientation as ▲PTS [N49] =(r34 AA Similarity of triangles (Direct))> ▲BTU ≅ ▲PTS [79]
-080. | ▲BTU has the same orientation as ▲PTS [N49], ▲BTU ≅ ▲PTS [79] =(r52 Properties of similar triangles (Direct))> BU:PS = TU:ST [80]
-081. | AB:AC = EF:CE [52], AB:BC = EF:CF [53], AC:AU = CE:ES [63], AU:QS = TU:ST [69], BC:BU = CF:FS [74], BU:PS = TU:ST [80] =(AR Deduction)> ES:FS = QS:PS [81]
-082. | C, R, S are collinear [25], E, F, S are collinear [38], P, P₁, R are collinear [C9], Q, Q₁, R are collinear [C4], CEPP₁ are cyclic [42], CFQQ₁ are cyclic [47], ES:FS = QS:PS [81] =(r94 Radial axis)> PP₁QQ₁ are cyclic [82]
+018. | C, R, T are collinear [16], C ≠ R [N12], C ≠ T [N13], R ≠ T [N14] =(r82 Parallel from collinear)> RT ∥ CR [18]
+019. | R, T, U are collinear [C10], R ≠ T [N14], R ≠ U [N15], T ≠ U [N16] =(r82 Parallel from collinear)> RT ∥ RU [19]
+020. | R, T, U are collinear [C10], R ≠ T [N14], R ≠ U [N15], T ≠ U [N16] =(r82 Parallel from collinear)> TU ∥ RU [20]
+021. | CR ∥ CT [17], RT ∥ CR [18], RT ∥ RU [19], TU ∥ RU [20] =(AR Deduction)> TU ∥ CT [21]
+022. | TU ∥ CT [21] =(r28 Overlapping parallels)> C, T, U are collinear [22]
+023. | C, T, U are collinear [22], C ≠ T [N13], C ≠ U [N17], T ≠ U [N16] =(r82 Parallel from collinear)> CU ∥ TU [23]
+024. | R, S, T are collinear [C11], R ≠ S [N18], R ≠ T [N14], S ≠ T [N19] =(r82 Parallel from collinear)> RS ∥ ST [24]
+025. | R, S, T are collinear [C11], R ≠ S [N18], R ≠ T [N14], S ≠ T [N19] =(r82 Parallel from collinear)> RT ∥ RS [25]
+026. | RS ∥ ST [24], RT ∥ RS [25], RT ∥ RU [19], TU ∥ RU [20] =(AR Deduction)> TU ∥ ST [26]
+027. | TU ∥ ST [26] =(r28 Overlapping parallels)> S, T, U are collinear [27]
+028. | S, T, U are collinear [27], S ≠ T [N19], S ≠ U [N20], T ≠ U [N16] =(r82 Parallel from collinear)> SU ∥ TU [28]
+029. | CU ∥ TU [23], SU ∥ TU [28] =(AR Deduction)> SU ∥ CU [29]
+030. | SU ∥ CU [29] =(r28 Overlapping parallels)> C, S, U are collinear [30]
+031. | C, S, U are collinear [30], C ≠ S [N21], C ≠ U [N17], S ≠ U [N20] =(r82 Parallel from collinear)> CS ∥ CU [31]
+032. | CS ∥ CU [31], CU ∥ TU [23], RT ∥ CR [18], RT ∥ RU [19], TU ∥ RU [20] =(AR Deduction)> CS ∥ CR [32]
+033. | CS ∥ CR [32] =(r28 Overlapping parallels)> C, R, S are collinear [33]
+034. | F, P, Q are collinear [C12], F ≠ P [N22], F ≠ Q [N23], P ≠ Q [N24] =(r82 Parallel from collinear)> FQ ∥ FP [34]
+035. | F, P, Q are collinear [C12], F ≠ P [N22], F ≠ Q [N23], P ≠ Q [N24] =(r82 Parallel from collinear)> PQ ∥ FP [35]
+036. | P, Q, S are collinear [C13], P ≠ Q [N24], P ≠ S [N25], Q ≠ S [N26] =(r82 Parallel from collinear)> PS ∥ PQ [36]
+037. | P, Q, S are collinear [C13], P ≠ Q [N24], P ≠ S [N25], Q ≠ S [N26] =(r82 Parallel from collinear)> PS ∥ QS [37]
+038. | FQ ∥ FP [34], PQ ∥ FP [35], PS ∥ PQ [36], PS ∥ QS [37] =(AR Deduction)> FQ ∥ QS [38]
+039. | FQ ∥ QS [38] =(r28 Overlapping parallels)> F, Q, S are collinear [39]
+040. | F, Q, S are collinear [39], F ≠ Q [N23], F ≠ S [N27], Q ≠ S [N26] =(r82 Parallel from collinear)> FS ∥ QS [40]
+041. | E, P, Q are collinear [C14], E ≠ P [N28], E ≠ Q [N29], P ≠ Q [N24] =(r82 Parallel from collinear)> EP ∥ PQ [41]
+042. | EP ∥ PQ [41], PS ∥ PQ [36] =(AR Deduction)> PS ∥ EP [42]
+043. | PS ∥ EP [42] =(r28 Overlapping parallels)> E, P, S are collinear [43]
+044. | E, P, S are collinear [43], E ≠ P [N28], E ≠ S [N30], P ≠ S [N25] =(r82 Parallel from collinear)> PS ∥ ES [44]
+045. | FS ∥ QS [40], PS ∥ ES [44], PS ∥ QS [37] =(AR Deduction)> FS ∥ ES [45]
+046. | FS ∥ ES [45] =(r28 Overlapping parallels)> E, F, S are collinear [46]
+047. | A, C, E are collinear [C17], A ≠ C [N31], A ≠ E [N32], C ≠ E [N33] =(r82 Parallel from collinear)> AC ∥ CE [47]
+048. | ∠(AB,AC) = ∠(PP₁,CP₁) [C15], AB ∥ PQ [C16], AC ∥ CE [47], EP ∥ PQ [41] =(AR Deduction)> ∠(CE,CP₁) = ∠(EP,PP₁) [48]
+049. | ∠(CE,CP₁) = ∠(EP,PP₁) [48], C, E, P₁ are not collinear [N34] =(r04 Congruent angles are in a cyclic)> CEPP₁ are cyclic [49]
+050. | B, C, F are collinear [C19], B ≠ C [N35], B ≠ F [N36], C ≠ F [N37] =(r82 Parallel from collinear)> CF ∥ BC [50]
+051. | ∠(AB,BC) = ∠(QQ₁,CQ₁) [C18], AB ∥ PQ [C16], CF ∥ BC [50], FQ ∥ FP [34], PQ ∥ FP [35] =(AR Deduction)> ∠(CF,CQ₁) = ∠(FQ,QQ₁) [51]
+052. | ∠(CF,CQ₁) = ∠(FQ,QQ₁) [51], C, F, Q₁ are not collinear [N38] =(r04 Congruent angles are in a cyclic)> CFQQ₁ are cyclic [52]
+053. | A, B, U are collinear [C20], A ≠ B [N40], A ≠ U [N41], B ≠ U [N42] =(r82 Parallel from collinear)> AB ∥ AU [53]
+054. | AB ∥ AU [53], AB ∥ PQ [C16], AC ∥ CE [47], PS ∥ ES [44], PS ∥ PQ [36] =(AR Deduction)> ∠(AC,AU) = ∠(CE,ES) [54]
+055. | AC ∥ CE [47], CS ∥ CU [31] =(AR Deduction)> ∠(AC,CU) = ∠(CE,CS) [55]
+056. | ∠(AC,AU) = ∠(CE,ES) [54], ∠(AC,CU) = ∠(CE,CS) [55], ▲ACU has the same orientation as ▲CSE [N39] =(r34 AA Similarity of triangles (Direct))> ▲ACU ≅ ▲ECS [56]
+057. | ▲ACU has the same orientation as ▲CSE [N39], ▲ACU ≅ ▲ECS [56] =(r52 Properties of similar triangles (Direct))> AC:AU = CE:ES [57]
+058. | E, F, S are collinear [46], E ≠ F [N44], E ≠ S [N30], F ≠ S [N27] =(r82 Parallel from collinear)> EF ∥ ES [58]
+059. | AB ∥ PQ [C16], AC ∥ CE [47], EF ∥ ES [58], PS ∥ ES [44], PS ∥ PQ [36] =(AR Deduction)> ∠(AB,AC) = ∠(EF,CE) [59]
+060. | AB ∥ PQ [C16], CF ∥ BC [50], EF ∥ ES [58], PS ∥ ES [44], PS ∥ PQ [36] =(AR Deduction)> ∠(AB,BC) = ∠(EF,CF) [60]
+061. | ∠(AB,AC) = ∠(EF,CE) [59], ∠(AB,BC) = ∠(EF,CF) [60], ▲ABC has the same orientation as ▲CEF [N43] =(r34 AA Similarity of triangles (Direct))> ▲ABC ≅ ▲EFC [61]
+062. | ▲ABC has the same orientation as ▲CEF [N43], ▲ABC ≅ ▲EFC [61] =(r52 Properties of similar triangles (Direct))> AC:BC = CE:CF [62]
+063. | A, Q, T are collinear [C2], A ≠ Q [N46], A ≠ T [N47], Q ≠ T [N48] =(r82 Parallel from collinear)> AT ∥ AQ [63]
+064. | A, Q, T are collinear [C2], A ≠ Q [N46], A ≠ T [N47], Q ≠ T [N48] =(r82 Parallel from collinear)> QT ∥ AQ [64]
+065. | AB ∥ PQ [C16], AT ∥ AQ [63], QT ∥ AQ [64] =(AR Deduction)> ∠(AB,AT) = ∠(PQ,QT) [65]
+066. | B, P, T are collinear [C7], B ≠ P [N49], B ≠ T [N50], P ≠ T [N51] =(r82 Parallel from collinear)> BP ∥ BT [66]
+067. | B, P, T are collinear [C7], B ≠ P [N49], B ≠ T [N50], P ≠ T [N51] =(r82 Parallel from collinear)> BP ∥ PT [67]
+068. | AB ∥ PQ [C16], BP ∥ BT [66], BP ∥ PT [67] =(AR Deduction)> ∠(AB,BT) = ∠(PQ,PT) [68]
+069. | ∠(AB,AT) = ∠(PQ,QT) [65], ∠(AB,BT) = ∠(PQ,PT) [68], ▲ABT has the same orientation as ▲PTQ [N45] =(r34 AA Similarity of triangles (Direct))> ▲ABT ≅ ▲QPT [69]
+070. | ▲ABT has the same orientation as ▲PTQ [N45], ▲ABT ≅ ▲QPT [69] =(r52 Properties of similar triangles (Direct))> AT:BT = QT:PT [70]
+071. | AB ∥ AU [53], AB ∥ PQ [C16], AT ∥ AQ [63], PS ∥ PQ [36], PS ∥ QS [37], QT ∥ AQ [64] =(AR Deduction)> ∠(AT,AU) = ∠(QT,QS) [71]
+072. | AB ∥ AU [53], AB ∥ PQ [C16], PS ∥ PQ [36], PS ∥ QS [37], RS ∥ ST [24], RT ∥ RS [25], RT ∥ RU [19], TU ∥ RU [20] =(AR Deduction)> ∠(AU,TU) = ∠(QS,ST) [72]
+073. | ∠(AT,AU) = ∠(QT,QS) [71], ∠(AU,TU) = ∠(QS,ST) [72], ▲ATU has the same orientation as ▲QTS [N52] =(r34 AA Similarity of triangles (Direct))> ▲ATU ≅ ▲QTS [73]
+074. | ▲ATU has the same orientation as ▲QTS [N52], ▲ATU ≅ ▲QTS [73] =(r52 Properties of similar triangles (Direct))> AT:QT = TU:ST [74]
+075. | ▲ATU has the same orientation as ▲QTS [N52], ▲ATU ≅ ▲QTS [73] =(r52 Properties of similar triangles (Direct))> AU:QS = TU:ST [75]
+076. | CF ∥ BC [50], CS ∥ CU [31] =(AR Deduction)> ∠(BC,CU) = ∠(CF,CS) [76]
+077. | A, B, U are collinear [C20], A ≠ B [N40], A ≠ U [N41], B ≠ U [N42] =(r82 Parallel from collinear)> BU ∥ AU [77]
+078. | AB ∥ AU [53], AB ∥ PQ [C16], BU ∥ AU [77], CS ∥ CU [31], FS ∥ QS [40], PS ∥ PQ [36], PS ∥ QS [37] =(AR Deduction)> ∠(BU,CU) = ∠(FS,CS) [78]
+079. | ∠(BC,CU) = ∠(CF,CS) [76], ∠(BU,CU) = ∠(FS,CS) [78], ▲BCU has the same orientation as ▲CSF [N53] =(r34 AA Similarity of triangles (Direct))> ▲BCU ≅ ▲FCS [79]
+080. | ▲BCU has the same orientation as ▲CSF [N53], ▲BCU ≅ ▲FCS [79] =(r52 Properties of similar triangles (Direct))> BC:BU = CF:FS [80]
+081. | AB ∥ AU [53], AB ∥ PQ [C16], BP ∥ BT [66], BP ∥ PT [67], BU ∥ AU [77], PS ∥ PQ [36] =(AR Deduction)> ∠(BT,BU) = ∠(PT,PS) [81]
+082. | BP ∥ BT [66], BP ∥ PT [67], RS ∥ ST [24], RT ∥ RS [25], RT ∥ RU [19], TU ∥ RU [20] =(AR Deduction)> ∠(BT,TU) = ∠(PT,ST) [82]
+083. | ∠(BT,BU) = ∠(PT,PS) [81], ∠(BT,TU) = ∠(PT,ST) [82], ▲BTU has the same orientation as ▲PTS [N54] =(r34 AA Similarity of triangles (Direct))> ▲BTU ≅ ▲PTS [83]
+084. | ▲BTU has the same orientation as ▲PTS [N54], ▲BTU ≅ ▲PTS [83] =(r52 Properties of similar triangles (Direct))> BT:BU = PT:PS [84]
+085. | AC:AU = CE:ES [57], AC:BC = CE:CF [62], AT:BT = QT:PT [70], AT:QT = TU:ST [74], AU:QS = TU:ST [75], BC:BU = CF:FS [80], BT:BU = PT:PS [84] =(AR Deduction)> ES:FS = QS:PS [85]
+086. | C, R, S are collinear [33], E, F, S are collinear [46], P, P₁, R are collinear [C8], Q, Q₁, R are collinear [C5], CEPP₁ are cyclic [49], CFQQ₁ are cyclic [52], ES:FS = QS:PS [85] =(r94 Radial axis)> PP₁QQ₁ are cyclic [86]
 
 
 # Appendix: AR deductions:
 
 
 
-003. | Angle Chasing to prove Q₁R ∥ A₁Q₁:
-| Premise A₁Q₁ ∥ QQ₁ gives a linear equation with coefficients {QQ1: 1, A1Q1: -1}
+002. | Angle Chasing to prove Q₁R ∥ A₁Q₁:
+| Premise QQ₁ ∥ A₁Q₁ gives a linear equation with coefficients {QQ1: 1, A1Q1: -1}
 | Premise Q₁R ∥ QQ₁ gives a linear equation with coefficients {QQ1: 1, RQ1: -1}
 | Then {QQ1: 1, A1Q1: -1} + -1 x {QQ1: 1, RQ1: -1}
 |    = {A1Q1: -1, RQ1: 1}
@@ -205,108 +211,138 @@ We are left with a linear equation with coefficients {A1Q1: -1, RQ1: 1} that giv
 
 
 006. | Angle Chasing to prove QR ∥ A₁R:
+| Premise A₁R ∥ Q₁R gives a linear equation with coefficients {RA1: 1, RQ1: -1}
 | Premise QR ∥ QQ₁ gives a linear equation with coefficients {QR: 1, QQ1: -1}
-| Premise Q₁R ∥ A₁R gives a linear equation with coefficients {RA1: 1, RQ1: -1}
-| Then {QR: 1, QQ1: -1} + -1 x {RA1: 1, RQ1: -1}
-|    = {QR: 1, QQ1: -1, RA1: -1, RQ1: 1}
+| Then {RA1: -1, RQ1: 1} + 1 x {QR: 1, QQ1: -1}
+|    = {RA1: -1, RQ1: 1, QR: 1, QQ1: -1}
 | Premise Q₁R ∥ QQ₁ gives a linear equation with coefficients {QQ1: 1, RQ1: -1}
-| Then {QR: 1, QQ1: -1, RA1: -1, RQ1: 1} + 1 x {QQ1: 1, RQ1: -1}
-|    = {QR: 1, RA1: -1}
-We are left with a linear equation with coefficients {QR: 1, RA1: -1} that gives QR ∥ A₁R
+| Then {RA1: -1, RQ1: 1, QR: 1, QQ1: -1} + 1 x {QQ1: 1, RQ1: -1}
+|    = {RA1: -1, QR: 1}
+We are left with a linear equation with coefficients {RA1: -1, QR: 1} that gives QR ∥ A₁R
 
 
 
-010. | Angle Chasing to prove P₁R ∥ B₁P₁:
+011. | Angle Chasing to prove B₁P₁ ∥ P₁R:
 | Premise PP₁ ∥ B₁P₁ gives a linear equation with coefficients {PP1: 1, B1P1: -1}
-| Premise P₁R ∥ PP₁ gives a linear equation with coefficients {PP1: 1, RP1: -1}
+| Premise PP₁ ∥ P₁R gives a linear equation with coefficients {PP1: 1, RP1: -1}
 | Then {PP1: 1, B1P1: -1} + -1 x {PP1: 1, RP1: -1}
 |    = {B1P1: -1, RP1: 1}
-We are left with a linear equation with coefficients {B1P1: -1, RP1: 1} that gives P₁R ∥ B₁P₁
+We are left with a linear equation with coefficients {B1P1: -1, RP1: 1} that gives B₁P₁ ∥ P₁R
 
 
 
 014. | Angle Chasing to prove PR ∥ B₁R:
-| Premise B₁R ∥ P₁R gives a linear equation with coefficients {RB1: 1, RP1: -1}
-| Premise PR ∥ PP₁ gives a linear equation with coefficients {PR: 1, PP1: -1}
-| Then {RB1: -1, RP1: 1} + 1 x {PR: 1, PP1: -1}
-|    = {RB1: -1, RP1: 1, PR: 1, PP1: -1}
-| Premise P₁R ∥ PP₁ gives a linear equation with coefficients {PP1: 1, RP1: -1}
-| Then {RB1: -1, RP1: 1, PR: 1, PP1: -1} + 1 x {PP1: 1, RP1: -1}
-|    = {RB1: -1, PR: 1}
-We are left with a linear equation with coefficients {RB1: -1, PR: 1} that gives PR ∥ B₁R
+| Premise PP₁ ∥ PR gives a linear equation with coefficients {PR: 1, PP1: -1}
+| Premise PP₁ ∥ P₁R gives a linear equation with coefficients {PP1: 1, RP1: -1}
+| Then {PR: 1, PP1: -1} + 1 x {PP1: 1, RP1: -1}
+|    = {PR: 1, RP1: -1}
+| Premise P₁R ∥ B₁R gives a linear equation with coefficients {RB1: 1, RP1: -1}
+| Then {PR: 1, RP1: -1} + -1 x {RB1: 1, RP1: -1}
+|    = {PR: 1, RB1: -1}
+We are left with a linear equation with coefficients {PR: 1, RB1: -1} that gives PR ∥ B₁R
 
 
 
-021. | Angle Chasing to prove CT ∥ ST:
+021. | Angle Chasing to prove TU ∥ CT:
 | Premise CR ∥ CT gives a linear equation with coefficients {CR: 1, CT: -1}
-| Premise CR ∥ RT gives a linear equation with coefficients {CR: 1, RT: -1}
+| Premise RT ∥ CR gives a linear equation with coefficients {CR: 1, RT: -1}
 | Then {CR: -1, CT: 1} + 1 x {CR: 1, RT: -1}
 |    = {CT: 1, RT: -1}
+| Premise RT ∥ RU gives a linear equation with coefficients {RT: 1, RU: -1}
+| Then {CT: 1, RT: -1} + 1 x {RT: 1, RU: -1}
+|    = {CT: 1, RU: -1}
+| Premise TU ∥ RU gives a linear equation with coefficients {RU: 1, TU: -1}
+| Then {CT: 1, RU: -1} + 1 x {RU: 1, TU: -1}
+|    = {CT: 1, TU: -1}
+We are left with a linear equation with coefficients {CT: 1, TU: -1} that gives TU ∥ CT
+
+
+
+026. | Angle Chasing to prove TU ∥ ST:
+| Premise RS ∥ ST gives a linear equation with coefficients {RS: 1, ST: -1}
 | Premise RT ∥ RS gives a linear equation with coefficients {RS: 1, RT: -1}
-| Then {CT: 1, RT: -1} + -1 x {RS: 1, RT: -1}
-|    = {CT: 1, RS: -1}
-| Premise ST ∥ RS gives a linear equation with coefficients {RS: 1, ST: -1}
-| Then {CT: 1, RS: -1} + 1 x {RS: 1, ST: -1}
-|    = {CT: 1, ST: -1}
-We are left with a linear equation with coefficients {CT: 1, ST: -1} that gives CT ∥ ST
+| Then {RS: -1, ST: 1} + 1 x {RS: 1, RT: -1}
+|    = {ST: 1, RT: -1}
+| Premise RT ∥ RU gives a linear equation with coefficients {RT: 1, RU: -1}
+| Then {ST: 1, RT: -1} + 1 x {RT: 1, RU: -1}
+|    = {ST: 1, RU: -1}
+| Premise TU ∥ RU gives a linear equation with coefficients {RU: 1, TU: -1}
+| Then {ST: 1, RU: -1} + 1 x {RU: 1, TU: -1}
+|    = {ST: 1, TU: -1}
+We are left with a linear equation with coefficients {ST: 1, TU: -1} that gives TU ∥ ST
 
 
 
-024. | Angle Chasing to prove CS ∥ RS:
-| Premise CS ∥ ST gives a linear equation with coefficients {CS: 1, ST: -1}
-| Premise ST ∥ RS gives a linear equation with coefficients {RS: 1, ST: -1}
-| Then {CS: 1, ST: -1} + -1 x {RS: 1, ST: -1}
-|    = {CS: 1, RS: -1}
-We are left with a linear equation with coefficients {CS: 1, RS: -1} that gives CS ∥ RS
+029. | Angle Chasing to prove SU ∥ CU:
+| Premise CU ∥ TU gives a linear equation with coefficients {CU: 1, TU: -1}
+| Premise SU ∥ TU gives a linear equation with coefficients {SU: 1, TU: -1}
+| Then {CU: 1, TU: -1} + -1 x {SU: 1, TU: -1}
+|    = {CU: 1, SU: -1}
+We are left with a linear equation with coefficients {CU: 1, SU: -1} that gives SU ∥ CU
 
 
 
-028. | Angle Chasing to prove PS ∥ FP:
+032. | Angle Chasing to prove CS ∥ CR:
+| Premise CS ∥ CU gives a linear equation with coefficients {CS: 1, CU: -1}
+| Premise CU ∥ TU gives a linear equation with coefficients {CU: 1, TU: -1}
+| Then {CS: -1, CU: 1} + -1 x {CU: 1, TU: -1}
+|    = {CS: -1, TU: 1}
+| Premise RT ∥ CR gives a linear equation with coefficients {CR: 1, RT: -1}
+| Then {CS: -1, TU: 1} + 1 x {CR: 1, RT: -1}
+|    = {CS: -1, TU: 1, CR: 1, RT: -1}
+| Premise RT ∥ RU gives a linear equation with coefficients {RT: 1, RU: -1}
+| Then {CS: -1, TU: 1, CR: 1, RT: -1} + 1 x {RT: 1, RU: -1}
+|    = {CS: -1, TU: 1, CR: 1, RU: -1}
+| Premise TU ∥ RU gives a linear equation with coefficients {RU: 1, TU: -1}
+| Then {CS: -1, TU: 1, CR: 1, RU: -1} + 1 x {RU: 1, TU: -1}
+|    = {CS: -1, CR: 1}
+We are left with a linear equation with coefficients {CS: -1, CR: 1} that gives CS ∥ CR
+
+
+
+038. | Angle Chasing to prove FQ ∥ QS:
+| Premise FQ ∥ FP gives a linear equation with coefficients {FP: 1, FQ: -1}
 | Premise PQ ∥ FP gives a linear equation with coefficients {FP: 1, PQ: -1}
+| Then {FP: -1, FQ: 1} + 1 x {FP: 1, PQ: -1}
+|    = {FQ: 1, PQ: -1}
 | Premise PS ∥ PQ gives a linear equation with coefficients {PQ: 1, PS: -1}
-| Then {FP: 1, PQ: -1} + 1 x {PQ: 1, PS: -1}
-|    = {FP: 1, PS: -1}
-We are left with a linear equation with coefficients {FP: 1, PS: -1} that gives PS ∥ FP
+| Then {FQ: 1, PQ: -1} + 1 x {PQ: 1, PS: -1}
+|    = {FQ: 1, PS: -1}
+| Premise PS ∥ QS gives a linear equation with coefficients {PS: 1, QS: -1}
+| Then {FQ: 1, PS: -1} + 1 x {PS: 1, QS: -1}
+|    = {FQ: 1, QS: -1}
+We are left with a linear equation with coefficients {FQ: 1, QS: -1} that gives FQ ∥ QS
 
 
 
-034. | Angle Chasing to prove EQ ∥ QS:
-| Premise EP ∥ EQ gives a linear equation with coefficients {EP: 1, EQ: -1}
+042. | Angle Chasing to prove PS ∥ EP:
 | Premise EP ∥ PQ gives a linear equation with coefficients {EP: 1, PQ: -1}
-| Then {EP: -1, EQ: 1} + 1 x {EP: 1, PQ: -1}
-|    = {EQ: 1, PQ: -1}
 | Premise PS ∥ PQ gives a linear equation with coefficients {PQ: 1, PS: -1}
-| Then {EQ: 1, PQ: -1} + 1 x {PQ: 1, PS: -1}
-|    = {EQ: 1, PS: -1}
+| Then {EP: 1, PQ: -1} + 1 x {PQ: 1, PS: -1}
+|    = {EP: 1, PS: -1}
+We are left with a linear equation with coefficients {EP: 1, PS: -1} that gives PS ∥ EP
+
+
+
+045. | Angle Chasing to prove FS ∥ ES:
+| Premise FS ∥ QS gives a linear equation with coefficients {FS: 1, QS: -1}
+| Premise PS ∥ ES gives a linear equation with coefficients {ES: 1, PS: -1}
+| Then {FS: -1, QS: 1} + 1 x {ES: 1, PS: -1}
+|    = {FS: -1, QS: 1, ES: 1, PS: -1}
 | Premise PS ∥ QS gives a linear equation with coefficients {PS: 1, QS: -1}
-| Then {EQ: 1, PS: -1} + 1 x {PS: 1, QS: -1}
-|    = {EQ: 1, QS: -1}
-We are left with a linear equation with coefficients {EQ: 1, QS: -1} that gives EQ ∥ QS
-
-
-
-037. | Angle Chasing to prove FS ∥ ES:
-| Premise PS ∥ FS gives a linear equation with coefficients {FS: 1, PS: -1}
-| Premise PS ∥ QS gives a linear equation with coefficients {PS: 1, QS: -1}
-| Then {FS: -1, PS: 1} + -1 x {PS: 1, QS: -1}
-|    = {FS: -1, QS: 1}
-| Premise QS ∥ ES gives a linear equation with coefficients {ES: 1, QS: -1}
-| Then {FS: -1, QS: 1} + 1 x {ES: 1, QS: -1}
+| Then {FS: -1, QS: 1, ES: 1, PS: -1} + 1 x {PS: 1, QS: -1}
 |    = {FS: -1, ES: 1}
 We are left with a linear equation with coefficients {FS: -1, ES: 1} that gives FS ∥ ES
 
 
 
-041. | Angle Chasing to prove ∠(CE,CP₁) = ∠(EP,PP₁):
+048. | Angle Chasing to prove ∠(CE,CP₁) = ∠(EP,PP₁):
 | Premise ∠(AB,AC) = ∠(PP₁,CP₁) gives a linear equation with coefficients {AB: -1, AC: 1, CP1: -1, PP1: 1}
 | Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
 | Then {AB: 1, AC: -1, CP1: 1, PP1: -1} + -1 x {AB: 1, PQ: -1}
 |    = {AC: -1, CP1: 1, PP1: -1, PQ: 1}
-| Premise AE ∥ AC gives a linear equation with coefficients {AC: 1, AE: -1}
-| Then {AC: -1, CP1: 1, PP1: -1, PQ: 1} + 1 x {AC: 1, AE: -1}
-|    = {CP1: 1, PP1: -1, PQ: 1, AE: -1}
-| Premise AE ∥ CE gives a linear equation with coefficients {AE: 1, CE: -1}
-| Then {CP1: 1, PP1: -1, PQ: 1, AE: -1} + 1 x {AE: 1, CE: -1}
+| Premise AC ∥ CE gives a linear equation with coefficients {AC: 1, CE: -1}
+| Then {AC: -1, CP1: 1, PP1: -1, PQ: 1} + 1 x {AC: 1, CE: -1}
 |    = {CP1: 1, PP1: -1, PQ: 1, CE: -1}
 | Premise EP ∥ PQ gives a linear equation with coefficients {EP: 1, PQ: -1}
 | Then {CP1: 1, PP1: -1, PQ: 1, CE: -1} + 1 x {EP: 1, PQ: -1}
@@ -315,18 +351,15 @@ We are left with a linear equation with coefficients {CP1: 1, PP1: -1, CE: -1, E
 
 
 
-046. | Angle Chasing to prove ∠(CF,CQ₁) = ∠(FQ,QQ₁):
+051. | Angle Chasing to prove ∠(CF,CQ₁) = ∠(FQ,QQ₁):
 | Premise ∠(AB,BC) = ∠(QQ₁,CQ₁) gives a linear equation with coefficients {AB: -1, BC: 1, CQ1: -1, QQ1: 1}
 | Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
 | Then {AB: 1, BC: -1, CQ1: 1, QQ1: -1} + -1 x {AB: 1, PQ: -1}
 |    = {BC: -1, CQ1: 1, QQ1: -1, PQ: 1}
-| Premise BC ∥ BF gives a linear equation with coefficients {BC: 1, BF: -1}
-| Then {BC: -1, CQ1: 1, QQ1: -1, PQ: 1} + 1 x {BC: 1, BF: -1}
-|    = {CQ1: 1, QQ1: -1, PQ: 1, BF: -1}
-| Premise CF ∥ BF gives a linear equation with coefficients {BF: 1, CF: -1}
-| Then {CQ1: 1, QQ1: -1, PQ: 1, BF: -1} + 1 x {BF: 1, CF: -1}
+| Premise CF ∥ BC gives a linear equation with coefficients {BC: 1, CF: -1}
+| Then {BC: -1, CQ1: 1, QQ1: -1, PQ: 1} + 1 x {BC: 1, CF: -1}
 |    = {CQ1: 1, QQ1: -1, PQ: 1, CF: -1}
-| Premise FP ∥ FQ gives a linear equation with coefficients {FP: 1, FQ: -1}
+| Premise FQ ∥ FP gives a linear equation with coefficients {FP: 1, FQ: -1}
 | Then {CQ1: 1, QQ1: -1, PQ: 1, CF: -1} + -1 x {FP: 1, FQ: -1}
 |    = {CQ1: 1, QQ1: -1, PQ: 1, CF: -1, FP: -1, FQ: 1}
 | Premise PQ ∥ FP gives a linear equation with coefficients {FP: 1, PQ: -1}
@@ -336,235 +369,187 @@ We are left with a linear equation with coefficients {CQ1: 1, QQ1: -1, CF: -1, F
 
 
 
-049. | Angle Chasing to prove ∠(AB,AC) = ∠(EF,CE):
+054. | Angle Chasing to prove ∠(AC,AU) = ∠(CE,ES):
+| Premise AB ∥ AU gives a linear equation with coefficients {AB: 1, AU: -1}
 | Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
-| Premise AE ∥ AC gives a linear equation with coefficients {AC: 1, AE: -1}
-| Then {AB: -1, PQ: 1} + 1 x {AC: 1, AE: -1}
-|    = {AB: -1, PQ: 1, AC: 1, AE: -1}
-| Premise AE ∥ CE gives a linear equation with coefficients {AE: 1, CE: -1}
-| Then {AB: -1, PQ: 1, AC: 1, AE: -1} + 1 x {AE: 1, CE: -1}
-|    = {AB: -1, PQ: 1, AC: 1, CE: -1}
-| Premise EF ∥ ES gives a linear equation with coefficients {EF: 1, ES: -1}
-| Then {AB: -1, PQ: 1, AC: 1, CE: -1} + 1 x {EF: 1, ES: -1}
-|    = {AB: -1, PQ: 1, AC: 1, CE: -1, EF: 1, ES: -1}
+| Then {AB: -1, AU: 1} + 1 x {AB: 1, PQ: -1}
+|    = {AU: 1, PQ: -1}
+| Premise AC ∥ CE gives a linear equation with coefficients {AC: 1, CE: -1}
+| Then {AU: 1, PQ: -1} + -1 x {AC: 1, CE: -1}
+|    = {AU: 1, PQ: -1, AC: -1, CE: 1}
+| Premise PS ∥ ES gives a linear equation with coefficients {ES: 1, PS: -1}
+| Then {AU: 1, PQ: -1, AC: -1, CE: 1} + -1 x {ES: 1, PS: -1}
+|    = {AU: 1, PQ: -1, AC: -1, CE: 1, ES: -1, PS: 1}
 | Premise PS ∥ PQ gives a linear equation with coefficients {PQ: 1, PS: -1}
-| Then {AB: -1, PQ: 1, AC: 1, CE: -1, EF: 1, ES: -1} + -1 x {PQ: 1, PS: -1}
-|    = {AB: -1, AC: 1, CE: -1, EF: 1, ES: -1, PS: 1}
-| Premise PS ∥ QS gives a linear equation with coefficients {PS: 1, QS: -1}
-| Then {AB: -1, AC: 1, CE: -1, EF: 1, ES: -1, PS: 1} + -1 x {PS: 1, QS: -1}
-|    = {AB: -1, AC: 1, CE: -1, EF: 1, ES: -1, QS: 1}
-| Premise QS ∥ ES gives a linear equation with coefficients {ES: 1, QS: -1}
-| Then {AB: -1, AC: 1, CE: -1, EF: 1, ES: -1, QS: 1} + 1 x {ES: 1, QS: -1}
-|    = {AB: -1, AC: 1, CE: -1, EF: 1}
-We are left with a linear equation with coefficients {AB: -1, AC: 1, CE: -1, EF: 1} that gives ∠(AB,AC) = ∠(EF,CE)
+| Then {AU: 1, PQ: -1, AC: -1, CE: 1, ES: -1, PS: 1} + 1 x {PQ: 1, PS: -1}
+|    = {AU: 1, AC: -1, CE: 1, ES: -1}
+We are left with a linear equation with coefficients {AU: 1, AC: -1, CE: 1, ES: -1} that gives ∠(AC,AU) = ∠(CE,ES)
 
 
 
-050. | Angle Chasing to prove ∠(AC,BC) = ∠(CE,CF):
-| Premise AE ∥ AC gives a linear equation with coefficients {AC: 1, AE: -1}
-| Premise AE ∥ CE gives a linear equation with coefficients {AE: 1, CE: -1}
-| Then {AC: -1, AE: 1} + -1 x {AE: 1, CE: -1}
-|    = {AC: -1, CE: 1}
-| Premise BC ∥ BF gives a linear equation with coefficients {BC: 1, BF: -1}
-| Then {AC: -1, CE: 1} + 1 x {BC: 1, BF: -1}
-|    = {AC: -1, CE: 1, BC: 1, BF: -1}
-| Premise CF ∥ BF gives a linear equation with coefficients {BF: 1, CF: -1}
-| Then {AC: -1, CE: 1, BC: 1, BF: -1} + 1 x {BF: 1, CF: -1}
-|    = {AC: -1, CE: 1, BC: 1, CF: -1}
-We are left with a linear equation with coefficients {AC: -1, CE: 1, BC: 1, CF: -1} that gives ∠(AC,BC) = ∠(CE,CF)
-
-
-
-055. | Angle Chasing to prove ∠(AC,AU) = ∠(CE,ES):
-| Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
-| Premise AE ∥ AC gives a linear equation with coefficients {AC: 1, AE: -1}
-| Then {AB: 1, PQ: -1} + -1 x {AC: 1, AE: -1}
-|    = {AB: 1, PQ: -1, AC: -1, AE: 1}
-| Premise AE ∥ CE gives a linear equation with coefficients {AE: 1, CE: -1}
-| Then {AB: 1, PQ: -1, AC: -1, AE: 1} + -1 x {AE: 1, CE: -1}
-|    = {AB: 1, PQ: -1, AC: -1, CE: 1}
-| Premise AU ∥ AB gives a linear equation with coefficients {AB: 1, AU: -1}
-| Then {AB: 1, PQ: -1, AC: -1, CE: 1} + -1 x {AB: 1, AU: -1}
-|    = {PQ: -1, AC: -1, CE: 1, AU: 1}
-| Premise PS ∥ PQ gives a linear equation with coefficients {PQ: 1, PS: -1}
-| Then {PQ: -1, AC: -1, CE: 1, AU: 1} + 1 x {PQ: 1, PS: -1}
-|    = {AC: -1, CE: 1, AU: 1, PS: -1}
-| Premise PS ∥ QS gives a linear equation with coefficients {PS: 1, QS: -1}
-| Then {AC: -1, CE: 1, AU: 1, PS: -1} + 1 x {PS: 1, QS: -1}
-|    = {AC: -1, CE: 1, AU: 1, QS: -1}
-| Premise QS ∥ ES gives a linear equation with coefficients {ES: 1, QS: -1}
-| Then {AC: -1, CE: 1, AU: 1, QS: -1} + -1 x {ES: 1, QS: -1}
-|    = {AC: -1, CE: 1, AU: 1, ES: -1}
-We are left with a linear equation with coefficients {AC: -1, CE: 1, AU: 1, ES: -1} that gives ∠(AC,AU) = ∠(CE,ES)
-
-
-
-058. | Angle Chasing to prove CT ∥ TU:
-| Premise CR ∥ CT gives a linear equation with coefficients {CR: 1, CT: -1}
-| Premise CR ∥ RT gives a linear equation with coefficients {CR: 1, RT: -1}
-| Then {CR: -1, CT: 1} + 1 x {CR: 1, RT: -1}
-|    = {CT: 1, RT: -1}
-| Premise RU ∥ RT gives a linear equation with coefficients {RT: 1, RU: -1}
-| Then {CT: 1, RT: -1} + 1 x {RT: 1, RU: -1}
-|    = {CT: 1, RU: -1}
-| Premise RU ∥ TU gives a linear equation with coefficients {RU: 1, TU: -1}
-| Then {CT: 1, RU: -1} + 1 x {RU: 1, TU: -1}
-|    = {CT: 1, TU: -1}
-We are left with a linear equation with coefficients {CT: 1, TU: -1} that gives CT ∥ TU
-
-
-
-061. | Angle Chasing to prove ∠(AC,CU) = ∠(CE,CS):
-| Premise AE ∥ AC gives a linear equation with coefficients {AC: 1, AE: -1}
-| Premise AE ∥ CE gives a linear equation with coefficients {AE: 1, CE: -1}
-| Then {AC: -1, AE: 1} + -1 x {AE: 1, CE: -1}
-|    = {AC: -1, CE: 1}
-| Premise CS ∥ ST gives a linear equation with coefficients {CS: 1, ST: -1}
-| Then {AC: -1, CE: 1} + -1 x {CS: 1, ST: -1}
-|    = {AC: -1, CE: 1, CS: -1, ST: 1}
-| Premise RT ∥ RS gives a linear equation with coefficients {RS: 1, RT: -1}
-| Then {AC: -1, CE: 1, CS: -1, ST: 1} + -1 x {RS: 1, RT: -1}
-|    = {AC: -1, CE: 1, CS: -1, ST: 1, RS: -1, RT: 1}
-| Premise RU ∥ RT gives a linear equation with coefficients {RT: 1, RU: -1}
-| Then {AC: -1, CE: 1, CS: -1, ST: 1, RS: -1, RT: 1} + -1 x {RT: 1, RU: -1}
-|    = {AC: -1, CE: 1, CS: -1, ST: 1, RS: -1, RU: 1}
-| Premise RU ∥ TU gives a linear equation with coefficients {RU: 1, TU: -1}
-| Then {AC: -1, CE: 1, CS: -1, ST: 1, RS: -1, RU: 1} + -1 x {RU: 1, TU: -1}
-|    = {AC: -1, CE: 1, CS: -1, ST: 1, RS: -1, TU: 1}
-| Premise ST ∥ RS gives a linear equation with coefficients {RS: 1, ST: -1}
-| Then {AC: -1, CE: 1, CS: -1, ST: 1, RS: -1, TU: 1} + 1 x {RS: 1, ST: -1}
-|    = {AC: -1, CE: 1, CS: -1, TU: 1}
-| Premise TU ∥ CU gives a linear equation with coefficients {CU: 1, TU: -1}
-| Then {AC: -1, CE: 1, CS: -1, TU: 1} + 1 x {CU: 1, TU: -1}
+055. | Angle Chasing to prove ∠(AC,CU) = ∠(CE,CS):
+| Premise AC ∥ CE gives a linear equation with coefficients {AC: 1, CE: -1}
+| Premise CS ∥ CU gives a linear equation with coefficients {CS: 1, CU: -1}
+| Then {AC: -1, CE: 1} + -1 x {CS: 1, CU: -1}
 |    = {AC: -1, CE: 1, CS: -1, CU: 1}
 We are left with a linear equation with coefficients {AC: -1, CE: 1, CS: -1, CU: 1} that gives ∠(AC,CU) = ∠(CE,CS)
 
 
 
-066. | Angle Chasing to prove ∠(AT,TU) = ∠(QT,ST):
-| Premise AT ∥ AQ gives a linear equation with coefficients {AQ: 1, AT: -1}
-| Premise QT ∥ AQ gives a linear equation with coefficients {AQ: 1, QT: -1}
-| Then {AQ: 1, AT: -1} + -1 x {AQ: 1, QT: -1}
-|    = {AT: -1, QT: 1}
-| Premise RT ∥ RS gives a linear equation with coefficients {RS: 1, RT: -1}
-| Then {AT: -1, QT: 1} + -1 x {RS: 1, RT: -1}
-|    = {AT: -1, QT: 1, RS: -1, RT: 1}
-| Premise RU ∥ RT gives a linear equation with coefficients {RT: 1, RU: -1}
-| Then {AT: -1, QT: 1, RS: -1, RT: 1} + -1 x {RT: 1, RU: -1}
-|    = {AT: -1, QT: 1, RS: -1, RU: 1}
-| Premise RU ∥ TU gives a linear equation with coefficients {RU: 1, TU: -1}
-| Then {AT: -1, QT: 1, RS: -1, RU: 1} + -1 x {RU: 1, TU: -1}
-|    = {AT: -1, QT: 1, RS: -1, TU: 1}
-| Premise ST ∥ RS gives a linear equation with coefficients {RS: 1, ST: -1}
-| Then {AT: -1, QT: 1, RS: -1, TU: 1} + 1 x {RS: 1, ST: -1}
-|    = {AT: -1, QT: 1, TU: 1, ST: -1}
-We are left with a linear equation with coefficients {AT: -1, QT: 1, TU: 1, ST: -1} that gives ∠(AT,TU) = ∠(QT,ST)
-
-
-
-067. | Angle Chasing to prove ∠(AU,TU) = ∠(QS,ST):
+059. | Angle Chasing to prove ∠(AB,AC) = ∠(EF,CE):
 | Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
-| Premise AU ∥ AB gives a linear equation with coefficients {AB: 1, AU: -1}
-| Then {AB: -1, PQ: 1} + 1 x {AB: 1, AU: -1}
-|    = {PQ: 1, AU: -1}
+| Premise AC ∥ CE gives a linear equation with coefficients {AC: 1, CE: -1}
+| Then {AB: -1, PQ: 1} + 1 x {AC: 1, CE: -1}
+|    = {AB: -1, PQ: 1, AC: 1, CE: -1}
+| Premise EF ∥ ES gives a linear equation with coefficients {EF: 1, ES: -1}
+| Then {AB: -1, PQ: 1, AC: 1, CE: -1} + 1 x {EF: 1, ES: -1}
+|    = {AB: -1, PQ: 1, AC: 1, CE: -1, EF: 1, ES: -1}
+| Premise PS ∥ ES gives a linear equation with coefficients {ES: 1, PS: -1}
+| Then {AB: -1, PQ: 1, AC: 1, CE: -1, EF: 1, ES: -1} + 1 x {ES: 1, PS: -1}
+|    = {AB: -1, PQ: 1, AC: 1, CE: -1, EF: 1, PS: -1}
 | Premise PS ∥ PQ gives a linear equation with coefficients {PQ: 1, PS: -1}
-| Then {PQ: 1, AU: -1} + -1 x {PQ: 1, PS: -1}
+| Then {AB: -1, PQ: 1, AC: 1, CE: -1, EF: 1, PS: -1} + -1 x {PQ: 1, PS: -1}
+|    = {AB: -1, AC: 1, CE: -1, EF: 1}
+We are left with a linear equation with coefficients {AB: -1, AC: 1, CE: -1, EF: 1} that gives ∠(AB,AC) = ∠(EF,CE)
+
+
+
+060. | Angle Chasing to prove ∠(AB,BC) = ∠(EF,CF):
+| Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
+| Premise CF ∥ BC gives a linear equation with coefficients {BC: 1, CF: -1}
+| Then {AB: -1, PQ: 1} + 1 x {BC: 1, CF: -1}
+|    = {AB: -1, PQ: 1, BC: 1, CF: -1}
+| Premise EF ∥ ES gives a linear equation with coefficients {EF: 1, ES: -1}
+| Then {AB: -1, PQ: 1, BC: 1, CF: -1} + 1 x {EF: 1, ES: -1}
+|    = {AB: -1, PQ: 1, BC: 1, CF: -1, EF: 1, ES: -1}
+| Premise PS ∥ ES gives a linear equation with coefficients {ES: 1, PS: -1}
+| Then {AB: -1, PQ: 1, BC: 1, CF: -1, EF: 1, ES: -1} + 1 x {ES: 1, PS: -1}
+|    = {AB: -1, PQ: 1, BC: 1, CF: -1, EF: 1, PS: -1}
+| Premise PS ∥ PQ gives a linear equation with coefficients {PQ: 1, PS: -1}
+| Then {AB: -1, PQ: 1, BC: 1, CF: -1, EF: 1, PS: -1} + -1 x {PQ: 1, PS: -1}
+|    = {AB: -1, BC: 1, CF: -1, EF: 1}
+We are left with a linear equation with coefficients {AB: -1, BC: 1, CF: -1, EF: 1} that gives ∠(AB,BC) = ∠(EF,CF)
+
+
+
+065. | Angle Chasing to prove ∠(AB,AT) = ∠(PQ,QT):
+| Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
+| Premise AT ∥ AQ gives a linear equation with coefficients {AQ: 1, AT: -1}
+| Then {AB: -1, PQ: 1} + -1 x {AQ: 1, AT: -1}
+|    = {AB: -1, PQ: 1, AQ: -1, AT: 1}
+| Premise QT ∥ AQ gives a linear equation with coefficients {AQ: 1, QT: -1}
+| Then {AB: -1, PQ: 1, AQ: -1, AT: 1} + 1 x {AQ: 1, QT: -1}
+|    = {AB: -1, PQ: 1, AT: 1, QT: -1}
+We are left with a linear equation with coefficients {AB: -1, PQ: 1, AT: 1, QT: -1} that gives ∠(AB,AT) = ∠(PQ,QT)
+
+
+
+068. | Angle Chasing to prove ∠(AB,BT) = ∠(PQ,PT):
+| Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
+| Premise BP ∥ BT gives a linear equation with coefficients {BP: 1, BT: -1}
+| Then {AB: -1, PQ: 1} + -1 x {BP: 1, BT: -1}
+|    = {AB: -1, PQ: 1, BP: -1, BT: 1}
+| Premise BP ∥ PT gives a linear equation with coefficients {BP: 1, PT: -1}
+| Then {AB: -1, PQ: 1, BP: -1, BT: 1} + 1 x {BP: 1, PT: -1}
+|    = {AB: -1, PQ: 1, BT: 1, PT: -1}
+We are left with a linear equation with coefficients {AB: -1, PQ: 1, BT: 1, PT: -1} that gives ∠(AB,BT) = ∠(PQ,PT)
+
+
+
+071. | Angle Chasing to prove ∠(AT,AU) = ∠(QT,QS):
+| Premise AB ∥ AU gives a linear equation with coefficients {AB: 1, AU: -1}
+| Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
+| Then {AB: -1, AU: 1} + 1 x {AB: 1, PQ: -1}
+|    = {AU: 1, PQ: -1}
+| Premise AT ∥ AQ gives a linear equation with coefficients {AQ: 1, AT: -1}
+| Then {AU: 1, PQ: -1} + 1 x {AQ: 1, AT: -1}
+|    = {AU: 1, PQ: -1, AQ: 1, AT: -1}
+| Premise PS ∥ PQ gives a linear equation with coefficients {PQ: 1, PS: -1}
+| Then {AU: 1, PQ: -1, AQ: 1, AT: -1} + 1 x {PQ: 1, PS: -1}
+|    = {AU: 1, AQ: 1, AT: -1, PS: -1}
+| Premise PS ∥ QS gives a linear equation with coefficients {PS: 1, QS: -1}
+| Then {AU: 1, AQ: 1, AT: -1, PS: -1} + 1 x {PS: 1, QS: -1}
+|    = {AU: 1, AQ: 1, AT: -1, QS: -1}
+| Premise QT ∥ AQ gives a linear equation with coefficients {AQ: 1, QT: -1}
+| Then {AU: 1, AQ: 1, AT: -1, QS: -1} + -1 x {AQ: 1, QT: -1}
+|    = {AU: 1, AT: -1, QS: -1, QT: 1}
+We are left with a linear equation with coefficients {AU: 1, AT: -1, QS: -1, QT: 1} that gives ∠(AT,AU) = ∠(QT,QS)
+
+
+
+072. | Angle Chasing to prove ∠(AU,TU) = ∠(QS,ST):
+| Premise AB ∥ AU gives a linear equation with coefficients {AB: 1, AU: -1}
+| Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
+| Then {AB: 1, AU: -1} + -1 x {AB: 1, PQ: -1}
+|    = {AU: -1, PQ: 1}
+| Premise PS ∥ PQ gives a linear equation with coefficients {PQ: 1, PS: -1}
+| Then {AU: -1, PQ: 1} + -1 x {PQ: 1, PS: -1}
 |    = {AU: -1, PS: 1}
 | Premise PS ∥ QS gives a linear equation with coefficients {PS: 1, QS: -1}
 | Then {AU: -1, PS: 1} + -1 x {PS: 1, QS: -1}
 |    = {AU: -1, QS: 1}
+| Premise RS ∥ ST gives a linear equation with coefficients {RS: 1, ST: -1}
+| Then {AU: -1, QS: 1} + 1 x {RS: 1, ST: -1}
+|    = {AU: -1, QS: 1, RS: 1, ST: -1}
 | Premise RT ∥ RS gives a linear equation with coefficients {RS: 1, RT: -1}
-| Then {AU: -1, QS: 1} + -1 x {RS: 1, RT: -1}
-|    = {AU: -1, QS: 1, RS: -1, RT: 1}
-| Premise RU ∥ RT gives a linear equation with coefficients {RT: 1, RU: -1}
-| Then {AU: -1, QS: 1, RS: -1, RT: 1} + -1 x {RT: 1, RU: -1}
-|    = {AU: -1, QS: 1, RS: -1, RU: 1}
-| Premise RU ∥ TU gives a linear equation with coefficients {RU: 1, TU: -1}
-| Then {AU: -1, QS: 1, RS: -1, RU: 1} + -1 x {RU: 1, TU: -1}
-|    = {AU: -1, QS: 1, RS: -1, TU: 1}
-| Premise ST ∥ RS gives a linear equation with coefficients {RS: 1, ST: -1}
-| Then {AU: -1, QS: 1, RS: -1, TU: 1} + 1 x {RS: 1, ST: -1}
-|    = {AU: -1, QS: 1, TU: 1, ST: -1}
-We are left with a linear equation with coefficients {AU: -1, QS: 1, TU: 1, ST: -1} that gives ∠(AU,TU) = ∠(QS,ST)
+| Then {AU: -1, QS: 1, RS: 1, ST: -1} + -1 x {RS: 1, RT: -1}
+|    = {AU: -1, QS: 1, ST: -1, RT: 1}
+| Premise RT ∥ RU gives a linear equation with coefficients {RT: 1, RU: -1}
+| Then {AU: -1, QS: 1, ST: -1, RT: 1} + -1 x {RT: 1, RU: -1}
+|    = {AU: -1, QS: 1, ST: -1, RU: 1}
+| Premise TU ∥ RU gives a linear equation with coefficients {RU: 1, TU: -1}
+| Then {AU: -1, QS: 1, ST: -1, RU: 1} + -1 x {RU: 1, TU: -1}
+|    = {AU: -1, QS: 1, ST: -1, TU: 1}
+We are left with a linear equation with coefficients {AU: -1, QS: 1, ST: -1, TU: 1} that gives ∠(AU,TU) = ∠(QS,ST)
 
 
 
-070. | Angle Chasing to prove ∠(BC,CU) = ∠(CF,CS):
-| Premise BC ∥ BF gives a linear equation with coefficients {BC: 1, BF: -1}
-| Premise CF ∥ BF gives a linear equation with coefficients {BF: 1, CF: -1}
-| Then {BC: -1, BF: 1} + -1 x {BF: 1, CF: -1}
-|    = {BC: -1, CF: 1}
-| Premise CS ∥ ST gives a linear equation with coefficients {CS: 1, ST: -1}
-| Then {BC: -1, CF: 1} + -1 x {CS: 1, ST: -1}
-|    = {BC: -1, CF: 1, CS: -1, ST: 1}
-| Premise RT ∥ RS gives a linear equation with coefficients {RS: 1, RT: -1}
-| Then {BC: -1, CF: 1, CS: -1, ST: 1} + -1 x {RS: 1, RT: -1}
-|    = {BC: -1, CF: 1, CS: -1, ST: 1, RS: -1, RT: 1}
-| Premise RU ∥ RT gives a linear equation with coefficients {RT: 1, RU: -1}
-| Then {BC: -1, CF: 1, CS: -1, ST: 1, RS: -1, RT: 1} + -1 x {RT: 1, RU: -1}
-|    = {BC: -1, CF: 1, CS: -1, ST: 1, RS: -1, RU: 1}
-| Premise RU ∥ TU gives a linear equation with coefficients {RU: 1, TU: -1}
-| Then {BC: -1, CF: 1, CS: -1, ST: 1, RS: -1, RU: 1} + -1 x {RU: 1, TU: -1}
-|    = {BC: -1, CF: 1, CS: -1, ST: 1, RS: -1, TU: 1}
-| Premise ST ∥ RS gives a linear equation with coefficients {RS: 1, ST: -1}
-| Then {BC: -1, CF: 1, CS: -1, ST: 1, RS: -1, TU: 1} + 1 x {RS: 1, ST: -1}
-|    = {BC: -1, CF: 1, CS: -1, TU: 1}
-| Premise TU ∥ CU gives a linear equation with coefficients {CU: 1, TU: -1}
-| Then {BC: -1, CF: 1, CS: -1, TU: 1} + 1 x {CU: 1, TU: -1}
+076. | Angle Chasing to prove ∠(BC,CU) = ∠(CF,CS):
+| Premise CF ∥ BC gives a linear equation with coefficients {BC: 1, CF: -1}
+| Premise CS ∥ CU gives a linear equation with coefficients {CS: 1, CU: -1}
+| Then {BC: -1, CF: 1} + -1 x {CS: 1, CU: -1}
 |    = {BC: -1, CF: 1, CS: -1, CU: 1}
 We are left with a linear equation with coefficients {BC: -1, CF: 1, CS: -1, CU: 1} that gives ∠(BC,CU) = ∠(CF,CS)
 
 
 
-072. | Angle Chasing to prove ∠(BU,CU) = ∠(FS,CS):
+078. | Angle Chasing to prove ∠(BU,CU) = ∠(FS,CS):
+| Premise AB ∥ AU gives a linear equation with coefficients {AB: 1, AU: -1}
 | Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
-| Premise AU ∥ AB gives a linear equation with coefficients {AB: 1, AU: -1}
-| Then {AB: -1, PQ: 1} + 1 x {AB: 1, AU: -1}
-|    = {PQ: 1, AU: -1}
+| Then {AB: 1, AU: -1} + -1 x {AB: 1, PQ: -1}
+|    = {AU: -1, PQ: 1}
 | Premise BU ∥ AU gives a linear equation with coefficients {AU: 1, BU: -1}
-| Then {PQ: 1, AU: -1} + 1 x {AU: 1, BU: -1}
+| Then {AU: -1, PQ: 1} + 1 x {AU: 1, BU: -1}
 |    = {PQ: 1, BU: -1}
-| Premise CS ∥ ST gives a linear equation with coefficients {CS: 1, ST: -1}
-| Then {PQ: 1, BU: -1} + -1 x {CS: 1, ST: -1}
-|    = {PQ: 1, BU: -1, CS: -1, ST: 1}
-| Premise PS ∥ FS gives a linear equation with coefficients {FS: 1, PS: -1}
-| Then {PQ: 1, BU: -1, CS: -1, ST: 1} + 1 x {FS: 1, PS: -1}
-|    = {PQ: 1, BU: -1, CS: -1, ST: 1, FS: 1, PS: -1}
+| Premise CS ∥ CU gives a linear equation with coefficients {CS: 1, CU: -1}
+| Then {PQ: 1, BU: -1} + -1 x {CS: 1, CU: -1}
+|    = {PQ: 1, BU: -1, CS: -1, CU: 1}
+| Premise FS ∥ QS gives a linear equation with coefficients {FS: 1, QS: -1}
+| Then {PQ: 1, BU: -1, CS: -1, CU: 1} + 1 x {FS: 1, QS: -1}
+|    = {PQ: 1, BU: -1, CS: -1, CU: 1, FS: 1, QS: -1}
 | Premise PS ∥ PQ gives a linear equation with coefficients {PQ: 1, PS: -1}
-| Then {PQ: 1, BU: -1, CS: -1, ST: 1, FS: 1, PS: -1} + -1 x {PQ: 1, PS: -1}
-|    = {BU: -1, CS: -1, ST: 1, FS: 1}
-| Premise RT ∥ RS gives a linear equation with coefficients {RS: 1, RT: -1}
-| Then {BU: -1, CS: -1, ST: 1, FS: 1} + -1 x {RS: 1, RT: -1}
-|    = {BU: -1, CS: -1, ST: 1, FS: 1, RS: -1, RT: 1}
-| Premise RU ∥ RT gives a linear equation with coefficients {RT: 1, RU: -1}
-| Then {BU: -1, CS: -1, ST: 1, FS: 1, RS: -1, RT: 1} + -1 x {RT: 1, RU: -1}
-|    = {BU: -1, CS: -1, ST: 1, FS: 1, RS: -1, RU: 1}
-| Premise RU ∥ TU gives a linear equation with coefficients {RU: 1, TU: -1}
-| Then {BU: -1, CS: -1, ST: 1, FS: 1, RS: -1, RU: 1} + -1 x {RU: 1, TU: -1}
-|    = {BU: -1, CS: -1, ST: 1, FS: 1, RS: -1, TU: 1}
-| Premise ST ∥ RS gives a linear equation with coefficients {RS: 1, ST: -1}
-| Then {BU: -1, CS: -1, ST: 1, FS: 1, RS: -1, TU: 1} + 1 x {RS: 1, ST: -1}
-|    = {BU: -1, CS: -1, FS: 1, TU: 1}
-| Premise TU ∥ CU gives a linear equation with coefficients {CU: 1, TU: -1}
-| Then {BU: -1, CS: -1, FS: 1, TU: 1} + 1 x {CU: 1, TU: -1}
-|    = {BU: -1, CS: -1, FS: 1, CU: 1}
-We are left with a linear equation with coefficients {BU: -1, CS: -1, FS: 1, CU: 1} that gives ∠(BU,CU) = ∠(FS,CS)
+| Then {PQ: 1, BU: -1, CS: -1, CU: 1, FS: 1, QS: -1} + -1 x {PQ: 1, PS: -1}
+|    = {BU: -1, CS: -1, CU: 1, FS: 1, QS: -1, PS: 1}
+| Premise PS ∥ QS gives a linear equation with coefficients {PS: 1, QS: -1}
+| Then {BU: -1, CS: -1, CU: 1, FS: 1, QS: -1, PS: 1} + -1 x {PS: 1, QS: -1}
+|    = {BU: -1, CS: -1, CU: 1, FS: 1}
+We are left with a linear equation with coefficients {BU: -1, CS: -1, CU: 1, FS: 1} that gives ∠(BU,CU) = ∠(FS,CS)
 
 
 
-077. | Angle Chasing to prove ∠(BT,BU) = ∠(PT,PS):
+081. | Angle Chasing to prove ∠(BT,BU) = ∠(PT,PS):
+| Premise AB ∥ AU gives a linear equation with coefficients {AB: 1, AU: -1}
 | Premise AB ∥ PQ gives a linear equation with coefficients {AB: 1, PQ: -1}
-| Premise AU ∥ AB gives a linear equation with coefficients {AB: 1, AU: -1}
-| Then {AB: 1, PQ: -1} + -1 x {AB: 1, AU: -1}
-|    = {PQ: -1, AU: 1}
+| Then {AB: -1, AU: 1} + 1 x {AB: 1, PQ: -1}
+|    = {AU: 1, PQ: -1}
 | Premise BP ∥ BT gives a linear equation with coefficients {BP: 1, BT: -1}
-| Then {PQ: -1, AU: 1} + 1 x {BP: 1, BT: -1}
-|    = {PQ: -1, AU: 1, BP: 1, BT: -1}
+| Then {AU: 1, PQ: -1} + 1 x {BP: 1, BT: -1}
+|    = {AU: 1, PQ: -1, BP: 1, BT: -1}
 | Premise BP ∥ PT gives a linear equation with coefficients {BP: 1, PT: -1}
-| Then {PQ: -1, AU: 1, BP: 1, BT: -1} + -1 x {BP: 1, PT: -1}
-|    = {PQ: -1, AU: 1, BT: -1, PT: 1}
+| Then {AU: 1, PQ: -1, BP: 1, BT: -1} + -1 x {BP: 1, PT: -1}
+|    = {AU: 1, PQ: -1, BT: -1, PT: 1}
 | Premise BU ∥ AU gives a linear equation with coefficients {AU: 1, BU: -1}
-| Then {PQ: -1, AU: 1, BT: -1, PT: 1} + -1 x {AU: 1, BU: -1}
+| Then {AU: 1, PQ: -1, BT: -1, PT: 1} + -1 x {AU: 1, BU: -1}
 |    = {PQ: -1, BT: -1, PT: 1, BU: 1}
 | Premise PS ∥ PQ gives a linear equation with coefficients {PQ: 1, PS: -1}
 | Then {PQ: -1, BT: -1, PT: 1, BU: 1} + 1 x {PQ: 1, PS: -1}
@@ -573,43 +558,46 @@ We are left with a linear equation with coefficients {BT: -1, PT: 1, BU: 1, PS: 
 
 
 
-078. | Angle Chasing to prove ∠(BT,TU) = ∠(PT,ST):
+082. | Angle Chasing to prove ∠(BT,TU) = ∠(PT,ST):
 | Premise BP ∥ BT gives a linear equation with coefficients {BP: 1, BT: -1}
 | Premise BP ∥ PT gives a linear equation with coefficients {BP: 1, PT: -1}
 | Then {BP: 1, BT: -1} + -1 x {BP: 1, PT: -1}
 |    = {BT: -1, PT: 1}
+| Premise RS ∥ ST gives a linear equation with coefficients {RS: 1, ST: -1}
+| Then {BT: -1, PT: 1} + 1 x {RS: 1, ST: -1}
+|    = {BT: -1, PT: 1, RS: 1, ST: -1}
 | Premise RT ∥ RS gives a linear equation with coefficients {RS: 1, RT: -1}
-| Then {BT: -1, PT: 1} + -1 x {RS: 1, RT: -1}
-|    = {BT: -1, PT: 1, RS: -1, RT: 1}
-| Premise RU ∥ RT gives a linear equation with coefficients {RT: 1, RU: -1}
-| Then {BT: -1, PT: 1, RS: -1, RT: 1} + -1 x {RT: 1, RU: -1}
-|    = {BT: -1, PT: 1, RS: -1, RU: 1}
-| Premise RU ∥ TU gives a linear equation with coefficients {RU: 1, TU: -1}
-| Then {BT: -1, PT: 1, RS: -1, RU: 1} + -1 x {RU: 1, TU: -1}
-|    = {BT: -1, PT: 1, RS: -1, TU: 1}
-| Premise ST ∥ RS gives a linear equation with coefficients {RS: 1, ST: -1}
-| Then {BT: -1, PT: 1, RS: -1, TU: 1} + 1 x {RS: 1, ST: -1}
-|    = {BT: -1, PT: 1, TU: 1, ST: -1}
-We are left with a linear equation with coefficients {BT: -1, PT: 1, TU: 1, ST: -1} that gives ∠(BT,TU) = ∠(PT,ST)
+| Then {BT: -1, PT: 1, RS: 1, ST: -1} + -1 x {RS: 1, RT: -1}
+|    = {BT: -1, PT: 1, ST: -1, RT: 1}
+| Premise RT ∥ RU gives a linear equation with coefficients {RT: 1, RU: -1}
+| Then {BT: -1, PT: 1, ST: -1, RT: 1} + -1 x {RT: 1, RU: -1}
+|    = {BT: -1, PT: 1, ST: -1, RU: 1}
+| Premise TU ∥ RU gives a linear equation with coefficients {RU: 1, TU: -1}
+| Then {BT: -1, PT: 1, ST: -1, RU: 1} + -1 x {RU: 1, TU: -1}
+|    = {BT: -1, PT: 1, ST: -1, TU: 1}
+We are left with a linear equation with coefficients {BT: -1, PT: 1, ST: -1, TU: 1} that gives ∠(BT,TU) = ∠(PT,ST)
 
 
 
-081. | Ratio Chasing to prove ES:FS = QS:PS:
-| Premise AB:AC = EF:CE gives a linear equation with coefficients {AB²: 1, AC²: -1, CE²: 1, EF²: -1}
-| Premise AB:BC = EF:CF gives a linear equation with coefficients {AB²: 1, BC²: -1, CF²: 1, EF²: -1}
-| Then {AB²: 1, AC²: -1, CE²: 1, EF²: -1} + -1 x {AB²: 1, BC²: -1, CF²: 1, EF²: -1}
-|    = {AC²: -1, CE²: 1, BC²: 1, CF²: -1}
+085. | Ratio Chasing to prove ES:FS = QS:PS:
 | Premise AC:AU = CE:ES gives a linear equation with coefficients {AC²: 1, AU²: -1, CE²: -1, ES²: 1}
-| Then {AC²: -1, CE²: 1, BC²: 1, CF²: -1} + 1 x {AC²: 1, AU²: -1, CE²: -1, ES²: 1}
-|    = {BC²: 1, CF²: -1, AU²: -1, ES²: 1}
+| Premise AC:BC = CE:CF gives a linear equation with coefficients {AC²: 1, BC²: -1, CE²: -1, CF²: 1}
+| Then {AC²: 1, AU²: -1, CE²: -1, ES²: 1} + -1 x {AC²: 1, BC²: -1, CE²: -1, CF²: 1}
+|    = {AU²: -1, ES²: 1, BC²: 1, CF²: -1}
+| Premise AT:BT = QT:PT gives a linear equation with coefficients {AT²: 1, BT²: -1, PT²: 1, QT²: -1}
+| Then {AU²: -1, ES²: 1, BC²: 1, CF²: -1} + 1 x {AT²: 1, BT²: -1, PT²: 1, QT²: -1}
+|    = {AU²: -1, ES²: 1, BC²: 1, CF²: -1, AT²: 1, BT²: -1, PT²: 1, QT²: -1}
+| Premise AT:QT = TU:ST gives a linear equation with coefficients {AT²: 1, QT²: -1, ST²: 1, TU²: -1}
+| Then {AU²: -1, ES²: 1, BC²: 1, CF²: -1, AT²: 1, BT²: -1, PT²: 1, QT²: -1} + -1 x {AT²: 1, QT²: -1, ST²: 1, TU²: -1}
+|    = {AU²: -1, ES²: 1, BC²: 1, CF²: -1, BT²: -1, PT²: 1, ST²: -1, TU²: 1}
 | Premise AU:QS = TU:ST gives a linear equation with coefficients {AU²: 1, QS²: -1, ST²: 1, TU²: -1}
-| Then {BC²: 1, CF²: -1, AU²: -1, ES²: 1} + 1 x {AU²: 1, QS²: -1, ST²: 1, TU²: -1}
-|    = {BC²: 1, CF²: -1, ES²: 1, QS²: -1, ST²: 1, TU²: -1}
+| Then {AU²: -1, ES²: 1, BC²: 1, CF²: -1, BT²: -1, PT²: 1, ST²: -1, TU²: 1} + 1 x {AU²: 1, QS²: -1, ST²: 1, TU²: -1}
+|    = {ES²: 1, BC²: 1, CF²: -1, BT²: -1, PT²: 1, QS²: -1}
 | Premise BC:BU = CF:FS gives a linear equation with coefficients {BC²: 1, BU²: -1, CF²: -1, FS²: 1}
-| Then {BC²: 1, CF²: -1, ES²: 1, QS²: -1, ST²: 1, TU²: -1} + -1 x {BC²: 1, BU²: -1, CF²: -1, FS²: 1}
-|    = {ES²: 1, QS²: -1, ST²: 1, TU²: -1, BU²: 1, FS²: -1}
-| Premise BU:PS = TU:ST gives a linear equation with coefficients {BU²: 1, PS²: -1, ST²: 1, TU²: -1}
-| Then {ES²: 1, QS²: -1, ST²: 1, TU²: -1, BU²: 1, FS²: -1} + -1 x {BU²: 1, PS²: -1, ST²: 1, TU²: -1}
+| Then {ES²: 1, BC²: 1, CF²: -1, BT²: -1, PT²: 1, QS²: -1} + -1 x {BC²: 1, BU²: -1, CF²: -1, FS²: 1}
+|    = {ES²: 1, BT²: -1, PT²: 1, QS²: -1, BU²: 1, FS²: -1}
+| Premise BT:BU = PT:PS gives a linear equation with coefficients {BT²: 1, BU²: -1, PS²: 1, PT²: -1}
+| Then {ES²: 1, BT²: -1, PT²: 1, QS²: -1, BU²: 1, FS²: -1} + 1 x {BT²: 1, BU²: -1, PS²: 1, PT²: -1}
 |    = {ES²: 1, QS²: -1, FS²: -1, PS²: 1}
 We are left with a linear equation with coefficients {ES²: 1, QS²: -1, FS²: -1, PS²: 1} that gives ES:FS = QS:PS
 

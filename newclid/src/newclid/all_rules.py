@@ -1089,7 +1089,8 @@ R94_RADICAL_AXES = Rule(
         "coll R P1 P",
         "coll R Q1 Q",
         "coll S C R",
-        "coll S E F"
+        "coll S E F",
+        # "ncyclic P1 C Q1 P",
     ),
     conclusions_txt=("cyclic P Q Q1 P1",),
 )

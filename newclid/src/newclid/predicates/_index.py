@@ -15,6 +15,7 @@ class PredicateType(str, Enum):
 
     CIRCUMCENTER = "circle"
     CYCLIC = "cyclic"
+    N_CYCLIC = "ncyclic"
 
     CONSTANT_ANGLE = "aconst"
     A_COMPUTE = "acompute"

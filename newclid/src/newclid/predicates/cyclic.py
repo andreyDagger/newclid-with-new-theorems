@@ -56,3 +56,36 @@ class Cyclic(PredicateInterface):
 
     def __str__(self) -> str:
         return f"{''.join(str(p) for p in self.points)} are cyclic"
+
+
+class NCyclic(PredicateInterface):
+    """ncyclic A B C D -
+    Represent that 4 (or more) points not lie on the same circle."""
+
+    predicate_type: Literal[PredicateType.N_CYCLIC] = PredicateType.N_CYCLIC
+
+    points: tuple[Point, ...]
+
+    @staticmethod
+    def preparse(
+        args: tuple[PredicateArgument, ...],
+    ) -> tuple[PredicateArgument, ...] | None:
+        if len(set(args)) <= 3:
+            return None
+        return tuple(sorted(set(args)))
+
+    def check_numerical(self) -> bool:
+        return not Cyclic(points=self.points).check_numerical()
+
+    def check(self, proof_state: ProofState) -> bool | None:
+        return not proof_state.symbols.circles.check_cyclic(self.points)
+
+    # def add(self, proof_state: ProofState) -> tuple[PredicateInterface, ...]:
+    #     proof_state.symbols.circles.make_cyclic(self.points, justification=self)
+    #     return ()
+
+    def to_tokens(self) -> tuple[PredicateArgument, ...]:
+        return tuple(PredicateArgument(p.name) for p in self.points)
+
+    def __str__(self) -> str:
+        return f"{''.join(str(p) for p in self.points)} are not cyclic"
