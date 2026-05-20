@@ -1,0 +1,338 @@
+diff --git a/newclid/src/newclid/all_rules.py b/newclid/src/newclid/all_rules.py
+index b812065..6efaa7a 100644
+--- a/newclid/src/newclid/all_rules.py
++++ b/newclid/src/newclid/all_rules.py
+@@ -1089,7 +1089,8 @@ R94_RADICAL_AXES = Rule(
+         "coll R P1 P",
+         "coll R Q1 Q",
+         "coll S C R",
+-        "coll S E F"
++        "coll S E F",
++        # "ncyclic P1 C Q1 P",
+     ),
+     conclusions_txt=("cyclic P Q Q1 P1",),
+ )
+diff --git a/newclid/src/newclid/predicates/_index.py b/newclid/src/newclid/predicates/_index.py
+index 1ec9f2d..6f88dd2 100644
+--- a/newclid/src/newclid/predicates/_index.py
++++ b/newclid/src/newclid/predicates/_index.py
+@@ -15,6 +15,7 @@ class PredicateType(str, Enum):
+ 
+     CIRCUMCENTER = "circle"
+     CYCLIC = "cyclic"
++    N_CYCLIC = "ncyclic"
+ 
+     CONSTANT_ANGLE = "aconst"
+     A_COMPUTE = "acompute"
+diff --git a/newclid/src/newclid/predicates/cyclic.py b/newclid/src/newclid/predicates/cyclic.py
+index 2bb157a..bed4897 100644
+--- a/newclid/src/newclid/predicates/cyclic.py
++++ b/newclid/src/newclid/predicates/cyclic.py
+@@ -56,3 +56,36 @@ class Cyclic(PredicateInterface):
+ 
+     def __str__(self) -> str:
+         return f"{''.join(str(p) for p in self.points)} are cyclic"
++
++
++class NCyclic(PredicateInterface):
++    """ncyclic A B C D -
++    Represent that 4 (or more) points not lie on the same circle."""
++
++    predicate_type: Literal[PredicateType.N_CYCLIC] = PredicateType.N_CYCLIC
++
++    points: tuple[Point, ...]
++
++    @staticmethod
++    def preparse(
++        args: tuple[PredicateArgument, ...],
++    ) -> tuple[PredicateArgument, ...] | None:
++        if len(set(args)) <= 3:
++            return None
++        return tuple(sorted(set(args)))
++
++    def check_numerical(self) -> bool:
++        return not Cyclic(points=self.points).check_numerical()
++
++    def check(self, proof_state: ProofState) -> bool | None:
++        return not proof_state.symbols.circles.check_cyclic(self.points)
++
++    # def add(self, proof_state: ProofState) -> tuple[PredicateInterface, ...]:
++    #     proof_state.symbols.circles.make_cyclic(self.points, justification=self)
++    #     return ()
++
++    def to_tokens(self) -> tuple[PredicateArgument, ...]:
++        return tuple(PredicateArgument(p.name) for p in self.points)
++
++    def __str__(self) -> str:
++        return f"{''.join(str(p) for p in self.points)} are not cyclic"
+diff --git a/output/html/dependency_graph.html b/output/html/dependency_graph.html
+index 32be235..23c71c6 100644
+--- a/output/html/dependency_graph.html
++++ b/output/html/dependency_graph.html
+@@ -174,8 +174,8 @@
+                   
+ 
+                
+ 
+diff --git a/output/run_infos.json b/output/run_infos.json
+index e8ea2eb..d08465c 100644
+--- a/output/run_infos.json
++++ b/output/run_infos.json
+@@ -1,13 +1,13 @@
+ {
+-  "runtime": 0.43393611907958984,
++  "runtime": 0.48455286026000977,
+   "success": true,
+-  "steps": 137,
++  "steps": 143,
+   "success_per_goal": {
+     "PP₁QQ₁ are cyclic succeeded": true
+   },
+   "agent_stats": {
+     "agent_type": "follow_deductions",
+-    "n_deductions_stored": 136,
+-    "n_deductions_followed": 136
++    "n_deductions_stored": 142,
++    "n_deductions_followed": 142
+   }
+ }
+\ No newline at end of file
+diff --git a/yuclid/src/CMakeLists.txt b/yuclid/src/CMakeLists.txt
+index 67f5212..c1f2033 100644
+--- a/yuclid/src/CMakeLists.txt
++++ b/yuclid/src/CMakeLists.txt
+@@ -34,6 +34,7 @@ add_library(yuclid
+   statement/line_angle_eq.cpp
+   statement/midpoint.cpp
+   statement/ncoll.cpp
++  statement/ncyclic.cpp
+   statement/npara.cpp
+   statement/nperp.cpp
+   statement/not_equal.cpp
+diff --git a/yuclid/src/matcher.cpp b/yuclid/src/matcher.cpp
+index 6d823b0..c7b19a5 100644
+--- a/yuclid/src/matcher.cpp
++++ b/yuclid/src/matcher.cpp
+@@ -25,6 +25,7 @@
+ #include "statement/coll.hpp"
+ #include "statement/angle_eq.hpp"
+ #include "statement/cyclic.hpp"
++#include "statement/ncyclic.hpp"
+ #include "statement/midpoint.hpp"
+ #include "statement/orthocenter.hpp"
+ #include "statement/para.hpp"
+@@ -680,8 +681,7 @@ namespace Yuclid {
+                     for (const auto& pt_s : m_problem->all_points()) {
+                       if (pt_s.is_close(pt_p) || pt_s.is_close(pt_p1) || pt_s.is_close(pt_c) || pt_s.is_close(pt_e) || pt_s.is_close(pt_q) || pt_s.is_close(pt_q1) || pt_s.is_close(pt_f) || pt_s.is_close(pt_r)) continue;
+                       if (!Collinear(pt_s, pt_c, pt_r).check_equations() || !Collinear(pt_s, pt_e, pt_f).check_equations()) continue;
+-                      if (!EqualRatios(Dist(pt_s, pt_p), Dist(pt_s, pt_q), Dist(pt_s, pt_f), Dist(pt_s, pt_e)).check_equations()) continue;
+-                      // cerr << "HERE: " << pt_p.name() << " " << pt_p1.name() << " " << pt_c.name() << " " << pt_e.name() << " " << pt_q.name() << " " << pt_q1.name() << " " << pt_f.name() << " " << pt_r.name() << " " << pt_s.name() << "\n";
++                      if (!EqualRatios(Dist(pt_s, pt_p), Dist(pt_s, pt_q), Dist(pt_s, pt_f), Dist(pt_s, pt_e)).check_equations()) continue; // !NonCyclicQuadrangle(pt_p1, pt_c, pt_q1, pt_p).check_equations()
+                       insert_theorem(Theorem::radical_axes(pt_p, pt_p1, pt_q, pt_q1, pt_e, pt_f, pt_c, pt_r, pt_s));
+                     }
+                   }
+diff --git a/yuclid/src/statement/ncyclic.cpp b/yuclid/src/statement/ncyclic.cpp
+new file mode 100644
+index 0000000..62b80d9
+--- /dev/null
++++ b/yuclid/src/statement/ncyclic.cpp
+@@ -0,0 +1,91 @@
++/**
++   Copyright 2025 Concordance Inc. dba Harmonic
++
++   Licensed under the Apache License, Version 2.0 (the "License");
++   you may not use this file except in compliance with the License.
++   You may obtain a copy of the License at
++
++       http://www.apache.org/licenses/LICENSE-2.0
++
++   Unless required by applicable law or agreed to in writing, software
++   distributed under the License is distributed on an "AS IS" BASIS,
++   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++   See the License for the specific language governing permissions and
++   limitations under the License.
++*/
++#include "ncyclic.hpp"
++#include "coll.hpp"
++#include "statement/statement.hpp"
++#include "type/point.hpp"
++#include "typedef.hpp"
++#include <algorithm>
++#include <memory>
++#include <ostream>
++#include <stdexcept>
++#include <string>
++#include <vector>
++
++using namespace std;
++
++namespace Yuclid {
++
++  NonCyclicQuadrangle::NonCyclicQuadrangle(Point a, Point b, Point c, Point d)
++    : m_a(a), m_b(b), m_c(c), m_d(d) {}
++
++  NonCyclicQuadrangle::NonCyclicQuadrangle(const vector<statement_arg>& args) :
++    m_a(get<Point>(args.at(0))), m_b(get<Point>(args.at(1))),
++    m_c(get<Point>(args.at(2))), m_d(get<Point>(args.at(3)))
++  {
++    if (args.size() != 4) {
++      throw invalid_argument("ncyclic constructor expects 4 arguments.");
++    }
++  }
++
++  string NonCyclicQuadrangle::name() const { return "ncyclic"; }
++
++  vector<Point> NonCyclicQuadrangle::points() const {
++    return {m_a, m_b, m_c, m_d};
++  }
++
++  unique_ptr<Statement> NonCyclicQuadrangle::normalize() const {
++    vector<Point> pts = {m_a, m_b, m_c, m_d};
++    ranges::sort(pts);
++    return make_unique<NonCyclicQuadrangle>(pts[0], pts[1], pts[2], pts[3]);
++  }
++
++  bool NonCyclicQuadrangle::check_nondegen() const {
++    return equal_angles_cad_cbd().check_nondegen() &&
++      equal_angles_bad_bcd().check_nondegen() &&
++      !Collinear(m_a, m_b, m_c).check_equations();
++  }
++
++  bool NonCyclicQuadrangle::check_equations() const {
++    return !equal_angles_cad_cbd().check_equations();
++  }
++
++  vector<statement_arg> NonCyclicQuadrangle::args() const {
++    return {m_a, m_b, m_c, m_d};
++  }
++
++  unique_ptr<Statement> NonCyclicQuadrangle::clone() const {
++    return make_unique<NonCyclicQuadrangle>(*this);
++  }
++
++  // Implementation of statement-specific methods for cyclic
++  EqualAngles NonCyclicQuadrangle::equal_angles_cad_cbd() const {
++    return {Angle(m_c, m_a, m_d), Angle(m_c, m_b, m_d)};
++  }
++
++  EqualAngles NonCyclicQuadrangle::equal_angles_bad_bcd() const {
++    return {Angle(m_b, m_a, m_d), Angle(m_b, m_c, m_d)};
++  }
++
++  EqualAngles NonCyclicQuadrangle::equal_angles_abd_acd() const {
++    return {Angle(m_a, m_b, m_d), Angle(m_a, m_c, m_d)};
++  }
++
++  ostream &NonCyclicQuadrangle::print(ostream &out) const {
++    return out << m_a << " not ∈ ω(" << m_b << m_c << m_d << ")";
++  }
++
++} // namespace Yuclid
+diff --git a/yuclid/src/statement/ncyclic.hpp b/yuclid/src/statement/ncyclic.hpp
+new file mode 100644
+index 0000000..caec6fe
+--- /dev/null
++++ b/yuclid/src/statement/ncyclic.hpp
+@@ -0,0 +1,66 @@
++/**
++   Copyright 2025 Concordance Inc. dba Harmonic
++
++   Licensed under the Apache License, Version 2.0 (the "License");
++   you may not use this file except in compliance with the License.
++   You may obtain a copy of the License at
++
++       http://www.apache.org/licenses/LICENSE-2.0
++
++   Unless required by applicable law or agreed to in writing, software
++   distributed under the License is distributed on an "AS IS" BASIS,
++   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++   See the License for the specific language governing permissions and
++   limitations under the License.
++*/
++#pragma once
++#include <memory>
++#include <string>
++#include <vector>
++#include <variant>
++#include <optional>
++#include <compare> // For operator<=>
++#include "statement.hpp"
++#include "typedef.hpp" // Assuming point is defined here
++#include "equal_angles.hpp"        // Required for returning equal_angles objects
++#include <stdexcept>          // For std::invalid_argument
++
++namespace Yuclid {
++
++  class NonCyclicQuadrangle : public Statement {
++  public:
++    NonCyclicQuadrangle(Point a, Point b, Point c, Point d); // Renamed parameters
++    explicit NonCyclicQuadrangle(const std::vector<statement_arg>& args); // Added explicit constructor
++
++    [[nodiscard]] std::string name() const override;
++    [[nodiscard]] std::vector<Point> points() const override;
++    [[nodiscard]] std::unique_ptr<Statement> normalize() const override;
++    [[nodiscard]] bool check_nondegen() const override;
++    [[nodiscard]] bool check_equations() const override;
++    [[nodiscard]] std::vector<statement_arg> args() const override;
++    [[nodiscard]] std::unique_ptr<Statement> clone() const override;
++
++    // Public read-only access methods for points
++    [[nodiscard]] const Point& a() const { return m_a; }
++    [[nodiscard]] const Point& b() const { return m_b; }
++    [[nodiscard]] const Point& c() const { return m_c; }
++    [[nodiscard]] const Point& d() const { return m_d; }
++
++    // Statement-specific methods for cyclic quadrilateral angle equalities
++    [[nodiscard]] EqualAngles equal_angles_cad_cbd() const;
++    [[nodiscard]] EqualAngles equal_angles_bad_bcd() const;
++    [[nodiscard]] EqualAngles equal_angles_abd_acd() const;
++
++    std::ostream &print(std::ostream &out) const override;
++
++  private:
++    Point m_a; // Renamed private member
++    Point m_b; // Renamed private member
++    Point m_c; // Renamed private member
++    Point m_d; // Renamed private member
++
++    // Defaulted three-way comparison operator
++    auto operator<=>(const NonCyclicQuadrangle &other) const = default;
++  };
++
++} // namespace Yuclid
+diff --git a/yuclid/src/theorem.cpp b/yuclid/src/theorem.cpp
+index d88c013..127d0f1 100644
+--- a/yuclid/src/theorem.cpp
++++ b/yuclid/src/theorem.cpp
+@@ -24,6 +24,7 @@
+ #include "statement/cong.hpp"
+ #include "statement/congruent_triangles.hpp"
+ #include "statement/cyclic.hpp"
++#include "statement/ncyclic.hpp"
+ #include "statement/eqn_statement.hpp"
+ #include "statement/eqratio.hpp"
+ #include "statement/equal_angles.hpp"
+@@ -61,6 +62,7 @@
+ #include <utility>
+ #include <vector>
+ 
++
+ using namespace std;
+ 
+ namespace Yuclid {
+@@ -609,7 +611,6 @@ namespace Yuclid {
+ 
+   Theorem Theorem::radical_axes(const Point &p, const Point &p1, const Point &q, const Point &q1, const Point &e, const Point &f, const Point &c, const Point &r, const Point &s) {
+     Theorem thm("Radical axes.", "r94");
+-    // cerr << "THEOREM: " << p.name() << " " << p1.name() << " " << q.name() << " "
+     thm
+     .add_hypothesis<CyclicQuadrangle>(p1, c, p, e)
+     .add_hypothesis<CyclicQuadrangle>(q1, c, q, f)
+@@ -618,6 +619,7 @@ namespace Yuclid {
+     .add_hypothesis<Collinear>(r, q1, q)
+     .add_hypothesis<Collinear>(s, c, r)
+     .add_hypothesis<Collinear>(s, e, f)
++    // .add_hypothesis<NonCyclicQuadrangle>(p1, c, q1, p)
+     .add_conclusion<CyclicQuadrangle>(p, p1, q, q1);
+     return thm;
+   }

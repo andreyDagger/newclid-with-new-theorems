@@ -63,6 +63,9 @@ from newclid.all_rules import (
     R91_ANGLES_OF_ISO_TRAPEZOID,
     R93_PAPPUS_THEOREM,
     R94_RADICAL_AXES,
+    R95_PASCAL_THEOREM,
+    R96_DESARGUES_THEOREM,
+    R97_NEWTON_GAUSS_LINE,
 )
 from newclid.deductors import ARReason
 from newclid.deductors.deductor_interface import ARCoefficient
@@ -426,6 +429,9 @@ YUCLID_RULES: set[Rule] = {
     R91_ANGLES_OF_ISO_TRAPEZOID,
     R93_PAPPUS_THEOREM,
     R94_RADICAL_AXES,
+    R95_PASCAL_THEOREM,
+    R96_DESARGUES_THEOREM,
+    R97_NEWTON_GAUSS_LINE,
 }
 
 ID_TO_YUCLID_RULE: dict[str, Rule] = {rule.id: rule for rule in YUCLID_RULES}

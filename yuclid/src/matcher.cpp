@@ -133,6 +133,9 @@ namespace Yuclid {
     }
     match_pappus();
     match_radical_axes();
+    match_pascal_theorem();
+    match_desargues_theorem();
+    match_newton_gauss_line();
   }
 
   vector<tuple<double, double, Triangle>> TheoremMatcher::all_triangles() {
@@ -693,6 +696,137 @@ namespace Yuclid {
       }
     }
   }
+
+  void TheoremMatcher::match_pascal_theorem() {
+    const auto& points = m_problem->all_points();
+    for (const auto& pt_a : points) {
+      for (const auto& pt_b : points) {
+        if (pt_a.is_close(pt_b)) continue;
+        for (const auto& pt_c : points) {
+          if (pt_c.is_close(pt_a) || pt_c.is_close(pt_b)) continue;
+          for (const auto& pt_d : points) {
+            if (pt_d.is_close(pt_a) || pt_d.is_close(pt_b) || pt_d.is_close(pt_c)) continue;
+            if (!CyclicQuadrangle(pt_a, pt_b, pt_c, pt_d).check_equations()) continue;
+            for (const auto& pt_e : points) {
+              if (pt_e.is_close(pt_a) || pt_e.is_close(pt_b) || pt_e.is_close(pt_c) || pt_e.is_close(pt_d)) continue;
+              if (!CyclicQuadrangle(pt_b, pt_c, pt_d, pt_e).check_equations()) continue;
+              for (const auto& pt_f : points) {
+                if (pt_f.is_close(pt_a) || pt_f.is_close(pt_b) || pt_f.is_close(pt_c) || pt_f.is_close(pt_d) || pt_f.is_close(pt_e)) continue;
+                if (!CyclicQuadrangle(pt_c, pt_d, pt_e, pt_f).check_equations()) continue;
+                for (const auto& pt_x : points) {
+                  if (pt_x.is_close(pt_a) || pt_x.is_close(pt_b) || pt_x.is_close(pt_c) || pt_x.is_close(pt_d) || pt_x.is_close(pt_e) || pt_x.is_close(pt_f)) continue;
+                  if (!Collinear(pt_x, pt_a, pt_b).check_equations() || !Collinear(pt_x, pt_d, pt_e).check_equations()) continue;
+                  for (const auto& pt_y : points) {
+                    if (pt_y.is_close(pt_a) || pt_y.is_close(pt_b) || pt_y.is_close(pt_c) || pt_y.is_close(pt_d) || pt_y.is_close(pt_e) || pt_y.is_close(pt_f) || pt_y.is_close(pt_x)) continue;
+                    if (!Collinear(pt_y, pt_b, pt_c).check_equations() || !Collinear(pt_y, pt_e, pt_f).check_equations()) continue;
+                    for (const auto& pt_z : points) {
+                      if (pt_z.is_close(pt_a) || pt_z.is_close(pt_b) || pt_z.is_close(pt_c) || pt_z.is_close(pt_d) || pt_z.is_close(pt_e) || pt_z.is_close(pt_f) || pt_z.is_close(pt_x) || pt_z.is_close(pt_y)) continue;
+                      if (!Collinear(pt_z, pt_c, pt_d).check_equations() || !Collinear(pt_z, pt_a, pt_f).check_equations()) continue;
+                      insert_theorem(Theorem::pascal_theorem(pt_a, pt_b, pt_c, pt_d, pt_e, pt_f, pt_x, pt_y, pt_z));
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  void TheoremMatcher::match_desargues_theorem() {
+    const auto& points = m_problem->all_points();
+    for (const auto& p : points) {
+        for (const auto& a1 : points) {
+            if (a1.is_close(p)) continue;
+            for (const auto& a2 : points) {
+                if (a2.is_close(p) || a2.is_close(a1)) continue;
+                if (!Collinear(p, a1, a2).check_equations()) continue;
+                for (const auto& b1 : points) {
+                    if (b1.is_close(p) || b1.is_close(a1) || b1.is_close(a2)) continue;
+                    for (const auto& b2 : points) {
+                        if (b2.is_close(p) || b2.is_close(a1) || b2.is_close(a2) || b2.is_close(b1)) continue;
+                        if (!Collinear(p, b1, b2).check_equations()) continue;
+                        for (const auto& c1 : points) {
+                            if (c1.is_close(p) || c1.is_close(a1) || c1.is_close(a2) || c1.is_close(b1) || c1.is_close(b2)) continue;
+                            for (const auto& c2 : points) {
+                                if (c2.is_close(p) || c2.is_close(a1) || c2.is_close(a2) || c2.is_close(b1) || c2.is_close(b2) || c2.is_close(c1)) continue;
+                                if (!Collinear(p, c1, c2).check_equations()) continue;
+
+                                for (const auto& x : points) {
+                                    if (x.is_close(p) || x.is_close(a1) || x.is_close(a2) || x.is_close(b1) || x.is_close(b2) || x.is_close(c1) || x.is_close(c2)) continue;
+                                    if (!Collinear(x, a1, b1).check_equations() || !Collinear(x, a2, b2).check_equations()) continue;
+
+                                    for (const auto& y : points) {
+                                        if (y.is_close(p) || y.is_close(a1) || y.is_close(a2) || y.is_close(b1) || y.is_close(b2) || y.is_close(c1) || y.is_close(c2) || y.is_close(x)) continue;
+                                        if (!Collinear(y, a1, c1).check_equations() || !Collinear(y, a2, c2).check_equations()) continue;
+
+                                        for (const auto& z : points) {
+                                            if (z.is_close(p) || z.is_close(a1) || z.is_close(a2) || z.is_close(b1) || z.is_close(b2) || z.is_close(c1) || z.is_close(c2) || z.is_close(x) || z.is_close(y)) continue;
+                                            if (!Collinear(z, b1, c1).check_equations() || !Collinear(z, b2, c2).check_equations()) continue;
+
+                                            insert_theorem(Theorem::desargues_theorem(p, a1, b1, c1, a2, b2, c2, x, y, z));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+  void TheoremMatcher::match_newton_gauss_line() {
+    const auto& points = m_problem->all_points();
+    for (const auto& a : points) {
+        for (const auto& b : points) {
+            if (b.is_close(a)) continue;
+            for (const auto& c : points) {
+                if (c.is_close(a) || c.is_close(b)) continue;
+
+                for (const auto& a1 : points) {
+                    if (a1.is_close(a) || a1.is_close(b) || a1.is_close(c)) continue;
+                    if (!Collinear(a1, b, c).check_equations()) continue;
+
+                    for (const auto& b1 : points) {
+                        if (b1.is_close(a) || b1.is_close(b) || b1.is_close(c) || b1.is_close(a1)) continue;
+                        if (!Collinear(b1, c, a).check_equations()) continue;
+
+                        for (const auto& c1 : points) {
+                            if (c1.is_close(a) || c1.is_close(b) || c1.is_close(c) || c1.is_close(a1) || c1.is_close(b1)) continue;
+                            if (!Collinear(c1, a, b).check_equations()) continue;
+                            if (!Collinear(a1, b1, c1).check_equations()) continue;
+
+                            for (const auto& a2 : points) {
+                                if (a2.is_close(a) || a2.is_close(b) || a2.is_close(c) ||
+                                    a2.is_close(a1) || a2.is_close(b1) || a2.is_close(c1)) continue;
+                                if (!Midpoint(a, a2, a1).check_equations()) continue;
+                              // cerr<<"HERE\n";
+                                for (const auto& b2 : points) {
+                                    if (b2.is_close(a) || b2.is_close(b) || b2.is_close(c) ||
+                                        b2.is_close(a1) || b2.is_close(b1) || b2.is_close(c1) || b2.is_close(a2)) continue;
+                                    if (!Midpoint(b, b2, b1).check_equations()) continue;
+
+                                    for (const auto& c2 : points) {
+                                        if (c2.is_close(a) || c2.is_close(b) || c2.is_close(c) ||
+                                            c2.is_close(a1) || c2.is_close(b1) || c2.is_close(c1) ||
+                                            c2.is_close(a2) || c2.is_close(b2)) continue;
+                                        if (!Midpoint(c, c2, c1).check_equations()) continue;
+
+                                        insert_theorem(Theorem::newton_gauss_line(
+                                            a, b, c, a1, b1, c1, a2, b2, c2));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
   void TheoremMatcher::match_law_sin(const unordered_set<SinOrDist, boost::hash<SinOrDist>> &angles) {
     if (m_config->ar_sin_enabled() && m_config->eqn_statements_enabled()) {

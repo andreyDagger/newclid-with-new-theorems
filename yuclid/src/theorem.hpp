@@ -260,6 +260,12 @@ namespace Yuclid {
 
     static Theorem radical_axes(const Point& p, const Point& p1, const Point& q, const Point& q1, const Point& e, const Point& f, const Point& c, const Point& r, const Point& s);
 
+    static Theorem pascal_theorem(const Point& a, const Point& b, const Point& c, const Point& d, const Point& e, const Point& f, const Point& x, const Point& y, const Point& z);
+
+    static Theorem desargues_theorem(const Point& p, const Point& a1, const Point& b1, const Point& c1, const Point& a2, const Point& b2, const Point& c2, const Point& x, const Point& y, const Point& z);
+
+    static Theorem newton_gauss_line(const Point& a, const Point& b, const Point& c, const Point& a1, const Point& b1, const Point& c1, const Point& a2, const Point& b2, const Point& c2);
+
     [[nodiscard]] Theorem normalize() const;
 
     Theorem() = default;

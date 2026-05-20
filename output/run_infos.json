@@ -1,13 +1,13 @@
 {
-  "runtime": 0.48455286026000977,
+  "runtime": 0.02431511878967285,
   "success": true,
-  "steps": 143,
+  "steps": 2,
   "success_per_goal": {
-    "PP₁QQ₁ are cyclic succeeded": true
+    "A₂, B₂, C₂ are collinear succeeded": true
   },
   "agent_stats": {
     "agent_type": "follow_deductions",
-    "n_deductions_stored": 142,
-    "n_deductions_followed": 142
+    "n_deductions_stored": 1,
+    "n_deductions_followed": 1
   }
 }

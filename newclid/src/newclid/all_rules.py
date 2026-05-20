@@ -125,6 +125,9 @@ __all__ = [
     "R92_DIAMETER_CROSSES_CENTER",
     "R93_PAPPUS_THEOREM",
     "R94_RADICAL_AXES",
+    "R95_PASCAL_THEOREM",
+    "R96_DESARGUES_THEOREM",
+    "R97_NEWTON_GAUSS_LINE",
 ]
 
 R00_PERPENDICULARS_GIVE_PARALLEL = Rule(
@@ -1095,6 +1098,55 @@ R94_RADICAL_AXES = Rule(
     conclusions_txt=("cyclic P Q Q1 P1",),
 )
 
+R95_PASCAL_THEOREM = Rule(
+    id="r95",
+    description="Pascal theorem",
+    premises_txt=(
+        "cyclic A B C D",
+        "cyclic B C D E",
+        "cyclic C D E F",
+        "coll X A B",
+        "coll X D E",
+        "coll Y B C",
+        "coll Y E F",
+        "coll Z C D",
+        "coll Z A F",
+    ),
+    conclusions_txt=("coll X Y Z",),
+)
+
+R96_DESARGUES_THEOREM = Rule(
+    id="r96",
+    description="Desargues theorem",
+    premises_txt=(
+        "coll P A1 A2",
+        "coll P B1 B2",
+        "coll P C1 C2",
+        "coll X A1 B1",
+        "coll X A2 B2",
+        "coll Y A1 C1",
+        "coll Y A2 C2",
+        "coll Z B1 C1",
+        "coll Z B2 C2",
+    ),
+    conclusions_txt=("coll X Y Z",),
+)
+
+R97_NEWTON_GAUSS_LINE = Rule(
+    id="r97",
+    description="Newton Gauss",
+    premises_txt=(
+        "coll A B C1",
+        "coll A C B1",
+        "coll B C A1",
+        "coll A1 B1 C1",
+        "midp A1 A2 A",
+        "midp B1 B2 B",
+        "midp C1 C2 C",
+    ),
+    conclusions_txt=("coll A2 B2 C2",),
+)
+
 ALL_RULES: list[Rule] = [
     R00_PERPENDICULARS_GIVE_PARALLEL,
     R01_DEFINITION_OF_CYCLIC,
@@ -1185,6 +1237,9 @@ ALL_RULES: list[Rule] = [
     R92_DIAMETER_CROSSES_CENTER,
     R93_PAPPUS_THEOREM,
     R94_RADICAL_AXES,
+    R95_PASCAL_THEOREM,
+    R96_DESARGUES_THEOREM,
+    R97_NEWTON_GAUSS_LINE,
 ]
 """List of all rules that existed at some point in the history of Newclid"""
 

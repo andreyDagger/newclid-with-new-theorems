@@ -166,6 +166,12 @@ namespace Yuclid {
 
     void match_radical_axes();
 
+    void match_pascal_theorem();
+
+    void match_desargues_theorem();
+
+    void match_newton_gauss_line();
+
     const Problem *m_problem;
     const Config::Solver *m_config;
 

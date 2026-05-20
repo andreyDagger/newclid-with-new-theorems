@@ -624,6 +624,52 @@ namespace Yuclid {
     return thm;
   }
 
+  Theorem Theorem::pascal_theorem(const Point& a, const Point& b, const Point& c, const Point& d, const Point& e, const Point& f, const Point& x, const Point& y, const Point& z) {
+    Theorem thm("Pascal theorem.", "r95");
+    thm
+    .add_hypothesis<CyclicQuadrangle>(a, b, c, d)
+    .add_hypothesis<CyclicQuadrangle>(b, c, d, e)
+    .add_hypothesis<CyclicQuadrangle>(c, d, e, f)
+    .add_hypothesis<Collinear>(x, a, b)
+    .add_hypothesis<Collinear>(x, d, e)
+    .add_hypothesis<Collinear>(y, b, c)
+    .add_hypothesis<Collinear>(y, e, f)
+    .add_hypothesis<Collinear>(z, c, d)
+    .add_hypothesis<Collinear>(z, a, f)
+    .add_conclusion<Collinear>(x, y, z);
+    return thm;
+  }
+
+  Theorem Theorem::desargues_theorem(const Point& p, const Point& a1, const Point& b1, const Point& c1, const Point& a2, const Point& b2, const Point& c2, const Point& x, const Point& y, const Point& z) {
+    Theorem thm("Desargues theorem.", "r96");
+    thm
+    .add_hypothesis<Collinear>(p, a1, a2)
+    .add_hypothesis<Collinear>(p, b1, b2)
+    .add_hypothesis<Collinear>(p, c1, c2)
+    .add_hypothesis<Collinear>(x, a1, b1)
+    .add_hypothesis<Collinear>(x, a2, b2)
+    .add_hypothesis<Collinear>(y, a1, c1)
+    .add_hypothesis<Collinear>(y, a2, c2)
+    .add_hypothesis<Collinear>(z, b1, c1)
+    .add_hypothesis<Collinear>(z, b2, c2)
+    .add_conclusion<Collinear>(x, y, z);
+    return thm;
+  }
+
+  Theorem Theorem::newton_gauss_line(const Point& a, const Point& b, const Point& c, const Point& a1, const Point& b1, const Point& c1, const Point& a2, const Point& b2, const Point& c2) {
+    Theorem thm("Newton Gauss line.", "r97");
+    thm
+    .add_hypothesis<Collinear>(a, b, c1)
+    .add_hypothesis<Collinear>(b, c, a1)
+    .add_hypothesis<Collinear>(a, c, b1)
+    .add_hypothesis<Collinear>(a1, b1, c1)
+    .add_hypothesis<Midpoint>(a, a2, a1)
+    .add_hypothesis<Midpoint>(b, b2, b1)
+    .add_hypothesis<Midpoint>(c, c2, c1)
+    .add_conclusion<Collinear>(a2, b2, c2);
+    return thm;
+  }
+
   Point Theorem::max_point() const {
 #ifdef __cpp_lib_ranges_concat
     // TODO: test that this #ifdef branch actually works
