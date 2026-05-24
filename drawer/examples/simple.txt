@@ -1,0 +1,11 @@
+# A tiny configuration using the core commands.
+fix a 0 0
+fix b 1 0
+fix c 0.5 0.8660254038
+fix e 0.35 0
+init d 0.5 -0.4
+
+cong a b b c
+coll a e b
+cyclic a b c d
+eqangle a b c b c a

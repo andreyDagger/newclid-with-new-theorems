@@ -1,0 +1,45 @@
+# IMO 2008 Problem 1 configuration.
+# Let H be the orthocenter of acute triangle ABC. The circle centered at the
+# midpoint of BC and passing through H meets line BC at A1 and A2; similarly for
+# B1, B2 and C1, C2. The check_cyclic rows encode the conclusion that the six
+# constructed points are concyclic.
+
+fix a 0 2
+fix b -1 0
+fix c 2 0
+
+init h 0 1
+init d 0.5 0
+init e 1 1
+init f -0.5 1
+init a1 -0.6180339887 0
+init a2 1.6180339887 0
+init b1 1.7071067812 0.2928932188
+init b2 0.2928932188 1.7071067812
+init c1 -0.2763932023 1.4472135955
+init c2 -0.7236067977 0.5527864045
+
+perp a h b c
+perp b h a c
+midpoint d b c
+midpoint e c a
+midpoint f a b
+
+coll b a1 c
+coll b a2 c
+cong d a1 d h
+cong d a2 d h
+
+coll c b1 a
+coll c b2 a
+cong e b1 e h
+cong e b2 e h
+
+coll a c1 b
+coll a c2 b
+cong f c1 f h
+cong f c2 f h
+
+check_cyclic a1 a2 b1 b2
+check_cyclic a1 a2 b1 c1
+check_cyclic a1 a2 b1 c2

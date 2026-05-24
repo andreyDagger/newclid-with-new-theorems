@@ -1,0 +1,27 @@
+# IMO 2004 Problem 1 configuration.
+# ABC is acute. The circle with diameter BC meets AB and AC at M and N.
+# O is the midpoint of BC. R is the intersection of the angle bisectors of
+# angle BAC and angle MON. K is built on BC and on the circle BMR; the check
+# verifies the theorem's second circle CNR also passes through K.
+
+fix a 0 2
+fix b -1 0
+fix c 2 0
+
+init o 0.5 0
+init m -0.4 1.2
+init n 0.5 1.5
+init r 0.158113883 1.02565835
+init k 0.32455532 0
+
+midpoint o b c
+coll a m b
+coll a n c
+perp b m c m
+perp b n c n
+eqangle b a r r a c
+eqangle m o r r o n
+coll b k c
+cyclic b m r k
+
+check_cyclic c n r k

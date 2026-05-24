@@ -1,0 +1,33 @@
+# IMO 2007 Problem 2 configuration.
+# ABCD is a parallelogram, B C E D are cyclic, A F G are collinear,
+# F lies on DC, G lies on BC, and EF = EG = EC.
+#
+# M, N, P are added as requested:
+# M midpoint of CF, N midpoint of CG, P midpoint of AC and also BD.
+
+fix d -0.8660254038 -0.5
+fix c 0.8660254038 -0.5
+fix e 0.2756373558 -0.9612616959
+
+init a -0.7326599767 0.0348994967
+init b 0.9993908270 0.0348994967
+init f -0.3147506934 -0.5
+init g 0.5803698067 -1.6457020049
+init m 0.2756373552 -0.5
+init n 0.7231976052 -1.0728510025
+init p 0.0666827135 -0.2325502517
+
+midpoint p a c
+midpoint p b d
+coll d c f
+coll b c g
+coll a f g
+cyclic b c e d
+cong e f e g
+cong e f e c
+
+midpoint m c f
+midpoint n c g
+
+# The theorem's conclusion, not used as a constraint.
+check_eqangle d a f f a b

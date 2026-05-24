@@ -1,0 +1,25 @@
+# IMO 2019 Problem 2 configuration.
+# A1 lies on BC and B1 lies on AC. P lies on AA1, Q lies on BB1, and PQ is
+# parallel to AB. P1 lies on PB1 with angle PP1C = BAC. Q1 lies on QA1 with
+# angle CQ1Q = CBA. The check verifies P, Q, Q1, P1 are cyclic.
+
+fix a 0 2
+fix b -1 0
+fix c 2 0
+fix a1 0.5 0
+fix b1 1 1
+
+init p 0.275 0.9
+init q 0.1 0.55
+init p1 2.21820303 1.168028
+init q1 1.37567568 -1.20405405
+
+coll a p a1
+coll b q b1
+parallel p q a b
+coll p b1 p1
+eqangle p p1 c b a c
+coll q a1 q1
+eqangle c q1 q c b a
+
+check_cyclic p q q1 p1

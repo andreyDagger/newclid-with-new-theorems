@@ -1,0 +1,25 @@
+# IMO 2014 Problem 4 configuration.
+# P and Q lie on BC with angle PAB = ACB and angle CAQ = ABC.
+# P is the midpoint of AM and Q is the midpoint of AN. X is the intersection
+# of BM and CN. The check verifies X lies on the circumcircle of ABC.
+
+fix a 0 2
+fix b -1 0
+fix c 2 0
+
+init p 0.6666666667 0
+init q -0.6666666667 0
+init m 1.3333333333 -2
+init n -1.3333333333 -2
+init x 0.2352941176 -1.0588235294
+
+coll b p c
+coll b q c
+eqangle p a b a c b
+eqangle c a q c b a
+midpoint p a m
+midpoint q a n
+coll b m x
+coll c n x
+
+check_cyclic a b x c
