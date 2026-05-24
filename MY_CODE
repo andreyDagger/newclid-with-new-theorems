@@ -1,4 +1,4 @@
-﻿from newclid import GeometricSolverBuilder, GeometricSolver
+from newclid import GeometricSolverBuilder, GeometricSolver
 from newclid.jgex.problem_builder import JGEXProblemBuilder
 from pathlib import Path
 from newclid.jgex.formulation import JGEXFormulation
