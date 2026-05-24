@@ -1,0 +1,2162 @@
+﻿from newclid import GeometricSolverBuilder, GeometricSolver
+from newclid.jgex.problem_builder import JGEXProblemBuilder
+from pathlib import Path
+from newclid.jgex.formulation import JGEXFormulation
+import numpy as np
+
+# Set the random generator
+rng = np.random.default_rng()
+
+# statement = "a = free a; b = free b; c = on_line c a b; p = free p; q = free q; r = on_line r p q; x = on_line x a q, on_line x b p; y = on_line y a r, on_line y c p; z = on_line z b r, on_line z c q ? coll x y z"
+statement = "a b c = triangle a b c; a1 = on_line a1 b c; b1 = on_line b1 a c; p = on_line p a a1; q = on_line q b b1, on_pline q p a b; p1 = on_line p1 p b1, eqangle3 p1 p c a b c; q1 = on_line q1 q a1, eqangle3 q1 c q b c a; r = on_line r p p1, on_line r q q1; e = on_line e p q, on_line e a c; f = on_line f p q, on_line f b c; t = on_line t a q, on_line t b p; s = on_line s r t, on_line s p q; u = on_line u r t, on_line u a b ? cyclic p p1 q1 q"
+# Build the problem setup from JGEX string
+problem_setup = JGEXProblemBuilder(rng=rng).with_problem_from_txt(
+  statement
+).build()
+
+# We now build the solver on the problem
+solver: GeometricSolver = GeometricSolverBuilder().build(problem_setup)
+
+# And run the solver
+success = solver.run()
+
+if success:
+    print("Successfuly solved the problem! Proof:")
+    solver.write_all_outputs(out_folder_path=Path('./output'),jgex_problem=JGEXFormulation.from_text(statement))
+else:
+    print("Failed to solve the problem...")
+
+print(f"Run infos {solver.run_infos}")
+
+    "R93_PAPPUS_THEOREM",
+    "R94_RADICAL_AXES",
+R93_PAPPUS_THEOREM = Rule(
+    id="r93",
+    description="Pappus",
+    premises_txt=(
+        "coll A B C",
+        "coll P Q R",
+        "coll A X Q",
+        "coll B X P",
+        "coll A Y R",
+        "coll C Y P",
+        "coll B Z R",
+        "coll C Z Q",
+    ),
+    conclusions_txt=("coll X Y Z",),
+)
+
+R94_RADICAL_AXES = Rule(
+    id="r94",
+    description="Radial axis",
+    premises_txt=(
+        "cyclic P1 C P E",
+        "cyclic Q1 C Q F",
+        "eqratio S P S Q S F S E",
+        "coll R P1 P",
+        "coll R Q1 Q",
+        "coll S C R",
+        "coll S E F"
+    ),
+    conclusions_txt=("cyclic P Q Q1 P1",),
+)
+
+    R93_PAPPUS_THEOREM,
+    R94_RADICAL_AXES,
+    R93_PAPPUS_THEOREM,
+    R94_RADICAL_AXES,
+                print(f"STDERR: {result.stderr}")
+    R93_PAPPUS_THEOREM,
+    R94_RADICAL_AXES,
+    match_pappus();
+    match_radical_axes();
+  void TheoremMatcher::match_pappus() {
+    for (const auto& pt_a : m_problem->all_points()) {
+      for (const auto& pt_b : m_problem->all_points()) {
+        if (pt_b.is_close(pt_a)) continue;
+        for (const auto& pt_c : m_problem->all_points()) {
+          if (pt_c.is_close(pt_b) || pt_c.is_close(pt_a)) continue;
+          if (!Collinear(pt_a, pt_b, pt_c).check_equations()) continue;
+          for (const auto& pt_p : m_problem->all_points()) {
+            if (pt_p.is_close(pt_a) || pt_p.is_close(pt_b) || pt_p.is_close(pt_c)) continue;
+            for (const auto& pt_q : m_problem->all_points()) {
+              if (pt_q.is_close(pt_a) || pt_q.is_close(pt_b) || pt_q.is_close(pt_c) || pt_q.is_close(pt_p)) continue;
+              for (const auto& pt_r : m_problem->all_points()) {
+                if (pt_r.is_close(pt_a) || pt_r.is_close(pt_b) || pt_r.is_close(pt_c) || pt_r.is_close(pt_p) || pt_r.is_close(pt_q)) continue;
+                if (!Collinear(pt_p, pt_q, pt_r).check_equations()) continue;
+                for (const auto& pt_x : m_problem->all_points()) {
+                  if (pt_x.is_close(pt_a) || pt_x.is_close(pt_b) || pt_x.is_close(pt_c) || pt_x.is_close(pt_p) || pt_x.is_close(pt_q) || pt_x.is_close(pt_r)) continue;
+                  if (!Collinear(pt_a, pt_x, pt_q).check_equations() || !Collinear(pt_b, pt_x, pt_p).check_equations()) continue;
+                  for (const auto& pt_y : m_problem->all_points()) {
+                    if (pt_y.is_close(pt_a) || pt_y.is_close(pt_b) || pt_y.is_close(pt_c) || pt_y.is_close(pt_p) || pt_y.is_close(pt_q) || pt_y.is_close(pt_r) || pt_y.is_close(pt_x)) continue;
+                    if (!Collinear(pt_a, pt_y, pt_r).check_equations() || !Collinear(pt_c, pt_y, pt_p).check_equations()) continue;
+                    for (const auto& pt_z : m_problem->all_points()) {
+                      if (pt_z.is_close(pt_a) || pt_z.is_close(pt_b) || pt_z.is_close(pt_c) || pt_z.is_close(pt_p) || pt_z.is_close(pt_q) || pt_z.is_close(pt_r) || pt_z.is_close(pt_x) || pt_z.is_close(pt_y)) continue;
+                      if (!Collinear(pt_b, pt_z, pt_r).check_equations() || !Collinear(pt_c, pt_z, pt_q).check_equations()) continue;
+                      insert_theorem(Theorem::pappus_theorem(pt_a, pt_b, pt_c, pt_p, pt_q, pt_r, pt_x, pt_y, pt_z));
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  void TheoremMatcher::match_radical_axes() {
+    for (const auto& pt_p : m_problem->all_points()) {
+      for (const auto& pt_p1 : m_problem->all_points()) {
+        if (pt_p1.is_close(pt_p)) continue;
+        for (const auto& pt_c : m_problem->all_points()) {
+          if (pt_c.is_close(pt_p) || pt_c.is_close(pt_p1)) continue;
+          for (const auto& pt_e : m_problem->all_points()) {
+            if (pt_e.is_close(pt_p) || pt_e.is_close(pt_p1) || pt_e.is_close(pt_c)) continue;
+            if (!CyclicQuadrangle(pt_p1, pt_c, pt_p, pt_e).check_equations()) continue;
+            for (const auto& pt_q : m_problem->all_points()) {
+              if (pt_q.is_close(pt_p) || pt_q.is_close(pt_p1) || pt_q.is_close(pt_c) || pt_q.is_close(pt_e)) continue;
+              for (const auto& pt_q1 : m_problem->all_points()) {
+                if (pt_q1.is_close(pt_p) || pt_q1.is_close(pt_p1) || pt_q1.is_close(pt_c) || pt_q1.is_close(pt_e) || pt_q1.is_close(pt_q)) continue;
+                for (const auto& pt_f : m_problem->all_points()) {
+                  if (pt_f.is_close(pt_p) || pt_f.is_close(pt_p1) || pt_f.is_close(pt_c) || pt_f.is_close(pt_e) || pt_f.is_close(pt_q) || pt_f.is_close(pt_q1)) continue;
+                  if (!CyclicQuadrangle(pt_q1, pt_c, pt_q, pt_f).check_equations()) continue;
+                  for (const auto& pt_r : m_problem->all_points()) {
+                    if (pt_r.is_close(pt_p) || pt_r.is_close(pt_p1) || pt_r.is_close(pt_c) || pt_r.is_close(pt_e) || pt_r.is_close(pt_q) || pt_r.is_close(pt_q1) || pt_r.is_close(pt_f)) continue;
+                    if (!Collinear(pt_r, pt_p1, pt_p).check_equations() || !Collinear(pt_r, pt_q1, pt_q).check_equations()) continue;
+                    for (const auto& pt_s : m_problem->all_points()) {
+                      if (pt_s.is_close(pt_p) || pt_s.is_close(pt_p1) || pt_s.is_close(pt_c) || pt_s.is_close(pt_e) || pt_s.is_close(pt_q) || pt_s.is_close(pt_q1) || pt_s.is_close(pt_f) || pt_s.is_close(pt_r)) continue;
+                      if (!Collinear(pt_s, pt_c, pt_r).check_equations() || !Collinear(pt_s, pt_e, pt_f).check_equations()) continue;
+                      if (!EqualRatios(Dist(pt_s, pt_p), Dist(pt_s, pt_q), Dist(pt_s, pt_f), Dist(pt_s, pt_e)).check_equations()) continue;
+                      // cerr << "HERE: " << pt_p.name() << " " << pt_p1.name() << " " << pt_c.name() << " " << pt_e.name() << " " << pt_q.name() << " " << pt_q1.name() << " " << pt_f.name() << " " << pt_r.name() << " " << pt_s.name() << "\n";
+                      insert_theorem(Theorem::radical_axes(pt_p, pt_p1, pt_q, pt_q1, pt_e, pt_f, pt_c, pt_r, pt_s));
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+    void match_pappus();
+
+    void match_radical_axes();
+
+  Theorem Theorem::pappus_theorem(const Point& a, const Point& b, const Point& c, const Point& p, const Point& q, const Point& r, const Point& x, const Point& y, const Point& z) {
+    Theorem thm("Pappus.", "r93");
+    thm
+      .add_hypothesis<Collinear>(a, b, c)
+    .add_hypothesis<Collinear>(p, q, r)
+    .add_hypothesis<Collinear>(a, x, q)
+    .add_hypothesis<Collinear>(b, x, p)
+    .add_hypothesis<Collinear>(a, y, r)
+    .add_hypothesis<Collinear>(c, y, p)
+    .add_hypothesis<Collinear>(b, z, r)
+    .add_hypothesis<Collinear>(c, z, q)
+    .add_conclusion<Collinear>(x, y, z);
+    return thm;
+  }
+
+  Theorem Theorem::radical_axes(const Point &p, const Point &p1, const Point &q, const Point &q1, const Point &e, const Point &f, const Point &c, const Point &r, const Point &s) {
+    Theorem thm("Radical axes.", "r94");
+    // cerr << "THEOREM: " << p.name() << " " << p1.name() << " " << q.name() << " "
+    thm
+    .add_hypothesis<CyclicQuadrangle>(p1, c, p, e)
+    .add_hypothesis<CyclicQuadrangle>(q1, c, q, f)
+    .add_hypothesis<EqualRatios>(Dist(s, p), Dist(s, q), Dist(s, f), Dist(s, e))
+    .add_hypothesis<Collinear>(r, p1, p)
+    .add_hypothesis<Collinear>(r, q1, q)
+    .add_hypothesis<Collinear>(s, c, r)
+    .add_hypothesis<Collinear>(s, e, f)
+    .add_conclusion<CyclicQuadrangle>(p, p1, q, q1);
+    return thm;
+  }
+
+    static Theorem pappus_theorem(const Point& a, const Point& b, const Point& c, const Point& p, const Point& q, const Point& r, const Point& x, const Point& y, const Point& z);
+
+    static Theorem radical_axes(const Point& p, const Point& p1, const Point& q, const Point& q1, const Point& e, const Point& f, const Point& c, const Point& r, const Point& s);
+
+        "coll S E F",
+        # "ncyclic P1 C Q1 P",
+    N_CYCLIC = "ncyclic"
+
+
+class NCyclic(PredicateInterface):
+    """ncyclic A B C D -
+    Represent that 4 (or more) points not lie on the same circle."""
+
+    predicate_type: Literal[PredicateType.N_CYCLIC] = PredicateType.N_CYCLIC
+
+    points: tuple[Point, ...]
+
+    @staticmethod
+    def preparse(
+        args: tuple[PredicateArgument, ...],
+    ) -> tuple[PredicateArgument, ...] | None:
+        if len(set(args)) <= 3:
+            return None
+        return tuple(sorted(set(args)))
+
+    def check_numerical(self) -> bool:
+        return not Cyclic(points=self.points).check_numerical()
+
+    def check(self, proof_state: ProofState) -> bool | None:
+        return not proof_state.symbols.circles.check_cyclic(self.points)
+
+    # def add(self, proof_state: ProofState) -> tuple[PredicateInterface, ...]:
+    #     proof_state.symbols.circles.make_cyclic(self.points, justification=self)
+    #     return ()
+
+    def to_tokens(self) -> tuple[PredicateArgument, ...]:
+        return tuple(PredicateArgument(p.name) for p in self.points)
+
+    def __str__(self) -> str:
+        return f"{''.join(str(p) for p in self.points)} are not cyclic"
+#include "statement/ncyclic.hpp"
+                      if (!EqualRatios(Dist(pt_s, pt_p), Dist(pt_s, pt_q), Dist(pt_s, pt_f), Dist(pt_s, pt_e)).check_equations()) continue; // !NonCyclicQuadrangle(pt_p1, pt_c, pt_q1, pt_p).check_equations()
+/**
+   Copyright 2025 Concordance Inc. dba Harmonic
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+#include "ncyclic.hpp"
+#include "coll.hpp"
+#include "statement/statement.hpp"
+#include "type/point.hpp"
+#include "typedef.hpp"
+#include <algorithm>
+#include <memory>
+#include <ostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+namespace Yuclid {
+
+  NonCyclicQuadrangle::NonCyclicQuadrangle(Point a, Point b, Point c, Point d)
+    : m_a(a), m_b(b), m_c(c), m_d(d) {}
+
+  NonCyclicQuadrangle::NonCyclicQuadrangle(const vector<statement_arg>& args) :
+    m_a(get<Point>(args.at(0))), m_b(get<Point>(args.at(1))),
+    m_c(get<Point>(args.at(2))), m_d(get<Point>(args.at(3)))
+  {
+    if (args.size() != 4) {
+      throw invalid_argument("ncyclic constructor expects 4 arguments.");
+    }
+  }
+
+  string NonCyclicQuadrangle::name() const { return "ncyclic"; }
+
+  vector<Point> NonCyclicQuadrangle::points() const {
+    return {m_a, m_b, m_c, m_d};
+  }
+
+  unique_ptr<Statement> NonCyclicQuadrangle::normalize() const {
+    vector<Point> pts = {m_a, m_b, m_c, m_d};
+    ranges::sort(pts);
+    return make_unique<NonCyclicQuadrangle>(pts[0], pts[1], pts[2], pts[3]);
+  }
+
+  bool NonCyclicQuadrangle::check_nondegen() const {
+    return equal_angles_cad_cbd().check_nondegen() &&
+      equal_angles_bad_bcd().check_nondegen() &&
+      !Collinear(m_a, m_b, m_c).check_equations();
+  }
+
+  bool NonCyclicQuadrangle::check_equations() const {
+    return !equal_angles_cad_cbd().check_equations();
+  }
+
+  vector<statement_arg> NonCyclicQuadrangle::args() const {
+    return {m_a, m_b, m_c, m_d};
+  }
+
+  unique_ptr<Statement> NonCyclicQuadrangle::clone() const {
+    return make_unique<NonCyclicQuadrangle>(*this);
+  }
+
+  // Implementation of statement-specific methods for cyclic
+  EqualAngles NonCyclicQuadrangle::equal_angles_cad_cbd() const {
+    return {Angle(m_c, m_a, m_d), Angle(m_c, m_b, m_d)};
+  }
+
+  EqualAngles NonCyclicQuadrangle::equal_angles_bad_bcd() const {
+    return {Angle(m_b, m_a, m_d), Angle(m_b, m_c, m_d)};
+  }
+
+  EqualAngles NonCyclicQuadrangle::equal_angles_abd_acd() const {
+    return {Angle(m_a, m_b, m_d), Angle(m_a, m_c, m_d)};
+  }
+
+  ostream &NonCyclicQuadrangle::print(ostream &out) const {
+    return out << m_a << " not ∈ ω(" << m_b << m_c << m_d << ")";
+  }
+
+} // namespace Yuclid
+/**
+   Copyright 2025 Concordance Inc. dba Harmonic
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+#pragma once
+#include <memory>
+#include <string>
+#include <vector>
+#include <variant>
+#include <optional>
+#include <compare> // For operator<=>
+#include "statement.hpp"
+#include "typedef.hpp" // Assuming point is defined here
+#include "equal_angles.hpp"        // Required for returning equal_angles objects
+#include <stdexcept>          // For std::invalid_argument
+
+namespace Yuclid {
+
+  class NonCyclicQuadrangle : public Statement {
+  public:
+    NonCyclicQuadrangle(Point a, Point b, Point c, Point d); // Renamed parameters
+    explicit NonCyclicQuadrangle(const std::vector<statement_arg>& args); // Added explicit constructor
+
+    [[nodiscard]] std::string name() const override;
+    [[nodiscard]] std::vector<Point> points() const override;
+    [[nodiscard]] std::unique_ptr<Statement> normalize() const override;
+    [[nodiscard]] bool check_nondegen() const override;
+    [[nodiscard]] bool check_equations() const override;
+    [[nodiscard]] std::vector<statement_arg> args() const override;
+    [[nodiscard]] std::unique_ptr<Statement> clone() const override;
+
+    // Public read-only access methods for points
+    [[nodiscard]] const Point& a() const { return m_a; }
+    [[nodiscard]] const Point& b() const { return m_b; }
+    [[nodiscard]] const Point& c() const { return m_c; }
+    [[nodiscard]] const Point& d() const { return m_d; }
+
+    // Statement-specific methods for cyclic quadrilateral angle equalities
+    [[nodiscard]] EqualAngles equal_angles_cad_cbd() const;
+    [[nodiscard]] EqualAngles equal_angles_bad_bcd() const;
+    [[nodiscard]] EqualAngles equal_angles_abd_acd() const;
+
+    std::ostream &print(std::ostream &out) const override;
+
+  private:
+    Point m_a; // Renamed private member
+    Point m_b; // Renamed private member
+    Point m_c; // Renamed private member
+    Point m_d; // Renamed private member
+
+    // Defaulted three-way comparison operator
+    auto operator<=>(const NonCyclicQuadrangle &other) const = default;
+  };
+
+} // namespace Yuclid
+#include "statement/ncyclic.hpp"
+
+    // .add_hypothesis<NonCyclicQuadrangle>(p1, c, q1, p)
+# statement = "a b c = triangle a b c; a1 = on_line a1 b c; b1 = on_line b1 a c; p = on_line p a a1; q = on_line q b b1, on_pline q p a b; p1 = on_line p1 p b1, eqangle3 p1 p c a b c; q1 = on_line q1 q a1, eqangle3 q1 c q b c a; r = on_line r p p1, on_line r q q1; e = on_line e p q, on_line e a c; f = on_line f p q, on_line f b c; t = on_line t a q, on_line t b p; s = on_line s r t, on_line s p q; u = on_line u r t, on_line u a b ? cyclic p p1 q1 q"
+# statement = "a b c = triangle a b c; d = on_circum d a b c; e = on_circum e a b c; f = on_circum f a b c; x = on_line x a b, on_line x d e; y = on_line y b c, on_line y e f; z = on_line z c d, on_line z a f ? coll x y z"
+statement = "a b c = triangle a b c; a1 = on_line a1 b c; b1 = on_line b1 a c; c1 = on_line c1 a b, on_line c1 a1 b1; a2 = midpoint a2 a a1; b2 = midpoint b2 b b1; c2 = midpoint c2 c c1 ? coll a2 b2 c2"
+from newclid import GeometricSolverBuilder, GeometricSolver
+from newclid.jgex.problem_builder import JGEXProblemBuilder
+from pathlib import Path
+from newclid.jgex.formulation import JGEXFormulation
+import numpy as np
+
+rng = np.random.default_rng()
+
+rule_to_statement = {
+    "pascal": "a b c = triangle a b c; d = on_circum d a b c; e = on_circum e a b c; f = on_circum f a b c; x = on_line x a b, on_line x d e; y = on_line y b c, on_line y e f; z = on_line z c d, on_line z a f ? coll x y z",
+    "desargues": "a1 b1 c1 = triangle a1 b1 c1; a2 b2 = segment a2 b2; p = on_line p a1 a2, on_line p b1 b2; c2 = on_line c2 p c1; x = on_line x a1 b1, on_line x a2 b2; y = on_line y a1 c1, on_line y a2 c2; z = on_line z b1 c1, on_line z b2 c2 ? coll x y z",
+    "pappus": "a b = segment a b; c = on_line c a b; p q = segment p q; r = on_line r p q; x = on_line x a q, on_line x b p; y = on_line y a r, on_line y c p; z = on_line z b r, on_line z c q ? coll x y z",
+    "radical_axes": "a b c = triangle a b c; a1 = on_line a1 b c; b1 = on_line b1 a c; p = on_line p a a1; q = on_line q b b1, on_pline q p a b; p1 = on_line p1 p b1, eqangle3 p1 p c a b c; q1 = on_line q1 q a1, eqangle3 q1 c q b c a; r = on_line r p p1, on_line r q q1; e = on_line e p q, on_line e a c; f = on_line f p q, on_line f b c; t = on_line t a q, on_line t b p; s = on_line s r t, on_line s p q; u = on_line u r t, on_line u a b ? cyclic p p1 q1 q",
+    "newton_gauss_line": "a b c = triangle a b c; a1 = on_line a1 b c; b1 = on_line b1 a c; c1 = on_line c1 a b, on_line c1 a1 b1; a2 = midpoint a2 a a1; b2 = midpoint b2 b b1; c2 = midpoint c2 c c1 ? coll a2 b2 c2",
+     }
+for name, statement in rule_to_statement.items():
+    problem_setup = JGEXProblemBuilder(rng=rng).with_problem_from_txt(
+      statement
+    ).build()
+
+    solver: GeometricSolver = GeometricSolverBuilder().build(problem_setup)
+
+    success = solver.run()
+
+    assert success
+
+    "R95_PASCAL_THEOREM",
+    "R96_DESARGUES_THEOREM",
+    "R97_NEWTON_GAUSS_LINE",
+R95_PASCAL_THEOREM = Rule(
+    id="r95",
+    description="Pascal theorem",
+    premises_txt=(
+        "cyclic A B C D",
+        "cyclic B C D E",
+        "cyclic C D E F",
+        "coll X A B",
+        "coll X D E",
+        "coll Y B C",
+        "coll Y E F",
+        "coll Z C D",
+        "coll Z A F",
+    ),
+    conclusions_txt=("coll X Y Z",),
+)
+
+R96_DESARGUES_THEOREM = Rule(
+    id="r96",
+    description="Desargues theorem",
+    premises_txt=(
+        "coll P A1 A2",
+        "coll P B1 B2",
+        "coll P C1 C2",
+        "coll X A1 B1",
+        "coll X A2 B2",
+        "coll Y A1 C1",
+        "coll Y A2 C2",
+        "coll Z B1 C1",
+        "coll Z B2 C2",
+    ),
+    conclusions_txt=("coll X Y Z",),
+)
+
+R97_NEWTON_GAUSS_LINE = Rule(
+    id="r97",
+    description="Newton Gauss",
+    premises_txt=(
+        "coll A B C1",
+        "coll A C B1",
+        "coll B C A1",
+        "coll A1 B1 C1",
+        "midp A1 A2 A",
+        "midp B1 B2 B",
+        "midp C1 C2 C",
+    ),
+    conclusions_txt=("coll A2 B2 C2",),
+)
+
+    R95_PASCAL_THEOREM,
+    R96_DESARGUES_THEOREM,
+    R97_NEWTON_GAUSS_LINE,
+    R95_PASCAL_THEOREM,
+    R96_DESARGUES_THEOREM,
+    R97_NEWTON_GAUSS_LINE,
+    R95_PASCAL_THEOREM,
+    R96_DESARGUES_THEOREM,
+    R97_NEWTON_GAUSS_LINE,
+    match_pascal_theorem();
+    match_desargues_theorem();
+    match_newton_gauss_line();
+  void TheoremMatcher::match_pascal_theorem() {
+    const auto& points = m_problem->all_points();
+    for (const auto& pt_a : points) {
+      for (const auto& pt_b : points) {
+        if (pt_a.is_close(pt_b)) continue;
+        for (const auto& pt_c : points) {
+          if (pt_c.is_close(pt_a) || pt_c.is_close(pt_b)) continue;
+          for (const auto& pt_d : points) {
+            if (pt_d.is_close(pt_a) || pt_d.is_close(pt_b) || pt_d.is_close(pt_c)) continue;
+            if (!CyclicQuadrangle(pt_a, pt_b, pt_c, pt_d).check_equations()) continue;
+            for (const auto& pt_e : points) {
+              if (pt_e.is_close(pt_a) || pt_e.is_close(pt_b) || pt_e.is_close(pt_c) || pt_e.is_close(pt_d)) continue;
+              if (!CyclicQuadrangle(pt_b, pt_c, pt_d, pt_e).check_equations()) continue;
+              for (const auto& pt_f : points) {
+                if (pt_f.is_close(pt_a) || pt_f.is_close(pt_b) || pt_f.is_close(pt_c) || pt_f.is_close(pt_d) || pt_f.is_close(pt_e)) continue;
+                if (!CyclicQuadrangle(pt_c, pt_d, pt_e, pt_f).check_equations()) continue;
+                for (const auto& pt_x : points) {
+                  if (pt_x.is_close(pt_a) || pt_x.is_close(pt_b) || pt_x.is_close(pt_c) || pt_x.is_close(pt_d) || pt_x.is_close(pt_e) || pt_x.is_close(pt_f)) continue;
+                  if (!Collinear(pt_x, pt_a, pt_b).check_equations() || !Collinear(pt_x, pt_d, pt_e).check_equations()) continue;
+                  for (const auto& pt_y : points) {
+                    if (pt_y.is_close(pt_a) || pt_y.is_close(pt_b) || pt_y.is_close(pt_c) || pt_y.is_close(pt_d) || pt_y.is_close(pt_e) || pt_y.is_close(pt_f) || pt_y.is_close(pt_x)) continue;
+                    if (!Collinear(pt_y, pt_b, pt_c).check_equations() || !Collinear(pt_y, pt_e, pt_f).check_equations()) continue;
+                    for (const auto& pt_z : points) {
+                      if (pt_z.is_close(pt_a) || pt_z.is_close(pt_b) || pt_z.is_close(pt_c) || pt_z.is_close(pt_d) || pt_z.is_close(pt_e) || pt_z.is_close(pt_f) || pt_z.is_close(pt_x) || pt_z.is_close(pt_y)) continue;
+                      if (!Collinear(pt_z, pt_c, pt_d).check_equations() || !Collinear(pt_z, pt_a, pt_f).check_equations()) continue;
+                      insert_theorem(Theorem::pascal_theorem(pt_a, pt_b, pt_c, pt_d, pt_e, pt_f, pt_x, pt_y, pt_z));
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  void TheoremMatcher::match_desargues_theorem() {
+    const auto& points = m_problem->all_points();
+    for (const auto& p : points) {
+        for (const auto& a1 : points) {
+            if (a1.is_close(p)) continue;
+            for (const auto& a2 : points) {
+                if (a2.is_close(p) || a2.is_close(a1)) continue;
+                if (!Collinear(p, a1, a2).check_equations()) continue;
+                for (const auto& b1 : points) {
+                    if (b1.is_close(p) || b1.is_close(a1) || b1.is_close(a2)) continue;
+                    for (const auto& b2 : points) {
+                        if (b2.is_close(p) || b2.is_close(a1) || b2.is_close(a2) || b2.is_close(b1)) continue;
+                        if (!Collinear(p, b1, b2).check_equations()) continue;
+                        for (const auto& c1 : points) {
+                            if (c1.is_close(p) || c1.is_close(a1) || c1.is_close(a2) || c1.is_close(b1) || c1.is_close(b2)) continue;
+                            for (const auto& c2 : points) {
+                                if (c2.is_close(p) || c2.is_close(a1) || c2.is_close(a2) || c2.is_close(b1) || c2.is_close(b2) || c2.is_close(c1)) continue;
+                                if (!Collinear(p, c1, c2).check_equations()) continue;
+
+                                for (const auto& x : points) {
+                                    if (x.is_close(p) || x.is_close(a1) || x.is_close(a2) || x.is_close(b1) || x.is_close(b2) || x.is_close(c1) || x.is_close(c2)) continue;
+                                    if (!Collinear(x, a1, b1).check_equations() || !Collinear(x, a2, b2).check_equations()) continue;
+
+                                    for (const auto& y : points) {
+                                        if (y.is_close(p) || y.is_close(a1) || y.is_close(a2) || y.is_close(b1) || y.is_close(b2) || y.is_close(c1) || y.is_close(c2) || y.is_close(x)) continue;
+                                        if (!Collinear(y, a1, c1).check_equations() || !Collinear(y, a2, c2).check_equations()) continue;
+
+                                        for (const auto& z : points) {
+                                            if (z.is_close(p) || z.is_close(a1) || z.is_close(a2) || z.is_close(b1) || z.is_close(b2) || z.is_close(c1) || z.is_close(c2) || z.is_close(x) || z.is_close(y)) continue;
+                                            if (!Collinear(z, b1, c1).check_equations() || !Collinear(z, b2, c2).check_equations()) continue;
+
+                                            insert_theorem(Theorem::desargues_theorem(p, a1, b1, c1, a2, b2, c2, x, y, z));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+  void TheoremMatcher::match_newton_gauss_line() {
+    const auto& points = m_problem->all_points();
+    for (const auto& a : points) {
+        for (const auto& b : points) {
+            if (b.is_close(a)) continue;
+            for (const auto& c : points) {
+                if (c.is_close(a) || c.is_close(b)) continue;
+
+                for (const auto& a1 : points) {
+                    if (a1.is_close(a) || a1.is_close(b) || a1.is_close(c)) continue;
+                    if (!Collinear(a1, b, c).check_equations()) continue;
+
+                    for (const auto& b1 : points) {
+                        if (b1.is_close(a) || b1.is_close(b) || b1.is_close(c) || b1.is_close(a1)) continue;
+                        if (!Collinear(b1, c, a).check_equations()) continue;
+
+                        for (const auto& c1 : points) {
+                            if (c1.is_close(a) || c1.is_close(b) || c1.is_close(c) || c1.is_close(a1) || c1.is_close(b1)) continue;
+                            if (!Collinear(c1, a, b).check_equations()) continue;
+                            if (!Collinear(a1, b1, c1).check_equations()) continue;
+
+                            for (const auto& a2 : points) {
+                                if (a2.is_close(a) || a2.is_close(b) || a2.is_close(c) ||
+                                    a2.is_close(a1) || a2.is_close(b1) || a2.is_close(c1)) continue;
+                                if (!Midpoint(a, a2, a1).check_equations()) continue;
+                              // cerr<<"HERE\n";
+                                for (const auto& b2 : points) {
+                                    if (b2.is_close(a) || b2.is_close(b) || b2.is_close(c) ||
+                                        b2.is_close(a1) || b2.is_close(b1) || b2.is_close(c1) || b2.is_close(a2)) continue;
+                                    if (!Midpoint(b, b2, b1).check_equations()) continue;
+
+                                    for (const auto& c2 : points) {
+                                        if (c2.is_close(a) || c2.is_close(b) || c2.is_close(c) ||
+                                            c2.is_close(a1) || c2.is_close(b1) || c2.is_close(c1) ||
+                                            c2.is_close(a2) || c2.is_close(b2)) continue;
+                                        if (!Midpoint(c, c2, c1).check_equations()) continue;
+
+                                        insert_theorem(Theorem::newton_gauss_line(
+                                            a, b, c, a1, b1, c1, a2, b2, c2));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+    void match_pascal_theorem();
+
+    void match_desargues_theorem();
+
+    void match_newton_gauss_line();
+
+  Theorem Theorem::pascal_theorem(const Point& a, const Point& b, const Point& c, const Point& d, const Point& e, const Point& f, const Point& x, const Point& y, const Point& z) {
+    Theorem thm("Pascal theorem.", "r95");
+    thm
+    .add_hypothesis<CyclicQuadrangle>(a, b, c, d)
+    .add_hypothesis<CyclicQuadrangle>(b, c, d, e)
+    .add_hypothesis<CyclicQuadrangle>(c, d, e, f)
+    .add_hypothesis<Collinear>(x, a, b)
+    .add_hypothesis<Collinear>(x, d, e)
+    .add_hypothesis<Collinear>(y, b, c)
+    .add_hypothesis<Collinear>(y, e, f)
+    .add_hypothesis<Collinear>(z, c, d)
+    .add_hypothesis<Collinear>(z, a, f)
+    .add_conclusion<Collinear>(x, y, z);
+    return thm;
+  }
+
+  Theorem Theorem::desargues_theorem(const Point& p, const Point& a1, const Point& b1, const Point& c1, const Point& a2, const Point& b2, const Point& c2, const Point& x, const Point& y, const Point& z) {
+    Theorem thm("Desargues theorem.", "r96");
+    thm
+    .add_hypothesis<Collinear>(p, a1, a2)
+    .add_hypothesis<Collinear>(p, b1, b2)
+    .add_hypothesis<Collinear>(p, c1, c2)
+    .add_hypothesis<Collinear>(x, a1, b1)
+    .add_hypothesis<Collinear>(x, a2, b2)
+    .add_hypothesis<Collinear>(y, a1, c1)
+    .add_hypothesis<Collinear>(y, a2, c2)
+    .add_hypothesis<Collinear>(z, b1, c1)
+    .add_hypothesis<Collinear>(z, b2, c2)
+    .add_conclusion<Collinear>(x, y, z);
+    return thm;
+  }
+
+  Theorem Theorem::newton_gauss_line(const Point& a, const Point& b, const Point& c, const Point& a1, const Point& b1, const Point& c1, const Point& a2, const Point& b2, const Point& c2) {
+    Theorem thm("Newton Gauss line.", "r97");
+    thm
+    .add_hypothesis<Collinear>(a, b, c1)
+    .add_hypothesis<Collinear>(b, c, a1)
+    .add_hypothesis<Collinear>(a, c, b1)
+    .add_hypothesis<Collinear>(a1, b1, c1)
+    .add_hypothesis<Midpoint>(a, a2, a1)
+    .add_hypothesis<Midpoint>(b, b2, b1)
+    .add_hypothesis<Midpoint>(c, c2, c1)
+    .add_conclusion<Collinear>(a2, b2, c2);
+    return thm;
+  }
+
+    static Theorem pascal_theorem(const Point& a, const Point& b, const Point& c, const Point& d, const Point& e, const Point& f, const Point& x, const Point& y, const Point& z);
+
+    static Theorem desargues_theorem(const Point& p, const Point& a1, const Point& b1, const Point& c1, const Point& a2, const Point& b2, const Point& c2, const Point& x, const Point& y, const Point& z);
+
+    static Theorem newton_gauss_line(const Point& a, const Point& b, const Point& c, const Point& a1, const Point& b1, const Point& c1, const Point& a2, const Point& b2, const Point& c2);
+
+#!/usr/bin/env python
+"""Numerical drawer for small formal geometry descriptions."""
+
+from __future__ import annotations
+
+import argparse
+import math
+import os
+from dataclasses import dataclass
+from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+
+import torch
+
+
+EPS = 1e-9
+
+
+@dataclass(frozen=True)
+class Command:
+    op: str
+    args: Tuple[str, ...]
+    line_no: int
+    raw: str
+
+
+POINT_ARITIES = {
+    "cong": 4,
+    "coll": 3,
+    "cyclic": 4,
+    "eqangle": (6, 8),
+    "midpoint": 3,
+    "parallel": 4,
+    "perp": 4,
+    "check_cyclic": 4,
+    "check_eqangle": (6, 8),
+}
+
+
+def parse_text(text: str) -> List[Command]:
+    commands: List[Command] = []
+    for line_no, raw_line in enumerate(text.splitlines(), 1):
+        raw = raw_line.split("#", 1)[0].strip()
+        if not raw:
+            continue
+        parts = raw.split()
+        op = parts[0].lower()
+        args = tuple(parts[1:])
+
+        if op in ("fix", "init"):
+            if len(args) != 3:
+                raise ValueError(f"line {line_no}: {op} expects: point x y")
+            float(args[1])
+            float(args[2])
+        elif op in POINT_ARITIES:
+            arity = POINT_ARITIES[op]
+            ok = len(args) in arity if isinstance(arity, tuple) else len(args) == arity
+            if not ok:
+                raise ValueError(f"line {line_no}: {op} has wrong arity")
+        else:
+            known = ", ".join(sorted(["fix", "init"] + list(POINT_ARITIES)))
+            raise ValueError(f"line {line_no}: unknown command {op!r}; known: {known}")
+
+        commands.append(Command(op, args, line_no, raw))
+    return commands
+
+
+def load_commands(path: str) -> List[Command]:
+    with open(path, "r", encoding="utf-8") as f:
+        return parse_text(f.read())
+
+
+def point_names(commands: Sequence[Command]) -> List[str]:
+    names = set()
+    for cmd in commands:
+        if cmd.op in ("fix", "init"):
+            names.add(cmd.args[0])
+        else:
+            names.update(cmd.args)
+    return sorted(names)
+
+
+def cross2(u: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
+    return u[..., 0] * v[..., 1] - u[..., 1] * v[..., 0]
+
+
+def dot2(u: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
+    return (u * v).sum(dim=-1)
+
+
+def norm(v: torch.Tensor) -> torch.Tensor:
+    return torch.sqrt(dot2(v, v) + EPS)
+
+
+def distance(p: torch.Tensor, q: torch.Tensor) -> torch.Tensor:
+    return norm(p - q)
+
+
+def angle_at(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
+    u = a - b
+    v = c - b
+    return torch.atan2(torch.abs(cross2(u, v)), dot2(u, v))
+
+
+def oriented_angle_at(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
+    u = a - b
+    v = c - b
+    return torch.atan2(cross2(u, v), dot2(u, v))
+
+
+def directed_line_angle(
+    a: torch.Tensor, b: torch.Tensor, c: torch.Tensor, d: torch.Tensor
+) -> torch.Tensor:
+    u = b - a
+    v = d - c
+    return torch.atan2(cross2(u, v), dot2(u, v))
+
+
+def wrap_two_pi(x: torch.Tensor) -> torch.Tensor:
+    return torch.atan2(torch.sin(x), torch.cos(x))
+
+
+def wrap_line_angle(x: torch.Tensor) -> torch.Tensor:
+    # Oriented angles between straight lines are taken modulo pi.
+    return 0.5 * torch.atan2(torch.sin(2.0 * x), torch.cos(2.0 * x))
+
+
+def collinearity_loss(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
+    def sin_sq(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        return cross2(x, y).pow(2) / (dot2(x, x) * dot2(y, y) + EPS)
+
+    return (
+        sin_sq(b - a, c - a)
+        + sin_sq(a - b, c - b)
+        + sin_sq(a - c, b - c)
+    )
+
+
+def circumcircle(points: Sequence[Tuple[float, float]]) -> Optional[Tuple[float, float, float]]:
+    (x1, y1), (x2, y2), (x3, y3) = points[:3]
+    det = 2.0 * (
+        x1 * (y2 - y3)
+        + x2 * (y3 - y1)
+        + x3 * (y1 - y2)
+    )
+    if abs(det) < 1e-10:
+        return None
+    s1 = x1 * x1 + y1 * y1
+    s2 = x2 * x2 + y2 * y2
+    s3 = x3 * x3 + y3 * y3
+    ux = (s1 * (y2 - y3) + s2 * (y3 - y1) + s3 * (y1 - y2)) / det
+    uy = (s1 * (x3 - x2) + s2 * (x1 - x3) + s3 * (x2 - x1)) / det
+    r = math.hypot(x1 - ux, y1 - uy)
+    return ux, uy, r
+
+
+class GeometryProblem:
+    def __init__(self, commands: Sequence[Command], device: str = "cpu") -> None:
+        self.commands = list(commands)
+        self.names = point_names(commands)
+        self.index = {name: i for i, name in enumerate(self.names)}
+        self.device = torch.device(device)
+        self.fixed = self._fixed_points()
+        self.inits = self._init_points()
+
+    def _fixed_points(self) -> Dict[str, Tuple[float, float]]:
+        fixed: Dict[str, Tuple[float, float]] = {}
+        for cmd in self.commands:
+            if cmd.op == "fix":
+                fixed[cmd.args[0]] = (float(cmd.args[1]), float(cmd.args[2]))
+        return fixed
+
+    def _init_points(self) -> Dict[str, Tuple[float, float]]:
+        inits: Dict[str, Tuple[float, float]] = {}
+        for cmd in self.commands:
+            if cmd.op == "init":
+                inits[cmd.args[0]] = (float(cmd.args[1]), float(cmd.args[2]))
+        return inits
+
+    def p(self, xy: torch.Tensor, name: str) -> torch.Tensor:
+        return xy[self.index[name]]
+
+    def initial_tensor(self, seed: int, noise: float) -> torch.Tensor:
+        gen = torch.Generator(device=self.device)
+        gen.manual_seed(seed)
+        xy = torch.randn((len(self.names), 2), generator=gen, device=self.device) * 0.7
+        for name, value in self.inits.items():
+            i = self.index[name]
+            base = torch.tensor(value, dtype=torch.float64, device=self.device)
+            xy[i] = base + noise * torch.randn((2,), generator=gen, device=self.device)
+        for name, value in self.fixed.items():
+            xy[self.index[name]] = torch.tensor(value, dtype=torch.float64, device=self.device)
+        return xy.to(dtype=torch.float64)
+
+    def clamp_fixed(self, xy: torch.Tensor) -> None:
+        with torch.no_grad():
+            for name, value in self.fixed.items():
+                xy[self.index[name]] = torch.tensor(value, dtype=xy.dtype, device=xy.device)
+
+    def loss_terms(self, xy: torch.Tensor) -> Dict[str, torch.Tensor]:
+        terms: Dict[str, List[torch.Tensor]] = {
+            "cong": [],
+            "coll": [],
+            "cyclic": [],
+            "eqangle": [],
+            "midpoint": [],
+            "parallel": [],
+            "perp": [],
+        }
+
+        for cmd in self.commands:
+            args = cmd.args
+            if cmd.op in ("fix", "init", "check_cyclic", "check_eqangle"):
+                continue
+
+            if cmd.op == "cong":
+                a, b, c, d = [self.p(xy, x) for x in args]
+                terms["cong"].append((distance(a, b) - distance(c, d)).pow(2))
+            elif cmd.op == "coll":
+                a, b, c = [self.p(xy, x) for x in args]
+                terms["coll"].append(collinearity_loss(a, b, c))
+            elif cmd.op == "cyclic":
+                a, b, c, d = [self.p(xy, x) for x in args]
+                diff = wrap_two_pi(oriented_angle_at(a, b, d) - oriented_angle_at(a, c, d))
+                terms["cyclic"].append(diff.pow(2))
+            elif cmd.op == "eqangle" and len(args) == 6:
+                a, b, c, d, e, f = [self.p(xy, x) for x in args]
+                terms["eqangle"].append((angle_at(a, b, c) - angle_at(d, e, f)).pow(2))
+            elif cmd.op == "eqangle" and len(args) == 8:
+                a, b, c, d, e, f, g, h = [self.p(xy, x) for x in args]
+                diff = wrap_line_angle(
+                    directed_line_angle(a, b, c, d) - directed_line_angle(e, f, g, h)
+                )
+                terms["eqangle"].append(diff.pow(2))
+            elif cmd.op == "midpoint":
+                m, a, b = [self.p(xy, x) for x in args]
+                terms["midpoint"].append(((m - 0.5 * (a + b)).pow(2)).sum())
+            elif cmd.op == "parallel":
+                a, b, c, d = [self.p(xy, x) for x in args]
+                u = b - a
+                v = d - c
+                terms["parallel"].append(cross2(u, v).pow(2) / (dot2(u, u) * dot2(v, v) + EPS))
+            elif cmd.op == "perp":
+                a, b, c, d = [self.p(xy, x) for x in args]
+                u = b - a
+                v = d - c
+                terms["perp"].append(dot2(u, v).pow(2) / (dot2(u, u) * dot2(v, v) + EPS))
+
+        out: Dict[str, torch.Tensor] = {}
+        zero = torch.tensor(0.0, dtype=xy.dtype, device=xy.device)
+        for key, values in terms.items():
+            out[key] = torch.stack(values).sum() if values else zero
+        out["separation"] = self.separation_penalty(xy)
+        return out
+
+    def separation_penalty(self, xy: torch.Tensor) -> torch.Tensor:
+        parts = []
+        for i in range(len(self.names)):
+            for j in range(i + 1, len(self.names)):
+                dist2 = ((xy[i] - xy[j]).pow(2)).sum()
+                parts.append(torch.exp(-40.0 * dist2))
+        if not parts:
+            return torch.tensor(0.0, dtype=xy.dtype, device=xy.device)
+        return torch.stack(parts).sum()
+
+    def optimize(
+        self,
+        steps: int,
+        lr: float,
+        restarts: int,
+        separation_weight: float,
+        seed: int,
+        init_noise: float,
+        verbose: bool = False,
+    ) -> Tuple[torch.Tensor, Dict[str, float]]:
+        best_xy: Optional[torch.Tensor] = None
+        best_terms: Optional[Dict[str, float]] = None
+        best_score = float("inf")
+
+        for restart in range(restarts):
+            xy = self.initial_tensor(seed + 1009 * restart, init_noise).detach().requires_grad_(True)
+            opt = torch.optim.Adam([xy], lr=lr)
+
+            for step in range(steps):
+                opt.zero_grad()
+                terms = self.loss_terms(xy)
+                constraint_loss = sum(
+                    value for key, value in terms.items() if key != "separation"
+                )
+                loss = constraint_loss + separation_weight * terms["separation"]
+                loss.backward()
+                opt.step()
+                self.clamp_fixed(xy)
+
+                if verbose and (step + 1) % max(1, steps // 10) == 0:
+                    print(
+                        f"restart={restart + 1}/{restarts} step={step + 1}/{steps} "
+                        f"loss={loss.item():.6g}"
+                    )
+
+            with torch.no_grad():
+                terms = self.loss_terms(xy)
+                constraint_loss = sum(
+                    value for key, value in terms.items() if key != "separation"
+                )
+                score = (constraint_loss + separation_weight * terms["separation"]).item()
+                if score < best_score:
+                    best_score = score
+                    best_xy = xy.detach().clone()
+                    best_terms = {k: v.item() for k, v in terms.items()}
+
+        assert best_xy is not None and best_terms is not None
+        return best_xy.cpu(), best_terms
+
+    def coordinates(self, xy: torch.Tensor) -> Dict[str, Tuple[float, float]]:
+        return {
+            name: (float(xy[self.index[name], 0]), float(xy[self.index[name], 1]))
+            for name in self.names
+        }
+
+    def checks(self, xy: torch.Tensor) -> List[Tuple[Command, float]]:
+        out: List[Tuple[Command, float]] = []
+        for cmd in self.commands:
+            if cmd.op == "check_cyclic":
+                a, b, c, d = [self.p(xy, x) for x in cmd.args]
+                residual = wrap_two_pi(oriented_angle_at(a, b, d) - oriented_angle_at(a, c, d)).abs().item()
+                out.append((cmd, residual))
+                continue
+            if cmd.op != "check_eqangle":
+                continue
+            args = cmd.args
+            if len(args) == 6:
+                a, b, c, d, e, f = [self.p(xy, x) for x in args]
+                residual = (angle_at(a, b, c) - angle_at(d, e, f)).abs().item()
+            else:
+                a, b, c, d, e, f, g, h = [self.p(xy, x) for x in args]
+                residual = wrap_line_angle(
+                    directed_line_angle(a, b, c, d) - directed_line_angle(e, f, g, h)
+                ).abs().item()
+            out.append((cmd, residual))
+        return out
+
+    def normalized_commands(self) -> List[str]:
+        lines = []
+        for cmd in self.commands:
+            if cmd.op == "eqangle" and len(cmd.args) == 6:
+                a, b, c, d, e, f = cmd.args
+                lines.append(f"eqangle {a} {b} {b} {c} {d} {e} {e} {f}")
+            elif cmd.op == "check_eqangle" and len(cmd.args) == 6:
+                a, b, c, d, e, f = cmd.args
+                lines.append(f"check_eqangle {a} {b} {b} {c} {d} {e} {e} {f}")
+            else:
+                lines.append(f"{cmd.op} {' '.join(cmd.args)}")
+        return lines
+
+
+def plot_solution(
+    path: str,
+    problem: GeometryProblem,
+    coords: Dict[str, Tuple[float, float]],
+    commands: Sequence[Command],
+) -> None:
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Circle
+
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    fig, ax = plt.subplots(figsize=(7, 7))
+
+    def pt(name: str) -> Tuple[float, float]:
+        return coords[name]
+
+    drawn_segments = set()
+
+    def segment(a: str, b: str, style: str = "-", alpha: float = 0.55) -> None:
+        key = tuple(sorted((a, b)))
+        if key in drawn_segments:
+            return
+        drawn_segments.add(key)
+        x1, y1 = pt(a)
+        x2, y2 = pt(b)
+        ax.plot([x1, x2], [y1, y2], style, color="#555555", alpha=alpha, linewidth=1.2)
+
+    for cmd in commands:
+        args = cmd.args
+        if cmd.op == "cong":
+            segment(args[0], args[1], "--", 0.8)
+            segment(args[2], args[3], "--", 0.8)
+        elif cmd.op == "coll":
+            segment(args[0], args[1])
+            segment(args[1], args[2])
+        elif cmd.op == "cyclic":
+            pts = [pt(name) for name in args[:3]]
+            circle = circumcircle(pts)
+            if circle:
+                ux, uy, r = circle
+                ax.add_patch(Circle((ux, uy), r, fill=False, linestyle=":", color="#777777"))
+            for i in range(len(args)):
+                segment(args[i], args[(i + 1) % len(args)], ":", 0.35)
+        elif cmd.op == "midpoint":
+            segment(args[1], args[2], "-", 0.25)
+        elif cmd.op in ("parallel", "perp"):
+            segment(args[0], args[1], "-", 0.5)
+            segment(args[2], args[3], "-", 0.5)
+        elif cmd.op == "eqangle":
+            if len(args) == 6:
+                segment(args[1], args[0], "-", 0.25)
+                segment(args[1], args[2], "-", 0.25)
+                segment(args[4], args[3], "-", 0.25)
+                segment(args[4], args[5], "-", 0.25)
+            else:
+                segment(args[0], args[1], "-", 0.25)
+                segment(args[2], args[3], "-", 0.25)
+                segment(args[4], args[5], "-", 0.25)
+                segment(args[6], args[7], "-", 0.25)
+
+    xs = [xy[0] for xy in coords.values()]
+    ys = [xy[1] for xy in coords.values()]
+    ax.scatter(xs, ys, s=32, color="#111111", zorder=3)
+    for name, (x, y) in coords.items():
+        ax.annotate(name, (x, y), xytext=(4, 5), textcoords="offset points", fontsize=11)
+
+    ax.set_aspect("equal", adjustable="datalim")
+    ax.grid(True, color="#eeeeee")
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    fig.tight_layout()
+    fig.savefig(path, dpi=180)
+    plt.close(fig)
+
+
+def format_report(
+    problem: GeometryProblem,
+    xy: torch.Tensor,
+    terms: Dict[str, float],
+    separation_weight: float,
+) -> str:
+    coords = problem.coordinates(xy)
+    constraint_loss = sum(value for key, value in terms.items() if key != "separation")
+    total_loss = constraint_loss + separation_weight * terms["separation"]
+
+    lines = []
+    lines.append(f"total_loss {total_loss:.12g}")
+    lines.append(f"constraint_loss {constraint_loss:.12g}")
+    lines.append(f"separation_penalty {terms['separation']:.12g}")
+    lines.append("")
+    lines.append("coordinates")
+    for name, (x, y) in coords.items():
+        lines.append(f"{name} {x:.10f} {y:.10f}")
+    lines.append("")
+    lines.append("loss_terms")
+    for key in sorted(terms):
+        lines.append(f"{key} {terms[key]:.12g}")
+    checks = problem.checks(xy)
+    if checks:
+        lines.append("")
+        lines.append("checks")
+        for cmd, residual in checks:
+            lines.append(f"line {cmd.line_no}: {cmd.raw} residual_rad {residual:.12g}")
+    lines.append("")
+    lines.append("normalized_commands")
+    lines.extend(problem.normalized_commands())
+    return "\n".join(lines)
+
+
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("input", help="path to a geometry description")
+    parser.add_argument("--steps", type=int, default=30000)
+    parser.add_argument("--restarts", type=int, default=8)
+    parser.add_argument("--lr", type=float, default=0.03)
+    parser.add_argument("--seed", type=int, default=1)
+    parser.add_argument("--init-noise", type=float, default=0.03)
+    parser.add_argument("--separation-weight", type=float, default=0.001)
+    parser.add_argument("--device", default="cpu")
+    parser.add_argument("--plot", help="optional output png path")
+    parser.add_argument("--verbose", action="store_true")
+    args = parser.parse_args(argv)
+
+    commands = load_commands(args.input)
+    problem = GeometryProblem(commands, device=args.device)
+    xy, terms = problem.optimize(
+        steps=args.steps,
+        lr=args.lr,
+        restarts=args.restarts,
+        separation_weight=args.separation_weight,
+        seed=args.seed,
+        init_noise=args.init_noise,
+        verbose=args.verbose,
+    )
+    if args.plot:
+        plot_solution(args.plot, problem, problem.coordinates(xy), commands)
+    print(format_report(problem, xy, terms, args.separation_weight))
+    if args.plot:
+        print("")
+        print(f"plot {os.path.abspath(args.plot)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+import math
+import unittest
+from pathlib import Path
+
+from geometry_drawer import GeometryProblem, parse_text
+
+
+def constraint_loss(terms):
+    return sum(value for key, value in terms.items() if key != "separation")
+
+
+def solve(text, steps=500, lr=0.04, separation_weight=0.0, init_noise=0.0):
+    problem = GeometryProblem(parse_text(text))
+    xy, terms = problem.optimize(
+        steps=steps,
+        lr=lr,
+        restarts=1,
+        separation_weight=separation_weight,
+        seed=7,
+        init_noise=init_noise,
+    )
+    return problem, xy, terms
+
+
+class CommandConvergenceTests(unittest.TestCase):
+    def assert_term_small(self, text, term, threshold=1e-7, **kwargs):
+        _, _, terms = solve(text, **kwargs)
+        self.assertLess(terms[term], threshold, f"{term} did not converge: {terms}")
+
+    def test_cong_converges(self):
+        self.assert_term_small(
+            """
+            fix a 0 0
+            fix b 1 0
+            fix c 0 1
+            init d 0.2 1.7
+            cong a b c d
+            """,
+            "cong",
+        )
+
+    def test_coll_converges(self):
+        self.assert_term_small(
+            """
+            fix a 0 0
+            fix b 2 0
+            init c 0.8 1.1
+            coll a b c
+            """,
+            "coll",
+        )
+
+    def test_cyclic_converges(self):
+        self.assert_term_small(
+            """
+            fix a 1 0
+            fix b 0 1
+            fix c -1 0
+            init d -0.3 -0.8
+            cyclic a b c d
+            """,
+            "cyclic",
+            threshold=1e-6,
+        )
+
+    def test_eqangle_six_point_form_converges_and_normalizes(self):
+        problem, _, terms = solve(
+            """
+            fix a 1 0
+            fix b 0 0
+            fix c 0 1
+            fix d 1 1
+            fix e 0 0
+            init f -0.7 0.4
+            eqangle a b c d e f
+            """,
+            steps=1100,
+        )
+        self.assertLess(terms["eqangle"], 1e-7)
+        self.assertIn("eqangle a b b c d e e f", problem.normalized_commands())
+
+    def test_eqangle_eight_point_form_converges(self):
+        self.assert_term_small(
+            """
+            fix a 0 0
+            fix b 1 0
+            fix c 0 0
+            fix d 0 1
+            fix e 2 0
+            fix f 3 0
+            fix g 2 0
+            init h 2.7 0.6
+            eqangle a b c d e f g h
+            """,
+            "eqangle",
+            threshold=1e-7,
+            steps=700,
+        )
+
+    def test_midpoint_converges(self):
+        self.assert_term_small(
+            """
+            fix a -1 2
+            fix b 3 0
+            init m 0 0
+            midpoint m a b
+            """,
+            "midpoint",
+        )
+
+    def test_parallel_converges(self):
+        self.assert_term_small(
+            """
+            fix a 0 0
+            fix b 1 0
+            fix c 0 1
+            init d 1.0 1.7
+            parallel a b c d
+            """,
+            "parallel",
+        )
+
+    def test_perp_converges(self):
+        self.assert_term_small(
+            """
+            fix a 0 0
+            fix b 1 0
+            fix c 0 1
+            init d 0.8 1.6
+            perp a b c d
+            """,
+            "perp",
+        )
+
+    def test_fix_and_init_are_applied(self):
+        problem = GeometryProblem(
+            parse_text(
+                """
+                fix a 2 3
+                init b -4 5
+                """
+            )
+        )
+        xy = problem.initial_tensor(seed=1, noise=0.0)
+        coords = problem.coordinates(xy)
+        self.assertEqual(coords["a"], (2.0, 3.0))
+        self.assertEqual(coords["b"], (-4.0, 5.0))
+
+    def test_separation_penalty_matches_formula(self):
+        problem = GeometryProblem(
+            parse_text(
+                """
+                fix a 0 0
+                fix b 1 0
+                fix c 0 2
+                """
+            )
+        )
+        xy = problem.initial_tensor(seed=1, noise=0.0)
+        expected = math.exp(-40.0) + math.exp(-160.0) + math.exp(-200.0)
+        self.assertAlmostEqual(problem.separation_penalty(xy).item(), expected)
+
+
+class ExampleTests(unittest.TestCase):
+    def test_simple_example_constraints_converge(self):
+        commands = Path("examples/simple.txt").read_text(encoding="utf-8")
+        _, _, terms = solve(commands, steps=800, lr=0.03)
+        self.assertLess(constraint_loss(terms), 1e-6)
+
+    def test_imo_2007_p2_setup_and_angle_check(self):
+        commands = Path("examples/imo2007_p2.txt").read_text(encoding="utf-8")
+        problem, xy, terms = solve(
+            commands,
+            steps=800,
+            lr=0.03,
+        )
+        self.assertLess(constraint_loss(terms), 1e-5)
+        checks = problem.checks(xy)
+        self.assertEqual(len(checks), 1)
+        self.assertLess(checks[0][1], 1e-3)
+
+    def test_imo_2008_p1_setup_and_cyclic_checks(self):
+        commands = Path("examples/imo2008_p1.txt").read_text(encoding="utf-8")
+        problem, xy, terms = solve(
+            commands,
+            steps=800,
+            lr=0.03,
+        )
+        self.assertLess(constraint_loss(terms), 1e-5)
+        checks = problem.checks(xy)
+        self.assertEqual(len(checks), 3)
+        self.assertLess(max(residual for _, residual in checks), 1e-3)
+
+    def test_imo_2004_p1_setup_and_common_point_check(self):
+        commands = Path("examples/imo2004_p1.txt").read_text(encoding="utf-8")
+        problem, xy, terms = solve(
+            commands,
+            steps=1200,
+            lr=0.025,
+        )
+        self.assertLess(constraint_loss(terms), 1e-6)
+        checks = problem.checks(xy)
+        self.assertEqual(len(checks), 1)
+        self.assertLess(checks[0][1], 1e-3)
+
+    def test_imo_2014_p4_setup_and_circumcircle_check(self):
+        commands = Path("examples/imo2014_p4.txt").read_text(encoding="utf-8")
+        problem, xy, terms = solve(
+            commands,
+            steps=800,
+            lr=0.03,
+        )
+        self.assertLess(constraint_loss(terms), 1e-8)
+        checks = problem.checks(xy)
+        self.assertEqual(len(checks), 1)
+        self.assertLess(checks[0][1], 1e-6)
+
+    def test_imo_2019_p2_setup_and_cyclic_check(self):
+        commands = Path("examples/imo2019_p2.txt").read_text(encoding="utf-8")
+        problem, xy, terms = solve(
+            commands,
+            steps=1200,
+            lr=0.02,
+        )
+        self.assertLess(constraint_loss(terms), 1e-7)
+        checks = problem.checks(xy)
+        self.assertEqual(len(checks), 1)
+        self.assertLess(checks[0][1], 1e-4)
+
+
+if __name__ == "__main__":
+    unittest.main()
+"""Differentiable geometry loss primitives for geometry_drawer."""
+
+from __future__ import annotations
+
+from typing import Sequence
+
+import torch
+
+
+EPS = 1e-9
+
+
+def cross2(u: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
+    return u[..., 0] * v[..., 1] - u[..., 1] * v[..., 0]
+
+
+def dot2(u: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
+    return (u * v).sum(dim=-1)
+
+
+def norm(v: torch.Tensor) -> torch.Tensor:
+    return torch.sqrt(dot2(v, v) + EPS)
+
+
+def distance(p: torch.Tensor, q: torch.Tensor) -> torch.Tensor:
+    return norm(p - q)
+
+
+def rotate90(v: torch.Tensor) -> torch.Tensor:
+    return torch.stack((-v[..., 1], v[..., 0]), dim=-1)
+
+
+def signed_safe_denominator(value: torch.Tensor) -> torch.Tensor:
+    sign = torch.where(value.detach() >= 0, value.new_tensor(1.0), value.new_tensor(-1.0))
+    return value + sign * EPS
+
+
+def line_intersection(
+    a: torch.Tensor, b: torch.Tensor, c: torch.Tensor, d: torch.Tensor
+) -> torch.Tensor:
+    u = b - a
+    v = d - c
+    t = cross2(c - a, v) / signed_safe_denominator(cross2(u, v))
+    return a + t * u
+
+
+def orthocenter(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
+    altitude_a_end = a + rotate90(c - b)
+    altitude_b_end = b + rotate90(c - a)
+    return line_intersection(a, altitude_a_end, b, altitude_b_end)
+
+
+def incenter(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
+    side_a = distance(b, c)
+    side_b = distance(c, a)
+    side_c = distance(a, b)
+    return (side_a * a + side_b * b + side_c * c) / (side_a + side_b + side_c + EPS)
+
+
+def excenter(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
+    side_a = distance(b, c)
+    side_b = distance(c, a)
+    side_c = distance(a, b)
+    return (-side_a * a + side_b * b + side_c * c) / (-side_a + side_b + side_c + EPS)
+
+
+def point_match_loss(target: torch.Tensor, constructed: torch.Tensor) -> torch.Tensor:
+    return (target - constructed).pow(2).sum()
+
+
+def angle_at(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
+    u = a - b
+    v = c - b
+    return torch.atan2(torch.abs(cross2(u, v)), dot2(u, v))
+
+
+def oriented_angle_at(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
+    u = a - b
+    v = c - b
+    return torch.atan2(cross2(u, v), dot2(u, v))
+
+
+def directed_line_angle(
+    a: torch.Tensor, b: torch.Tensor, c: torch.Tensor, d: torch.Tensor
+) -> torch.Tensor:
+    u = b - a
+    v = d - c
+    return torch.atan2(cross2(u, v), dot2(u, v))
+
+
+def wrap_two_pi(x: torch.Tensor) -> torch.Tensor:
+    return torch.atan2(torch.sin(x), torch.cos(x))
+
+
+def wrap_line_angle(x: torch.Tensor) -> torch.Tensor:
+    # Oriented angles between straight lines are taken modulo pi.
+    return 0.5 * torch.atan2(torch.sin(2.0 * x), torch.cos(2.0 * x))
+
+
+def collinearity_loss(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
+    def sin_sq(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        return cross2(x, y).pow(2) / (dot2(x, x) * dot2(y, y) + EPS)
+
+    return (
+        sin_sq(b - a, c - a)
+        + sin_sq(a - b, c - b)
+        + sin_sq(a - c, b - c)
+    )
+
+
+def parallel_loss(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor, d: torch.Tensor) -> torch.Tensor:
+    u = b - a
+    v = d - c
+    return cross2(u, v).pow(2) / (dot2(u, u) * dot2(v, v) + EPS)
+
+
+def perpendicular_loss(
+    a: torch.Tensor, b: torch.Tensor, c: torch.Tensor, d: torch.Tensor
+) -> torch.Tensor:
+    u = b - a
+    v = d - c
+    return dot2(u, v).pow(2) / (dot2(u, u) * dot2(v, v) + EPS)
+
+
+def eqratio_loss(points: Sequence[torch.Tensor]) -> torch.Tensor:
+    a, b, c, d, e, f, g, h = points
+    return (distance(a, b) / (distance(c, d) + EPS) - distance(e, f) / (distance(g, h) + EPS)).pow(2)
+
+
+def distances_equation_loss(
+    coefficients: Sequence[float],
+    segments: Sequence[tuple[torch.Tensor, torch.Tensor]],
+    target: float,
+) -> torch.Tensor:
+    residual = torch.as_tensor(target, dtype=segments[0][0].dtype, device=segments[0][0].device)
+    residual = -residual
+    for coefficient, (a, b) in zip(coefficients, segments):
+        residual = residual + coefficient * distance(a, b)
+    return residual.pow(2)
+
+
+def angles_equation_loss(
+    coefficients: Sequence[float],
+    angles: Sequence[tuple[torch.Tensor, torch.Tensor, torch.Tensor]],
+    target: float,
+) -> torch.Tensor:
+    residual = torch.as_tensor(target, dtype=angles[0][0].dtype, device=angles[0][0].device)
+    residual = -residual
+    for coefficient, (a, b, c) in zip(coefficients, angles):
+        residual = residual + coefficient * angle_at(a, b, c)
+    return residual.pow(2)
+
+
+def convex_polygon_loss(points: Sequence[torch.Tensor]) -> torch.Tensor:
+    signed_area = points[0].new_tensor(0.0)
+    turns = []
+    n = len(points)
+    for i in range(n):
+        p = points[i]
+        q = points[(i + 1) % n]
+        r = points[(i + 2) % n]
+        signed_area = signed_area + cross2(p, q)
+        u = q - p
+        v = r - q
+        denom = norm(u) * norm(v) + EPS
+        turns.append(cross2(u, v) / denom)
+
+    orientation = torch.where(
+        signed_area.detach() >= 0,
+        signed_area.new_tensor(1.0),
+        signed_area.new_tensor(-1.0),
+    )
+    return torch.stack([torch.relu(-orientation * turn).pow(2) for turn in turns]).sum()
+import concurrent.futures
+import threading
+import time
+from geometry_constraints import (
+    EPS,
+    angle_at,
+    angles_equation_loss,
+    collinearity_loss,
+    convex_polygon_loss,
+    cross2,
+    directed_line_angle,
+    distance,
+    distances_equation_loss,
+    dot2,
+    eqratio_loss,
+    excenter,
+    incenter,
+    line_intersection,
+    norm,
+    oriented_angle_at,
+    orthocenter,
+    parallel_loss,
+    perpendicular_loss,
+    point_match_loss,
+    wrap_line_angle,
+    wrap_two_pi,
+)
+@dataclass
+class RestartProgress:
+    restart: int
+    step: int = 0
+    loss: float = float("nan")
+    constraint_loss: float = float("nan")
+    separation: float = float("nan")
+    best_loss: float = float("inf")
+    status: str = "pending"
+
+
+    "eqratio": 8,
+    "para": 4,
+VARIABLE_ARITY_COMMANDS = {
+    "angles_equation",
+    "convex_polygon",
+    "dists_equation",
+}
+
+CONSTRUCTION_ARITIES = {
+    "excenter": 3,
+    "incenter": 3,
+    "intersect": 4,
+    "orthocenter": 3,
+}
+
+        if len(parts) >= 3 and parts[1] == "=":
+            op = parts[2].lower()
+            args = tuple([parts[0]] + parts[3:])
+        else:
+            op = parts[0].lower()
+            args = tuple(parts[1:])
+        elif op in CONSTRUCTION_ARITIES:
+            arity = CONSTRUCTION_ARITIES[op]
+            if len(args) != arity + 1:
+                raise ValueError(f"line {line_no}: {op} expects: target = {op} points...")
+            if not (len(parts) >= 3 and parts[1] == "="):
+                raise ValueError(f"line {line_no}: {op} must be written as: point = {op} ...")
+        elif op == "dists_equation":
+            if len(args) < 4 or (len(args) - 1) % 3 != 0:
+                raise ValueError(
+                    f"line {line_no}: dists_equation expects: v1 a1 b1 ... vn an bn target"
+                )
+            for i in range(0, len(args) - 1, 3):
+                float(args[i])
+            float(args[-1])
+        elif op == "angles_equation":
+            if len(args) < 5 or (len(args) - 1) % 4 != 0:
+                raise ValueError(
+                    f"line {line_no}: angles_equation expects: v1 a1 b1 c1 ... vn an bn cn target"
+                )
+            for i in range(0, len(args) - 1, 4):
+                float(args[i])
+            float(args[-1])
+        elif op == "convex_polygon":
+            if len(args) < 3:
+                raise ValueError(f"line {line_no}: convex_polygon expects at least 3 points")
+            known = ", ".join(
+                sorted(
+                    ["fix", "init"]
+                    + list(POINT_ARITIES)
+                    + list(VARIABLE_ARITY_COMMANDS)
+                    + list(CONSTRUCTION_ARITIES)
+                )
+            )
+        elif cmd.op == "dists_equation":
+            for i in range(0, len(cmd.args) - 1, 3):
+                names.add(cmd.args[i + 1])
+                names.add(cmd.args[i + 2])
+        elif cmd.op == "angles_equation":
+            for i in range(0, len(cmd.args) - 1, 4):
+                names.update(cmd.args[i + 1 : i + 4])
+    def constructed_point(self, xy: torch.Tensor, cmd: Command) -> torch.Tensor:
+        args = cmd.args
+        if cmd.op == "intersect":
+            _, a, b, c, d = [self.p(xy, name) for name in args]
+            return line_intersection(a, b, c, d)
+        if cmd.op == "orthocenter":
+            _, a, b, c = [self.p(xy, name) for name in args]
+            return orthocenter(a, b, c)
+        if cmd.op == "incenter":
+            _, a, b, c = [self.p(xy, name) for name in args]
+            return incenter(a, b, c)
+        if cmd.op == "excenter":
+            _, a, b, c = [self.p(xy, name) for name in args]
+            return excenter(a, b, c)
+        raise ValueError(f"line {cmd.line_no}: {cmd.op} is not a construction")
+
+    def initialize_constructed_points(self, xy: torch.Tensor) -> None:
+        for cmd in self.commands:
+            if cmd.op not in CONSTRUCTION_ARITIES:
+                continue
+            target = cmd.args[0]
+            if target in self.fixed:
+                continue
+            xy[self.index[target]] = self.constructed_point(xy, cmd)
+
+        xy = xy.to(dtype=torch.float64)
+        self.initialize_constructed_points(xy)
+        self.clamp_fixed(xy)
+        return xy
+            "angles_equation": [],
+            "construction": [],
+            "convex_polygon": [],
+            "dists_equation": [],
+            "eqratio": [],
+            elif cmd.op in ("parallel", "para"):
+                terms["parallel"].append(parallel_loss(a, b, c, d))
+                terms["perp"].append(perpendicular_loss(a, b, c, d))
+            elif cmd.op == "eqratio":
+                points = [self.p(xy, x) for x in args]
+                terms["eqratio"].append(eqratio_loss(points))
+            elif cmd.op == "dists_equation":
+                coefficients = [float(args[i]) for i in range(0, len(args) - 1, 3)]
+                segments = [
+                    (self.p(xy, args[i + 1]), self.p(xy, args[i + 2]))
+                    for i in range(0, len(args) - 1, 3)
+                ]
+                terms["dists_equation"].append(
+                    distances_equation_loss(coefficients, segments, float(args[-1]))
+                )
+            elif cmd.op == "angles_equation":
+                coefficients = [float(args[i]) for i in range(0, len(args) - 1, 4)]
+                angles = [
+                    (self.p(xy, args[i + 1]), self.p(xy, args[i + 2]), self.p(xy, args[i + 3]))
+                    for i in range(0, len(args) - 1, 4)
+                ]
+                terms["angles_equation"].append(
+                    angles_equation_loss(coefficients, angles, float(args[-1]))
+                )
+            elif cmd.op == "convex_polygon":
+                terms["convex_polygon"].append(convex_polygon_loss([self.p(xy, x) for x in args]))
+            elif cmd.op in CONSTRUCTION_ARITIES:
+                terms["construction"].append(
+                    point_match_loss(self.p(xy, args[0]), self.constructed_point(xy, cmd))
+                )
+    def total_loss(
+        self,
+        terms: Dict[str, torch.Tensor],
+        separation_weight: float,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        constraint_loss = sum(value for key, value in terms.items() if key != "separation")
+        loss = constraint_loss + separation_weight * terms["separation"]
+        return loss, constraint_loss
+
+    def _optimize_restart(
+        self,
+        restart: int,
+        steps: int,
+        lr: float,
+        separation_weight: float,
+        seed: int,
+        init_noise: float,
+        success_loss: Optional[float],
+        stop_event: threading.Event,
+        progress: Dict[int, RestartProgress],
+        progress_lock: threading.Lock,
+    ) -> Optional[Tuple[float, torch.Tensor, Dict[str, float]]]:
+        with progress_lock:
+            progress[restart].status = "running"
+
+        xy = self.initial_tensor(seed + 1009 * restart, init_noise).detach().requires_grad_(True)
+        opt = torch.optim.Adam([xy], lr=lr)
+        best_score = float("inf")
+        best_xy: Optional[torch.Tensor] = None
+        best_terms: Optional[Dict[str, float]] = None
+
+        for step in range(steps):
+            if stop_event.is_set():
+                with progress_lock:
+                    if progress[restart].status != "success":
+                        progress[restart].status = "stopped"
+                break
+
+            opt.zero_grad()
+            terms = self.loss_terms(xy)
+            loss, constraint_loss = self.total_loss(terms, separation_weight)
+            loss.backward()
+            opt.step()
+            self.clamp_fixed(xy)
+
+            score = loss.item()
+            constraint_score = constraint_loss.item()
+            separation_score = terms["separation"].item()
+            if score < best_score:
+                best_score = score
+                best_xy = xy.detach().clone()
+                best_terms = {k: v.item() for k, v in terms.items()}
+
+            with progress_lock:
+                row = progress[restart]
+                row.step = step + 1
+                row.loss = score
+                row.constraint_loss = constraint_score
+                row.separation = separation_score
+                row.best_loss = best_score
+
+            if success_loss is not None and constraint_score <= success_loss:
+                stop_event.set()
+                with progress_lock:
+                    progress[restart].status = "success"
+                break
+        else:
+            with progress_lock:
+                progress[restart].status = "done"
+
+        if best_xy is None or best_terms is None:
+            with torch.no_grad():
+                terms = self.loss_terms(xy)
+                loss, _ = self.total_loss(terms, separation_weight)
+                best_score = loss.item()
+                best_xy = xy.detach().clone()
+                best_terms = {k: v.item() for k, v in terms.items()}
+
+        return best_score, best_xy, best_terms
+
+    def _progress_table(self, progress: Dict[int, RestartProgress], workers: int):
+        from rich.table import Table
+
+        table = Table(title=f"Geometry optimization ({workers} workers)")
+        table.add_column("Restart", justify="right")
+        table.add_column("Status")
+        table.add_column("Step", justify="right")
+        table.add_column("Loss", justify="right")
+        table.add_column("Constraint", justify="right")
+        table.add_column("Separation", justify="right")
+        table.add_column("Best", justify="right")
+
+        def fmt(value: float) -> str:
+            if math.isnan(value):
+                return "-"
+            if math.isinf(value):
+                return "-"
+            return f"{value:.4g}"
+
+        for restart in sorted(progress):
+            row = progress[restart]
+            table.add_row(
+                str(row.restart + 1),
+                row.status,
+                str(row.step),
+                fmt(row.loss),
+                fmt(row.constraint_loss),
+                fmt(row.separation),
+                fmt(row.best_loss),
+            )
+        return table
+
+        workers: int = 1,
+        success_loss: Optional[float] = None,
+        live_progress: bool = False,
+        if restarts < 1:
+            raise ValueError("restarts must be at least 1")
+        if workers < 1:
+            raise ValueError("workers must be at least 1")
+
+        worker_count = min(workers, restarts)
+        progress = {restart: RestartProgress(restart) for restart in range(restarts)}
+        progress_lock = threading.Lock()
+        stop_event = threading.Event()
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as executor:
+            futures = {
+                executor.submit(
+                    self._optimize_restart,
+                    restart,
+                    steps,
+                    lr,
+                    separation_weight,
+                    seed,
+                    init_noise,
+                    success_loss,
+                    stop_event,
+                    progress,
+                    progress_lock,
+                ): restart
+                for restart in range(restarts)
+            }
+
+            pending = set(futures)
+            if live_progress:
+                from rich.live import Live
+
+                with Live(self._progress_table(progress, worker_count), refresh_per_second=6) as live:
+                    while pending:
+                        done, pending = concurrent.futures.wait(
+                            pending,
+                            timeout=0.15,
+                            return_when=concurrent.futures.FIRST_COMPLETED,
+                        )
+                        for future in done:
+                            score, xy, terms = future.result()
+                            if score < best_score:
+                                best_score = score
+                                best_xy = xy
+                                best_terms = terms
+                        with progress_lock:
+                            live.update(self._progress_table(progress, worker_count))
+                    live.update(self._progress_table(progress, worker_count))
+            else:
+                for future in concurrent.futures.as_completed(futures):
+                    score, xy, terms = future.result()
+                    if score < best_score:
+                        best_score = score
+                        best_xy = xy
+                        best_terms = terms
+                    if verbose:
+                        restart = futures[future]
+                        print(
+                            f"restart={restart + 1}/{restarts} status={progress[restart].status} "
+                            f"best_loss={score:.6g}"
+                        )
+            elif cmd.op in CONSTRUCTION_ARITIES:
+                lines.append(f"{cmd.args[0]} = {cmd.op} {' '.join(cmd.args[1:])}")
+        elif cmd.op in ("parallel", "para", "perp", "eqratio"):
+            if cmd.op == "eqratio":
+                segment(args[4], args[5], "-", 0.5)
+                segment(args[6], args[7], "-", 0.5)
+        elif cmd.op == "dists_equation":
+            for i in range(0, len(args) - 1, 3):
+                segment(args[i + 1], args[i + 2], "-", 0.45)
+        elif cmd.op == "angles_equation":
+            for i in range(0, len(args) - 1, 4):
+                segment(args[i + 2], args[i + 1], "-", 0.25)
+                segment(args[i + 2], args[i + 3], "-", 0.25)
+        elif cmd.op == "convex_polygon":
+            for i in range(len(args)):
+                segment(args[i], args[(i + 1) % len(args)], "-", 0.65)
+        elif cmd.op == "intersect":
+            segment(args[1], args[2], "-", 0.55)
+            segment(args[3], args[4], "-", 0.55)
+        elif cmd.op in ("orthocenter", "incenter", "excenter"):
+            segment(args[1], args[2], "-", 0.35)
+            segment(args[2], args[3], "-", 0.35)
+            segment(args[3], args[1], "-", 0.35)
+            segment(args[0], args[1], ":", 0.25)
+            segment(args[0], args[2], ":", 0.25)
+            segment(args[0], args[3], ":", 0.25)
+    parser.add_argument("--steps", type=int, default=3000)
+    parser.add_argument(
+        "--threads",
+        type=int,
+        default=max(1, min(8, os.cpu_count() or 1)),
+        help="parallel optimization workers for independent restarts",
+    )
+    parser.add_argument(
+        "--success-loss",
+        type=float,
+        default=1e-8,
+        help="stop all workers once constraint loss reaches this value; negative disables early stop",
+    )
+    parser.add_argument("--no-live", action="store_true", help="disable rich live progress table")
+    live_progress = args.threads > 1 and not args.no_live
+        workers=args.threads,
+        success_loss=None if args.success_loss < 0 else args.success_loss,
+        live_progress=live_progress,
+    if live_progress:
+        print("")
+    def test_para_alias_converges(self):
+        self.assert_term_small(
+            """
+            fix a 0 0
+            fix b 1 0
+            fix c 0 1
+            init d 1.0 1.7
+            para a b c d
+            """,
+            "parallel",
+        )
+
+    def test_parallel_restarts_stop_after_success(self):
+        problem = GeometryProblem(
+            parse_text(
+                """
+                fix a 0 0
+                fix b 1 0
+                fix c 0 0
+                fix d 0 1
+                cong a b c d
+                """
+            )
+        )
+        _, terms = problem.optimize(
+            steps=50,
+            lr=0.03,
+            restarts=4,
+            separation_weight=0.0,
+            seed=7,
+            init_noise=0.0,
+            workers=2,
+            success_loss=1e-12,
+        )
+        self.assertLess(terms["cong"], 1e-12)
+
+class NewCommandTests(unittest.TestCase):
+    def loss_terms_at_initial_points(self, text):
+        problem = GeometryProblem(parse_text(text))
+        xy = problem.initial_tensor(seed=1, noise=0.0)
+        return problem, problem.loss_terms(xy)
+
+    def test_dists_equation_uses_coefficients_and_ignores_them_as_points(self):
+        problem, terms = self.loss_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 3 0
+            fix c 0 0
+            fix d 0 4
+            dists_equation 2 a b -1 c d 2
+            """
+        )
+        self.assertEqual(problem.names, ["a", "b", "c", "d"])
+        self.assertAlmostEqual(terms["dists_equation"].item(), 0.0, places=12)
+
+    def test_angles_equation_matches_linear_angle_formula(self):
+        _, terms = self.loss_terms_at_initial_points(
+            f"""
+            fix a 1 0
+            fix b 0 0
+            fix c 0 1
+            angles_equation 2 a b c {math.pi}
+            """
+        )
+        self.assertAlmostEqual(terms["angles_equation"].item(), 0.0, places=12)
+
+    def test_eqratio_matches_ratio_formula(self):
+        _, terms = self.loss_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 2 0
+            fix c 0 0
+            fix d 0 4
+            fix e 0 0
+            fix f 3 0
+            fix g 0 0
+            fix h 0 6
+            eqratio a b c d e f g h
+            """
+        )
+        self.assertAlmostEqual(terms["eqratio"].item(), 0.0, places=12)
+
+    def test_convex_polygon_is_zero_for_square_and_positive_for_concave_order(self):
+        _, convex_terms = self.loss_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 1 0
+            fix c 1 1
+            fix d 0 1
+            convex_polygon a b c d
+            """
+        )
+        _, concave_terms = self.loss_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 1 0
+            fix c 0.25 0.25
+            fix d 0 1
+            convex_polygon a b c d
+            """
+        )
+        self.assertAlmostEqual(convex_terms["convex_polygon"].item(), 0.0, places=12)
+        self.assertGreater(concave_terms["convex_polygon"].item(), 0.1)
+
+    def test_new_variable_arity_commands_validate_shape(self):
+        with self.assertRaises(ValueError):
+            parse_text("dists_equation 1 a b 2 c")
+        with self.assertRaises(ValueError):
+            parse_text("angles_equation 1 a b 0")
+        with self.assertRaises(ValueError):
+            parse_text("convex_polygon a b")
+
+
+class ConstructionCommandTests(unittest.TestCase):
+    def construction_terms_at_initial_points(self, text):
+        problem = GeometryProblem(parse_text(text))
+        xy = problem.initial_tensor(seed=1, noise=0.0)
+        return problem, problem.loss_terms(xy)
+
+    def test_intersect_constructs_point_from_two_lines(self):
+        problem, terms = self.construction_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 2 0
+            fix c 1 -1
+            fix d 1 1
+            fix x 1 0
+            x = intersect a b c d
+            """
+        )
+        self.assertEqual(problem.names, ["a", "b", "c", "d", "x"])
+        self.assertLess(terms["construction"].item(), 1e-12)
+
+    def test_orthocenter_constructs_right_triangle_vertex(self):
+        _, terms = self.construction_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 3 0
+            fix c 0 4
+            fix h 0 0
+            h = orthocenter a b c
+            """
+        )
+        self.assertLess(terms["construction"].item(), 1e-12)
+
+    def test_incenter_constructs_weighted_angle_center(self):
+        _, terms = self.construction_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 3 0
+            fix c 0 4
+            fix i 1 1
+            i = incenter a b c
+            """
+        )
+        self.assertLess(terms["construction"].item(), 1e-12)
+
+    def test_excenter_constructs_a_excenter(self):
+        _, terms = self.construction_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 3 0
+            fix c 0 4
+            fix ia 6 6
+            ia = excenter a b c
+            """
+        )
+        self.assertLess(terms["construction"].item(), 1e-10)
+
+    def test_constructed_point_can_converge(self):
+        self.assert_term_small(
+            """
+            fix a 0 0
+            fix b 2 0
+            fix c 1 -1
+            fix d 1 1
+            init x 0.2 0.4
+            x = intersect a b c d
+            """,
+            "construction",
+            steps=400,
+        )
+
+    def test_constructed_point_gets_formula_initial_coordinate(self):
+        problem = GeometryProblem(
+            parse_text(
+                """
+                fix a 0 0
+                fix b 2 0
+                fix c 1 -1
+                fix d 1 1
+                init x 0.2 0.4
+                x = intersect a b c d
+                """
+            )
+        )
+        coords = problem.coordinates(problem.initial_tensor(seed=1, noise=0.0))
+        self.assertAlmostEqual(coords["x"][0], 1.0, places=9)
+        self.assertAlmostEqual(coords["x"][1], 0.0, places=9)
+
+    def assert_term_small(self, text, term, threshold=1e-7, **kwargs):
+        _, _, terms = solve(text, **kwargs)
+        self.assertLess(terms[term], threshold, f"{term} did not converge: {terms}")
+
+    def test_constructions_require_assignment_syntax(self):
+        with self.assertRaises(ValueError):
+            parse_text("orthocenter a b c")
+        with self.assertRaises(ValueError):
+            parse_text("x = intersect a b c")
+
+
