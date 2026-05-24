@@ -132,6 +132,42 @@ class CommandConvergenceTests(unittest.TestCase):
             "perp",
         )
 
+    def test_para_alias_converges(self):
+        self.assert_term_small(
+            """
+            fix a 0 0
+            fix b 1 0
+            fix c 0 1
+            init d 1.0 1.7
+            para a b c d
+            """,
+            "parallel",
+        )
+
+    def test_parallel_restarts_stop_after_success(self):
+        problem = GeometryProblem(
+            parse_text(
+                """
+                fix a 0 0
+                fix b 1 0
+                fix c 0 0
+                fix d 0 1
+                cong a b c d
+                """
+            )
+        )
+        _, terms = problem.optimize(
+            steps=50,
+            lr=0.03,
+            restarts=4,
+            separation_weight=0.0,
+            seed=7,
+            init_noise=0.0,
+            workers=2,
+            success_loss=1e-12,
+        )
+        self.assertLess(terms["cong"], 1e-12)
+
     def test_fix_and_init_are_applied(self):
         problem = GeometryProblem(
             parse_text(
@@ -159,6 +195,181 @@ class CommandConvergenceTests(unittest.TestCase):
         xy = problem.initial_tensor(seed=1, noise=0.0)
         expected = math.exp(-40.0) + math.exp(-160.0) + math.exp(-200.0)
         self.assertAlmostEqual(problem.separation_penalty(xy).item(), expected)
+
+
+class NewCommandTests(unittest.TestCase):
+    def loss_terms_at_initial_points(self, text):
+        problem = GeometryProblem(parse_text(text))
+        xy = problem.initial_tensor(seed=1, noise=0.0)
+        return problem, problem.loss_terms(xy)
+
+    def test_dists_equation_uses_coefficients_and_ignores_them_as_points(self):
+        problem, terms = self.loss_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 3 0
+            fix c 0 0
+            fix d 0 4
+            dists_equation 2 a b -1 c d 2
+            """
+        )
+        self.assertEqual(problem.names, ["a", "b", "c", "d"])
+        self.assertAlmostEqual(terms["dists_equation"].item(), 0.0, places=12)
+
+    def test_angles_equation_matches_linear_angle_formula(self):
+        _, terms = self.loss_terms_at_initial_points(
+            f"""
+            fix a 1 0
+            fix b 0 0
+            fix c 0 1
+            angles_equation 2 a b c {math.pi}
+            """
+        )
+        self.assertAlmostEqual(terms["angles_equation"].item(), 0.0, places=12)
+
+    def test_eqratio_matches_ratio_formula(self):
+        _, terms = self.loss_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 2 0
+            fix c 0 0
+            fix d 0 4
+            fix e 0 0
+            fix f 3 0
+            fix g 0 0
+            fix h 0 6
+            eqratio a b c d e f g h
+            """
+        )
+        self.assertAlmostEqual(terms["eqratio"].item(), 0.0, places=12)
+
+    def test_convex_polygon_is_zero_for_square_and_positive_for_concave_order(self):
+        _, convex_terms = self.loss_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 1 0
+            fix c 1 1
+            fix d 0 1
+            convex_polygon a b c d
+            """
+        )
+        _, concave_terms = self.loss_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 1 0
+            fix c 0.25 0.25
+            fix d 0 1
+            convex_polygon a b c d
+            """
+        )
+        self.assertAlmostEqual(convex_terms["convex_polygon"].item(), 0.0, places=12)
+        self.assertGreater(concave_terms["convex_polygon"].item(), 0.1)
+
+    def test_new_variable_arity_commands_validate_shape(self):
+        with self.assertRaises(ValueError):
+            parse_text("dists_equation 1 a b 2 c")
+        with self.assertRaises(ValueError):
+            parse_text("angles_equation 1 a b 0")
+        with self.assertRaises(ValueError):
+            parse_text("convex_polygon a b")
+
+
+class ConstructionCommandTests(unittest.TestCase):
+    def construction_terms_at_initial_points(self, text):
+        problem = GeometryProblem(parse_text(text))
+        xy = problem.initial_tensor(seed=1, noise=0.0)
+        return problem, problem.loss_terms(xy)
+
+    def test_intersect_constructs_point_from_two_lines(self):
+        problem, terms = self.construction_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 2 0
+            fix c 1 -1
+            fix d 1 1
+            fix x 1 0
+            x = intersect a b c d
+            """
+        )
+        self.assertEqual(problem.names, ["a", "b", "c", "d", "x"])
+        self.assertLess(terms["construction"].item(), 1e-12)
+
+    def test_orthocenter_constructs_right_triangle_vertex(self):
+        _, terms = self.construction_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 3 0
+            fix c 0 4
+            fix h 0 0
+            h = orthocenter a b c
+            """
+        )
+        self.assertLess(terms["construction"].item(), 1e-12)
+
+    def test_incenter_constructs_weighted_angle_center(self):
+        _, terms = self.construction_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 3 0
+            fix c 0 4
+            fix i 1 1
+            i = incenter a b c
+            """
+        )
+        self.assertLess(terms["construction"].item(), 1e-12)
+
+    def test_excenter_constructs_a_excenter(self):
+        _, terms = self.construction_terms_at_initial_points(
+            """
+            fix a 0 0
+            fix b 3 0
+            fix c 0 4
+            fix ia 6 6
+            ia = excenter a b c
+            """
+        )
+        self.assertLess(terms["construction"].item(), 1e-10)
+
+    def test_constructed_point_can_converge(self):
+        self.assert_term_small(
+            """
+            fix a 0 0
+            fix b 2 0
+            fix c 1 -1
+            fix d 1 1
+            init x 0.2 0.4
+            x = intersect a b c d
+            """,
+            "construction",
+            steps=400,
+        )
+
+    def test_constructed_point_gets_formula_initial_coordinate(self):
+        problem = GeometryProblem(
+            parse_text(
+                """
+                fix a 0 0
+                fix b 2 0
+                fix c 1 -1
+                fix d 1 1
+                init x 0.2 0.4
+                x = intersect a b c d
+                """
+            )
+        )
+        coords = problem.coordinates(problem.initial_tensor(seed=1, noise=0.0))
+        self.assertAlmostEqual(coords["x"][0], 1.0, places=9)
+        self.assertAlmostEqual(coords["x"][1], 0.0, places=9)
+
+    def assert_term_small(self, text, term, threshold=1e-7, **kwargs):
+        _, _, terms = solve(text, **kwargs)
+        self.assertLess(terms[term], threshold, f"{term} did not converge: {terms}")
+
+    def test_constructions_require_assignment_syntax(self):
+        with self.assertRaises(ValueError):
+            parse_text("orthocenter a b c")
+        with self.assertRaises(ValueError):
+            parse_text("x = intersect a b c")
 
 
 class ExampleTests(unittest.TestCase):

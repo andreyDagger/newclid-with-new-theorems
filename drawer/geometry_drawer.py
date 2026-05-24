@@ -4,15 +4,40 @@
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import math
 import os
+import threading
+import time
 from dataclasses import dataclass
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 import torch
 
-
-EPS = 1e-9
+from geometry_constraints import (
+    EPS,
+    angle_at,
+    angles_equation_loss,
+    collinearity_loss,
+    convex_polygon_loss,
+    cross2,
+    directed_line_angle,
+    distance,
+    distances_equation_loss,
+    dot2,
+    eqratio_loss,
+    excenter,
+    incenter,
+    line_intersection,
+    norm,
+    oriented_angle_at,
+    orthocenter,
+    parallel_loss,
+    perpendicular_loss,
+    point_match_loss,
+    wrap_line_angle,
+    wrap_two_pi,
+)
 
 
 @dataclass(frozen=True)
@@ -23,16 +48,42 @@ class Command:
     raw: str
 
 
+@dataclass
+class RestartProgress:
+    restart: int
+    step: int = 0
+    loss: float = float("nan")
+    constraint_loss: float = float("nan")
+    separation: float = float("nan")
+    best_loss: float = float("inf")
+    status: str = "pending"
+
+
 POINT_ARITIES = {
     "cong": 4,
     "coll": 3,
     "cyclic": 4,
     "eqangle": (6, 8),
+    "eqratio": 8,
     "midpoint": 3,
+    "para": 4,
     "parallel": 4,
     "perp": 4,
     "check_cyclic": 4,
     "check_eqangle": (6, 8),
+}
+
+VARIABLE_ARITY_COMMANDS = {
+    "angles_equation",
+    "convex_polygon",
+    "dists_equation",
+}
+
+CONSTRUCTION_ARITIES = {
+    "excenter": 3,
+    "incenter": 3,
+    "intersect": 4,
+    "orthocenter": 3,
 }
 
 
@@ -43,21 +94,57 @@ def parse_text(text: str) -> List[Command]:
         if not raw:
             continue
         parts = raw.split()
-        op = parts[0].lower()
-        args = tuple(parts[1:])
+        if len(parts) >= 3 and parts[1] == "=":
+            op = parts[2].lower()
+            args = tuple([parts[0]] + parts[3:])
+        else:
+            op = parts[0].lower()
+            args = tuple(parts[1:])
 
         if op in ("fix", "init"):
             if len(args) != 3:
                 raise ValueError(f"line {line_no}: {op} expects: point x y")
             float(args[1])
             float(args[2])
+        elif op in CONSTRUCTION_ARITIES:
+            arity = CONSTRUCTION_ARITIES[op]
+            if len(args) != arity + 1:
+                raise ValueError(f"line {line_no}: {op} expects: target = {op} points...")
+            if not (len(parts) >= 3 and parts[1] == "="):
+                raise ValueError(f"line {line_no}: {op} must be written as: point = {op} ...")
         elif op in POINT_ARITIES:
             arity = POINT_ARITIES[op]
             ok = len(args) in arity if isinstance(arity, tuple) else len(args) == arity
             if not ok:
                 raise ValueError(f"line {line_no}: {op} has wrong arity")
+        elif op == "dists_equation":
+            if len(args) < 4 or (len(args) - 1) % 3 != 0:
+                raise ValueError(
+                    f"line {line_no}: dists_equation expects: v1 a1 b1 ... vn an bn target"
+                )
+            for i in range(0, len(args) - 1, 3):
+                float(args[i])
+            float(args[-1])
+        elif op == "angles_equation":
+            if len(args) < 5 or (len(args) - 1) % 4 != 0:
+                raise ValueError(
+                    f"line {line_no}: angles_equation expects: v1 a1 b1 c1 ... vn an bn cn target"
+                )
+            for i in range(0, len(args) - 1, 4):
+                float(args[i])
+            float(args[-1])
+        elif op == "convex_polygon":
+            if len(args) < 3:
+                raise ValueError(f"line {line_no}: convex_polygon expects at least 3 points")
         else:
-            known = ", ".join(sorted(["fix", "init"] + list(POINT_ARITIES)))
+            known = ", ".join(
+                sorted(
+                    ["fix", "init"]
+                    + list(POINT_ARITIES)
+                    + list(VARIABLE_ARITY_COMMANDS)
+                    + list(CONSTRUCTION_ARITIES)
+                )
+            )
             raise ValueError(f"line {line_no}: unknown command {op!r}; known: {known}")
 
         commands.append(Command(op, args, line_no, raw))
@@ -74,65 +161,16 @@ def point_names(commands: Sequence[Command]) -> List[str]:
     for cmd in commands:
         if cmd.op in ("fix", "init"):
             names.add(cmd.args[0])
+        elif cmd.op == "dists_equation":
+            for i in range(0, len(cmd.args) - 1, 3):
+                names.add(cmd.args[i + 1])
+                names.add(cmd.args[i + 2])
+        elif cmd.op == "angles_equation":
+            for i in range(0, len(cmd.args) - 1, 4):
+                names.update(cmd.args[i + 1 : i + 4])
         else:
             names.update(cmd.args)
     return sorted(names)
-
-
-def cross2(u: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
-    return u[..., 0] * v[..., 1] - u[..., 1] * v[..., 0]
-
-
-def dot2(u: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
-    return (u * v).sum(dim=-1)
-
-
-def norm(v: torch.Tensor) -> torch.Tensor:
-    return torch.sqrt(dot2(v, v) + EPS)
-
-
-def distance(p: torch.Tensor, q: torch.Tensor) -> torch.Tensor:
-    return norm(p - q)
-
-
-def angle_at(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
-    u = a - b
-    v = c - b
-    return torch.atan2(torch.abs(cross2(u, v)), dot2(u, v))
-
-
-def oriented_angle_at(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
-    u = a - b
-    v = c - b
-    return torch.atan2(cross2(u, v), dot2(u, v))
-
-
-def directed_line_angle(
-    a: torch.Tensor, b: torch.Tensor, c: torch.Tensor, d: torch.Tensor
-) -> torch.Tensor:
-    u = b - a
-    v = d - c
-    return torch.atan2(cross2(u, v), dot2(u, v))
-
-
-def wrap_two_pi(x: torch.Tensor) -> torch.Tensor:
-    return torch.atan2(torch.sin(x), torch.cos(x))
-
-
-def wrap_line_angle(x: torch.Tensor) -> torch.Tensor:
-    # Oriented angles between straight lines are taken modulo pi.
-    return 0.5 * torch.atan2(torch.sin(2.0 * x), torch.cos(2.0 * x))
-
-
-def collinearity_loss(a: torch.Tensor, b: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
-    def sin_sq(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        return cross2(x, y).pow(2) / (dot2(x, x) * dot2(y, y) + EPS)
-
-    return (
-        sin_sq(b - a, c - a)
-        + sin_sq(a - b, c - b)
-        + sin_sq(a - c, b - c)
-    )
 
 
 def circumcircle(points: Sequence[Tuple[float, float]]) -> Optional[Tuple[float, float, float]]:
@@ -179,6 +217,31 @@ class GeometryProblem:
     def p(self, xy: torch.Tensor, name: str) -> torch.Tensor:
         return xy[self.index[name]]
 
+    def constructed_point(self, xy: torch.Tensor, cmd: Command) -> torch.Tensor:
+        args = cmd.args
+        if cmd.op == "intersect":
+            _, a, b, c, d = [self.p(xy, name) for name in args]
+            return line_intersection(a, b, c, d)
+        if cmd.op == "orthocenter":
+            _, a, b, c = [self.p(xy, name) for name in args]
+            return orthocenter(a, b, c)
+        if cmd.op == "incenter":
+            _, a, b, c = [self.p(xy, name) for name in args]
+            return incenter(a, b, c)
+        if cmd.op == "excenter":
+            _, a, b, c = [self.p(xy, name) for name in args]
+            return excenter(a, b, c)
+        raise ValueError(f"line {cmd.line_no}: {cmd.op} is not a construction")
+
+    def initialize_constructed_points(self, xy: torch.Tensor) -> None:
+        for cmd in self.commands:
+            if cmd.op not in CONSTRUCTION_ARITIES:
+                continue
+            target = cmd.args[0]
+            if target in self.fixed:
+                continue
+            xy[self.index[target]] = self.constructed_point(xy, cmd)
+
     def initial_tensor(self, seed: int, noise: float) -> torch.Tensor:
         gen = torch.Generator(device=self.device)
         gen.manual_seed(seed)
@@ -189,7 +252,10 @@ class GeometryProblem:
             xy[i] = base + noise * torch.randn((2,), generator=gen, device=self.device)
         for name, value in self.fixed.items():
             xy[self.index[name]] = torch.tensor(value, dtype=torch.float64, device=self.device)
-        return xy.to(dtype=torch.float64)
+        xy = xy.to(dtype=torch.float64)
+        self.initialize_constructed_points(xy)
+        self.clamp_fixed(xy)
+        return xy
 
     def clamp_fixed(self, xy: torch.Tensor) -> None:
         with torch.no_grad():
@@ -198,10 +264,15 @@ class GeometryProblem:
 
     def loss_terms(self, xy: torch.Tensor) -> Dict[str, torch.Tensor]:
         terms: Dict[str, List[torch.Tensor]] = {
+            "angles_equation": [],
             "cong": [],
             "coll": [],
+            "construction": [],
+            "convex_polygon": [],
             "cyclic": [],
+            "dists_equation": [],
             "eqangle": [],
+            "eqratio": [],
             "midpoint": [],
             "parallel": [],
             "perp": [],
@@ -234,16 +305,39 @@ class GeometryProblem:
             elif cmd.op == "midpoint":
                 m, a, b = [self.p(xy, x) for x in args]
                 terms["midpoint"].append(((m - 0.5 * (a + b)).pow(2)).sum())
-            elif cmd.op == "parallel":
+            elif cmd.op in ("parallel", "para"):
                 a, b, c, d = [self.p(xy, x) for x in args]
-                u = b - a
-                v = d - c
-                terms["parallel"].append(cross2(u, v).pow(2) / (dot2(u, u) * dot2(v, v) + EPS))
+                terms["parallel"].append(parallel_loss(a, b, c, d))
             elif cmd.op == "perp":
                 a, b, c, d = [self.p(xy, x) for x in args]
-                u = b - a
-                v = d - c
-                terms["perp"].append(dot2(u, v).pow(2) / (dot2(u, u) * dot2(v, v) + EPS))
+                terms["perp"].append(perpendicular_loss(a, b, c, d))
+            elif cmd.op == "eqratio":
+                points = [self.p(xy, x) for x in args]
+                terms["eqratio"].append(eqratio_loss(points))
+            elif cmd.op == "dists_equation":
+                coefficients = [float(args[i]) for i in range(0, len(args) - 1, 3)]
+                segments = [
+                    (self.p(xy, args[i + 1]), self.p(xy, args[i + 2]))
+                    for i in range(0, len(args) - 1, 3)
+                ]
+                terms["dists_equation"].append(
+                    distances_equation_loss(coefficients, segments, float(args[-1]))
+                )
+            elif cmd.op == "angles_equation":
+                coefficients = [float(args[i]) for i in range(0, len(args) - 1, 4)]
+                angles = [
+                    (self.p(xy, args[i + 1]), self.p(xy, args[i + 2]), self.p(xy, args[i + 3]))
+                    for i in range(0, len(args) - 1, 4)
+                ]
+                terms["angles_equation"].append(
+                    angles_equation_loss(coefficients, angles, float(args[-1]))
+                )
+            elif cmd.op == "convex_polygon":
+                terms["convex_polygon"].append(convex_polygon_loss([self.p(xy, x) for x in args]))
+            elif cmd.op in CONSTRUCTION_ARITIES:
+                terms["construction"].append(
+                    point_match_loss(self.p(xy, args[0]), self.constructed_point(xy, cmd))
+                )
 
         out: Dict[str, torch.Tensor] = {}
         zero = torch.tensor(0.0, dtype=xy.dtype, device=xy.device)
@@ -262,6 +356,118 @@ class GeometryProblem:
             return torch.tensor(0.0, dtype=xy.dtype, device=xy.device)
         return torch.stack(parts).sum()
 
+    def total_loss(
+        self,
+        terms: Dict[str, torch.Tensor],
+        separation_weight: float,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        constraint_loss = sum(value for key, value in terms.items() if key != "separation")
+        loss = constraint_loss + separation_weight * terms["separation"]
+        return loss, constraint_loss
+
+    def _optimize_restart(
+        self,
+        restart: int,
+        steps: int,
+        lr: float,
+        separation_weight: float,
+        seed: int,
+        init_noise: float,
+        success_loss: Optional[float],
+        stop_event: threading.Event,
+        progress: Dict[int, RestartProgress],
+        progress_lock: threading.Lock,
+    ) -> Optional[Tuple[float, torch.Tensor, Dict[str, float]]]:
+        with progress_lock:
+            progress[restart].status = "running"
+
+        xy = self.initial_tensor(seed + 1009 * restart, init_noise).detach().requires_grad_(True)
+        opt = torch.optim.Adam([xy], lr=lr)
+        best_score = float("inf")
+        best_xy: Optional[torch.Tensor] = None
+        best_terms: Optional[Dict[str, float]] = None
+
+        for step in range(steps):
+            if stop_event.is_set():
+                with progress_lock:
+                    if progress[restart].status != "success":
+                        progress[restart].status = "stopped"
+                break
+
+            opt.zero_grad()
+            terms = self.loss_terms(xy)
+            loss, constraint_loss = self.total_loss(terms, separation_weight)
+            loss.backward()
+            opt.step()
+            self.clamp_fixed(xy)
+
+            score = loss.item()
+            constraint_score = constraint_loss.item()
+            separation_score = terms["separation"].item()
+            if score < best_score:
+                best_score = score
+                best_xy = xy.detach().clone()
+                best_terms = {k: v.item() for k, v in terms.items()}
+
+            with progress_lock:
+                row = progress[restart]
+                row.step = step + 1
+                row.loss = score
+                row.constraint_loss = constraint_score
+                row.separation = separation_score
+                row.best_loss = best_score
+
+            if success_loss is not None and constraint_score <= success_loss:
+                stop_event.set()
+                with progress_lock:
+                    progress[restart].status = "success"
+                break
+        else:
+            with progress_lock:
+                progress[restart].status = "done"
+
+        if best_xy is None or best_terms is None:
+            with torch.no_grad():
+                terms = self.loss_terms(xy)
+                loss, _ = self.total_loss(terms, separation_weight)
+                best_score = loss.item()
+                best_xy = xy.detach().clone()
+                best_terms = {k: v.item() for k, v in terms.items()}
+
+        return best_score, best_xy, best_terms
+
+    def _progress_table(self, progress: Dict[int, RestartProgress], workers: int):
+        from rich.table import Table
+
+        table = Table(title=f"Geometry optimization ({workers} workers)")
+        table.add_column("Restart", justify="right")
+        table.add_column("Status")
+        table.add_column("Step", justify="right")
+        table.add_column("Loss", justify="right")
+        table.add_column("Constraint", justify="right")
+        table.add_column("Separation", justify="right")
+        table.add_column("Best", justify="right")
+
+        def fmt(value: float) -> str:
+            if math.isnan(value):
+                return "-"
+            if math.isinf(value):
+                return "-"
+            return f"{value:.4g}"
+
+        for restart in sorted(progress):
+            row = progress[restart]
+            table.add_row(
+                str(row.restart + 1),
+                row.status,
+                str(row.step),
+                fmt(row.loss),
+                fmt(row.constraint_loss),
+                fmt(row.separation),
+                fmt(row.best_loss),
+            )
+        return table
+
     def optimize(
         self,
         steps: int,
@@ -271,42 +477,75 @@ class GeometryProblem:
         seed: int,
         init_noise: float,
         verbose: bool = False,
+        workers: int = 1,
+        success_loss: Optional[float] = None,
+        live_progress: bool = False,
     ) -> Tuple[torch.Tensor, Dict[str, float]]:
         best_xy: Optional[torch.Tensor] = None
         best_terms: Optional[Dict[str, float]] = None
         best_score = float("inf")
 
-        for restart in range(restarts):
-            xy = self.initial_tensor(seed + 1009 * restart, init_noise).detach().requires_grad_(True)
-            opt = torch.optim.Adam([xy], lr=lr)
+        if restarts < 1:
+            raise ValueError("restarts must be at least 1")
+        if workers < 1:
+            raise ValueError("workers must be at least 1")
 
-            for step in range(steps):
-                opt.zero_grad()
-                terms = self.loss_terms(xy)
-                constraint_loss = sum(
-                    value for key, value in terms.items() if key != "separation"
-                )
-                loss = constraint_loss + separation_weight * terms["separation"]
-                loss.backward()
-                opt.step()
-                self.clamp_fixed(xy)
+        worker_count = min(workers, restarts)
+        progress = {restart: RestartProgress(restart) for restart in range(restarts)}
+        progress_lock = threading.Lock()
+        stop_event = threading.Event()
 
-                if verbose and (step + 1) % max(1, steps // 10) == 0:
-                    print(
-                        f"restart={restart + 1}/{restarts} step={step + 1}/{steps} "
-                        f"loss={loss.item():.6g}"
-                    )
+        with concurrent.futures.ThreadPoolExecutor(max_workers=worker_count) as executor:
+            futures = {
+                executor.submit(
+                    self._optimize_restart,
+                    restart,
+                    steps,
+                    lr,
+                    separation_weight,
+                    seed,
+                    init_noise,
+                    success_loss,
+                    stop_event,
+                    progress,
+                    progress_lock,
+                ): restart
+                for restart in range(restarts)
+            }
 
-            with torch.no_grad():
-                terms = self.loss_terms(xy)
-                constraint_loss = sum(
-                    value for key, value in terms.items() if key != "separation"
-                )
-                score = (constraint_loss + separation_weight * terms["separation"]).item()
-                if score < best_score:
-                    best_score = score
-                    best_xy = xy.detach().clone()
-                    best_terms = {k: v.item() for k, v in terms.items()}
+            pending = set(futures)
+            if live_progress:
+                from rich.live import Live
+
+                with Live(self._progress_table(progress, worker_count), refresh_per_second=6) as live:
+                    while pending:
+                        done, pending = concurrent.futures.wait(
+                            pending,
+                            timeout=0.15,
+                            return_when=concurrent.futures.FIRST_COMPLETED,
+                        )
+                        for future in done:
+                            score, xy, terms = future.result()
+                            if score < best_score:
+                                best_score = score
+                                best_xy = xy
+                                best_terms = terms
+                        with progress_lock:
+                            live.update(self._progress_table(progress, worker_count))
+                    live.update(self._progress_table(progress, worker_count))
+            else:
+                for future in concurrent.futures.as_completed(futures):
+                    score, xy, terms = future.result()
+                    if score < best_score:
+                        best_score = score
+                        best_xy = xy
+                        best_terms = terms
+                    if verbose:
+                        restart = futures[future]
+                        print(
+                            f"restart={restart + 1}/{restarts} status={progress[restart].status} "
+                            f"best_loss={score:.6g}"
+                        )
 
         assert best_xy is not None and best_terms is not None
         return best_xy.cpu(), best_terms
@@ -348,6 +587,8 @@ class GeometryProblem:
             elif cmd.op == "check_eqangle" and len(cmd.args) == 6:
                 a, b, c, d, e, f = cmd.args
                 lines.append(f"check_eqangle {a} {b} {b} {c} {d} {e} {e} {f}")
+            elif cmd.op in CONSTRUCTION_ARITIES:
+                lines.append(f"{cmd.args[0]} = {cmd.op} {' '.join(cmd.args[1:])}")
             else:
                 lines.append(f"{cmd.op} {' '.join(cmd.args)}")
         return lines
@@ -397,9 +638,32 @@ def plot_solution(
                 segment(args[i], args[(i + 1) % len(args)], ":", 0.35)
         elif cmd.op == "midpoint":
             segment(args[1], args[2], "-", 0.25)
-        elif cmd.op in ("parallel", "perp"):
+        elif cmd.op in ("parallel", "para", "perp", "eqratio"):
             segment(args[0], args[1], "-", 0.5)
             segment(args[2], args[3], "-", 0.5)
+            if cmd.op == "eqratio":
+                segment(args[4], args[5], "-", 0.5)
+                segment(args[6], args[7], "-", 0.5)
+        elif cmd.op == "dists_equation":
+            for i in range(0, len(args) - 1, 3):
+                segment(args[i + 1], args[i + 2], "-", 0.45)
+        elif cmd.op == "angles_equation":
+            for i in range(0, len(args) - 1, 4):
+                segment(args[i + 2], args[i + 1], "-", 0.25)
+                segment(args[i + 2], args[i + 3], "-", 0.25)
+        elif cmd.op == "convex_polygon":
+            for i in range(len(args)):
+                segment(args[i], args[(i + 1) % len(args)], "-", 0.65)
+        elif cmd.op == "intersect":
+            segment(args[1], args[2], "-", 0.55)
+            segment(args[3], args[4], "-", 0.55)
+        elif cmd.op in ("orthocenter", "incenter", "excenter"):
+            segment(args[1], args[2], "-", 0.35)
+            segment(args[2], args[3], "-", 0.35)
+            segment(args[3], args[1], "-", 0.35)
+            segment(args[0], args[1], ":", 0.25)
+            segment(args[0], args[2], ":", 0.25)
+            segment(args[0], args[3], ":", 0.25)
         elif cmd.op == "eqangle":
             if len(args) == 6:
                 segment(args[1], args[0], "-", 0.25)
@@ -464,12 +728,25 @@ def format_report(
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input", help="path to a geometry description")
-    parser.add_argument("--steps", type=int, default=30000)
+    parser.add_argument("--steps", type=int, default=3000)
     parser.add_argument("--restarts", type=int, default=8)
     parser.add_argument("--lr", type=float, default=0.03)
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--init-noise", type=float, default=0.03)
     parser.add_argument("--separation-weight", type=float, default=0.001)
+    parser.add_argument(
+        "--threads",
+        type=int,
+        default=max(1, min(8, os.cpu_count() or 1)),
+        help="parallel optimization workers for independent restarts",
+    )
+    parser.add_argument(
+        "--success-loss",
+        type=float,
+        default=1e-8,
+        help="stop all workers once constraint loss reaches this value; negative disables early stop",
+    )
+    parser.add_argument("--no-live", action="store_true", help="disable rich live progress table")
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--plot", help="optional output png path")
     parser.add_argument("--verbose", action="store_true")
@@ -477,6 +754,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     commands = load_commands(args.input)
     problem = GeometryProblem(commands, device=args.device)
+    live_progress = args.threads > 1 and not args.no_live
     xy, terms = problem.optimize(
         steps=args.steps,
         lr=args.lr,
@@ -485,9 +763,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         seed=args.seed,
         init_noise=args.init_noise,
         verbose=args.verbose,
+        workers=args.threads,
+        success_loss=None if args.success_loss < 0 else args.success_loss,
+        live_progress=live_progress,
     )
     if args.plot:
         plot_solution(args.plot, problem, problem.coordinates(xy), commands)
+    if live_progress:
+        print("")
     print(format_report(problem, xy, terms, args.separation_weight))
     if args.plot:
         print("")
